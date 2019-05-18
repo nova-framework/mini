@@ -136,12 +136,10 @@ class Route
             //
             $pattern = array_get($this->patterns, $name, '[^/]+');
 
-            $result = sprintf('/(?P<%s>%s)', $name, $pattern);
-
             if ($optional) {
                 $optionals++;
 
-                return '(?:' .$result;
+                return sprintf('(?:/(?P<%s>%s)', $name, $pattern);
             }
 
             // The variable is not optional.
@@ -149,7 +147,7 @@ class Route
                 throw new LogicException("Route pattern [{$path}] cannot reference variable [{$name}] after optional variables.");
             }
 
-            return $result;
+            return sprintf('/(?P<%s>%s)', $name, $pattern);
 
         }, $path);
 
