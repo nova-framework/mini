@@ -12,11 +12,11 @@ use InvalidArgumentException;
 class UrlGenerator
 {
     /**
-     * All of the named routes and URI pairs.
+     * The Route Collection instance used by Router.
      *
-     * @var array
+     * @var \System\Routing\RouteCollection
      */
-    protected $routes = array();
+    protected $routes;
 
     /**
      * The request instance.
@@ -60,11 +60,14 @@ class UrlGenerator
     /**
      * Create a new URL Generator instance.
      *
+     * @param  \System\Routing\RouteCollection   $routes
      * @param  \Symfony\Component\HttpFoundation\Request   $request
      * @return void
      */
-    public function __construct(array $routes, Request $request)
+    public function __construct(RouteCollection $routes, Request $request)
     {
+        $this->routes = $routes;
+
         $this->request = $request;
     }
 
@@ -167,7 +170,7 @@ class UrlGenerator
      */
     public function route($name, $parameters = array())
     {
-        if (! isset($this->routes[$name])) {
+        if (is_null($route = $this->routes->getByName($name))) {
             throw new InvalidArgumentException("Route [{$name}] not defined.");
         }
 
@@ -183,7 +186,7 @@ class UrlGenerator
 
             return ! empty($value) ? '/' .$value : '';
 
-        }, $this->routes[$name]);
+        }, $route->getPath());
 
         $uri = $this->to(trim($uri, '/'));
 

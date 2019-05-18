@@ -49,7 +49,10 @@ class RoutingServiceProvider extends ServiceProvider
     {
         $this->app->singleton('url', function ($app)
         {
-            $routes = $app['router']->getNamedRoutes();
+            $router = $app['router'];
+
+            //
+            $routes = $router->getRoutes()->getNamedRoutes();
 
             $url = new UrlGenerator($routes, $app->rebinding('request', function ($app, $request)
             {
