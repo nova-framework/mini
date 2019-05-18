@@ -184,7 +184,7 @@ class Mailer
     protected function sendSwiftMessage($message, $mailer)
     {
         if ($this->events) {
-            $this->events->fire('mailer.sending', array($message));
+            $this->events->dispatch('mailer.sending', array($message));
         }
 
         if (! $this->pretending) {

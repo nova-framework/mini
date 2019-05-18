@@ -58,7 +58,7 @@ class Dispatcher
      */
     public function until($event, $payload = array())
     {
-        return $this->fire($event, $payload, true);
+        return $this->dispatch($event, $payload, true);
     }
 
     /**

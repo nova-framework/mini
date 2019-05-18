@@ -397,7 +397,7 @@ class SessionGuard extends Guard
      */
     protected function fireAuthEvent($event, array $payload)
     {
-        $this->events->fire('auth.' .$event, $payload);
+        $this->events->dispatch('auth.' .$event, $payload);
     }
 
     /**

@@ -558,7 +558,7 @@ class Model implements ArrayableInterface, JsonableInterface, \ArrayAccess
         $event = sprintf('database.model.%s: %s', $event, get_class($this));
 
         if (isset(static::$dispatcher)) {
-            $method = $halt ? 'until' : 'fire';
+            $method = $halt ? 'until' : 'dispatch';
 
             return call_user_func(array(static::$dispatcher, $method), $event, $this);
         }

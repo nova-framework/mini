@@ -24,26 +24,11 @@ class Router
     protected $container;
 
     /**
-     * An array of registered routes.
+     * The route collection instance.
      *
-     * @var array
+     * @var \System\Routing\RouteCollection
      */
-    protected $routes = array(
-        'GET'     => array(),
-        'POST'    => array(),
-        'PUT'     => array(),
-        'DELETE'  => array(),
-        'PATCH'   => array(),
-        'HEAD'    => array(),
-        'OPTIONS' => array(),
-    );
-
-    /**
-     * All of the named routes and URI pairs.
-     *
-     * @var array
-     */
-    protected $namedRoutes = array();
+    protected $routes;
 
     /**
      * All of the short-hand keys for middlewares.
@@ -80,6 +65,13 @@ class Router
      */
     protected $currentRoute;
 
+    /**
+     * An array of registered routes.
+     *
+     * @var array
+     */
+    public static $verbs = array('GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'HEAD', 'OPTIONS');
+
 
     /**
      * Create a new Router instance.
@@ -94,6 +86,9 @@ class Router
         $this->middleware = $middleware;
 
         $this->middlewareGroups = $middlewareGroups;
+
+        //
+        $this->routes = new RouteCollection();
     }
 
     /**
@@ -213,18 +208,12 @@ class Router
 
         $path = '/' .trim($path, '/');
 
-        //
+        // Create a new Route instance.
         $route = new Route($methods, $path, $action, $this->patterns);
 
-        foreach ($methods as $method) {
-            $this->routes[$method][$path] = $route;
-        }
+        $route->setContainer($this->container);
 
-        if (! empty($name = array_get($action, 'as'))) {
-            $this->namedRoutes[$name] = $route;
-        }
-
-        return $route->setContainer($this->container);
+        return $this->routes->add($route);
     }
 
     /**
@@ -249,7 +238,7 @@ class Router
      */
     public function dispatch(Request $request)
     {
-        $this->currentRoute = $route = $this->findRoute($request);
+        $this->currentRoute = $route = $this->routes->match($request);
 
         if (is_null($route)) {
             throw new NotFoundHttpException('Page not found');
@@ -267,31 +256,6 @@ class Router
             $response = $route->run();
 
             return $this->prepareResponse($request, $response);
-        });
-    }
-
-    /**
-     * Find the Route which matches the given Request.
-     *
-     * @param  \System\Http\Request  $request
-     * @return \System\Routing|Route|null
-     */
-    protected function findRoute(Request $request)
-    {
-        $method = $request->method();
-
-        $path = rawurldecode('/' .trim($request->path(), '/'));
-
-        //
-        $routes = array_get($this->routes, $method, array());
-
-        if (! is_null($route = array_get($routes, $path))) {
-            return $route;
-        }
-
-        return array_first($routes, function ($uri, $route) use ($path, $method)
-        {
-            return $route->matches($path, $method);
         });
     }
 
@@ -401,16 +365,6 @@ class Router
     }
 
     /**
-     * Get the registered named routes.
-     *
-     * @return array
-     */
-    public function getNamedRoutes()
-    {
-        return $this->namedRoutes;
-    }
-
-    /**
      * Get the currently dispatched route action, if any.
      *
      * @return array|null
@@ -418,6 +372,16 @@ class Router
     public function getCurrentRoute()
     {
         return $this->currentRoute;
+    }
+
+    /**
+     * Get the inner Route Collection instance.
+     *
+     * @return array
+     */
+    public function getRoutes()
+    {
+        return $this->routes;
     }
 
     /**
@@ -429,7 +393,7 @@ class Router
      */
     public function __call($method, $parameters)
     {
-        if (array_key_exists($key = strtoupper($method), $this->routes)) {
+        if (in_array($key = strtoupper($method), static::$verbs)) {
             array_unshift($parameters, array($key));
 
             return call_user_func_array(array($this, 'match'), $parameters);
