@@ -151,7 +151,7 @@ class Route
 
         }, $path);
 
-        return '#^' .$pattern .str_repeat(')?', $optionals) .'$#s';
+        return sprintf('#^%s%s$#s', $pattern, str_repeat(')?', $optionals));
     }
 
     /**
