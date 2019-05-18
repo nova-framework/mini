@@ -39,13 +39,6 @@ class RouteListCommand extends Command
     protected $routes;
 
     /**
-    * The table helper set.
-    *
-    * @var \Symfony\Component\Console\Helper\TableHelper
-    */
-    protected $table;
-
-    /**
     * The table headers for the command.
     *
     * @var array
@@ -53,6 +46,7 @@ class RouteListCommand extends Command
     protected $headers = array(
         'Method', 'URI', 'Name', 'Action', 'Middleware'
     );
+
 
     /**
     * Create a new route command instance.
@@ -75,17 +69,18 @@ class RouteListCommand extends Command
     */
     public function handle()
     {
-        $this->table = new Table($this->output);
-
         if (count($this->routes) == 0) {
             return $this->error("Your application doesn't have any routes.");
         }
 
         $routes = $this->getRoutes();
 
-        $this->table->setHeaders($this->headers)->setRows($routes);
+        //
+        $table = new Table($this->output);
 
-        $this->table->render($this->getOutput());
+        $table->setHeaders($this->headers)->setRows($routes);
+
+        $table->render($this->getOutput());
     }
 
     /**
