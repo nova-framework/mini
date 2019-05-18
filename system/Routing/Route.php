@@ -11,7 +11,6 @@ use DomainException;
 use LogicException;
 use ReflectionFunction;
 use ReflectionFunctionAbstract;
-use ReflectionMethod;
 use UnexpectedValueException;
 
 
@@ -124,32 +123,17 @@ class Route
         $parameters = $this->getParameters();
 
         if (is_array($callback = $this->resolveCallback())) {
-            return $this->runController($callback, $parameters);
+            list ($controller, $method) = $callback;
+
+            // Create a new Controller Dispatcher instance.
+            $dispatcher = new ControllerDispatcher();
+
+            return $dispatcher->dispatch($controller, $method, $parameters);
         }
 
-        return call_user_func_array($callback, $this->resolveCallParameters(
+        return call_user_func_array($callback, static::resolveCallParameters(
             $parameters, new ReflectionFunction($callback)
         ));
-    }
-
-    /**
-     * Run the given Controller callback.
-     *
-     * @param array $callback
-     * @param array $parameters
-     * @return mixed
-     */
-    protected function runController(array $callback, array $parameters)
-    {
-        list ($controller, $method) = $callback;
-
-        $parameters = $this->resolveCallParameters(
-            $parameters, new ReflectionMethod($controller, $method)
-        );
-
-        $dispatcher = new ControllerDispatcher();
-
-        return $dispatcher->dispatch($controller, $method, $parameters);
     }
 
     /**
@@ -196,7 +180,7 @@ class Route
      * @param \ReflectionFunctionAbstract $reflector
      * @return array
      */
-    protected function resolveCallParameters(array $parameters, ReflectionFunctionAbstract $reflector)
+    public static function resolveCallParameters(array $parameters, ReflectionFunctionAbstract $reflector)
     {
         foreach ($reflector->getParameters() as $key => $parameter) {
             if (! is_null($class = $parameter->getClass())) {

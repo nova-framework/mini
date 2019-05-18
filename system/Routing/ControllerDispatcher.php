@@ -4,6 +4,8 @@ namespace System\Routing;
 
 use System\Container\Container;
 
+use ReflectionMethod;
+
 
 class ControllerDispatcher
 {
@@ -18,6 +20,10 @@ class ControllerDispatcher
      */
     public function dispatch($controller, $method, array $parameters)
     {
+        $parameters = Route::resolveCallParameters(
+            $parameters, new ReflectionMethod($controller, $method)
+        );
+
         if (! method_exists($controller, 'callAction')) {
             return call_user_func_array(array($controller, $method), $parameters);
         }
