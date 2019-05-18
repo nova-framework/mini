@@ -85,14 +85,13 @@ class Route
      */
     public function matches($path, $method = 'ANY')
     {
-        $pattern = $this->compilePattern();
-
         if (($method !== 'ANY') && ! in_array($method, $this->methods)) {
             return false;
         }
 
-        //
-        else if (preg_match($pattern, $path, $matches) !== 1) {
+        $pattern = $this->compilePattern();
+
+        if (preg_match($pattern, $path, $matches) !== 1) {
             return false;
         }
 
@@ -145,7 +144,7 @@ class Route
                 return '(?:' .$result;
             }
 
-            //
+            // Not an optional parameter.
             else if ($optionals > 0) {
                 throw new LogicException("Route pattern [{$path}] cannot reference variable [{$name}] after optional variables.");
             }
@@ -164,23 +163,41 @@ class Route
      */
     public function run()
     {
-        $callback = $this->resolveCallback();
+        $parameters = $this->getParameters();
 
-        if ($callback instanceof Closure) {
-            $reflector = new ReflectionFunction($callback);
+        if (is_array($callback = $this->resolveCallback())) {
+            return $this->runControllerCallback($callback, $parameters);
+        }
 
-            return call_user_func_array(
-                $callback, $this->resolveCallParameters($reflector)
+        return call_user_func_array($callback, $this->resolveCallParameters(
+            $parameters, new ReflectionFunction($callback)
+        ));
+    }
+
+    /**
+     * Run the given Controller callback.
+     *
+     * @param array $callback
+     * @param array $parameters
+     * @return mixed
+     */
+    protected function runControllerCallback(array $callback, array $parameters)
+    {
+        list ($controller, $method) = $callback;
+
+        $parameters = $this->resolveCallParameters(
+            $parameters, new ReflectionMethod($controller, $method)
+        );
+
+        if (method_exists($controller, $callerMethod = 'callAction')) {
+            $callback = array($controller, $callerMethod);
+
+            $parameters = $this->resolveCallParameters(
+                array($method, $parameters), new ReflectionMethod($controller, $callerMethod)
             );
         }
 
-        extract($callback);
-
-        $parameters = $this->resolveCallParameters(
-            new ReflectionMethod($controller, $method)
-        );
-
-        return $controller->callAction($method, $parameters);
+        return call_user_func_array($callback, $parameters);
     }
 
     /**
@@ -195,41 +212,40 @@ class Route
             return $this->callback;
         }
 
-        $callback = $this->action['uses'];
+        $callback = array_get($this->action, 'uses');
 
         if ($callback instanceof Closure) {
             return $this->callback = $callback;
         }
 
-        //
-        else if (! Str::contains($callback, '@')) {
-            throw new UnexpectedValueException("Invalid route action: [{$callback}]");
+        // The action callback could be either a Closure instance or a string.
+        else if (! is_string($callback)) {
+            throw new LogicException("Invalid route action");
         }
 
-        list ($className, $method) = explode('@', $callback);
+        list ($className, $method) = array_pad(explode('@', $callback, 2), 2, null);
 
-        if (! class_exists($className)) {
-            throw new LogicException("Controller [{$className}] not found.");
+        if (is_null($method) || ! class_exists($className)) {
+            throw new LogicException("Invalid route action: [{$callback}]");
         }
 
-        //
+        // We will create a Controller instance, then we will check if its method exists.
         else if (! method_exists($controller = $this->container->make($className), $method)) {
             throw new LogicException("Controller [{$className}] has no method [${method}].");
         }
 
-        return $this->callback = compact('controller', 'method');
+        return $this->callback = array($controller, $method);
     }
 
     /**
      * Resolve the method parameters.
      *
+     * @param array $parameters
      * @param \ReflectionFunctionAbstract $reflector
      * @return array
      */
-    protected function resolveCallParameters(ReflectionFunctionAbstract $reflector)
+    protected function resolveCallParameters(array $parameters, ReflectionFunctionAbstract $reflector)
     {
-        $parameters = $this->getParameters();
-
         foreach ($reflector->getParameters() as $key => $parameter) {
             if (! is_null($class = $parameter->getClass())) {
                 $instance = $this->container->make($class->getName());
@@ -295,7 +311,7 @@ class Route
         $middleware = array_get($this->action, 'middleware', array());
 
         if (is_array($callback = $this->resolveCallback())) {
-            extract($callback);
+            list ($controller, $method) = $callback;
 
             $middleware = array_merge($middleware, $controller->gatherMiddleware($method));
         }
@@ -376,11 +392,9 @@ class Route
      */
     public function getActionName()
     {
-        if (is_string($callback = $this->action['uses'])) {
-            return $callback;
-        }
+        $callback = array_get($this->action, 'uses');
 
-        return 'Closure';
+        return is_string($callback) ? $callback : 'Closure';
     }
 
     /**
