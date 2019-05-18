@@ -4,8 +4,8 @@ namespace App\Controllers;
 
 use System\Http\Response;
 use System\Routing\Controller;
-use System\Support\Facades\View as ViewFactory;
-use System\View\View;
+use System\Support\Contracts\RenderableInterface as Renderable;
+use System\Support\Facades\View;
 
 use BadMethodCallException;
 
@@ -36,17 +36,22 @@ class BaseController extends Controller
     {
         $this->action = $method;
 
-        //
+        // initialize the Controller.
         $this->initialize();
 
         $response = call_user_func_array(array($this, $method), $parameters);
 
-        if (($response instanceof View) && ! empty($this->layout)) {
-            $layout = 'Layouts/' .$this->layout;
+        return $this->processResponse($response);
+    }
 
-            $view = ViewFactory::make($layout, array('content' => $response));
+    protected function processResponse($response)
+    {
+        if (($response instanceof Renderable) && ! empty($layout = $this->getLayout())) {
+            $view = sprintf('Layouts/%s', $layout);
 
-            return new Response($view->render(), 200);
+            $instance = View::make($view, array('content' => $response));
+
+            return new Response($instance->render(), 200);
         }
 
         return $response;
@@ -54,18 +59,24 @@ class BaseController extends Controller
 
     protected function createView(array $data = array(), $view = null)
     {
-        if (is_null($view)) {
-            $view = ucfirst($this->action);
-        }
-
         $classPath = str_replace('\\', '/', static::class);
 
-        if (preg_match('#^App/Controllers/(.*)$#', $classPath, $matches) === 1) {
-            $view = $matches[1] .'/' .$view;
-
-            return ViewFactory::make($view, $data);
+        if (preg_match('#^App/Controllers/(.*)$#', $classPath, $matches) !== 1) {
+            throw new BadMethodCallException('Invalid Controller namespace');
         }
 
-        throw new BadMethodCallException('Invalid Controller namespace');
+        $view = sprintf('%s/%s', $matches[1], $view ?: ucfirst($this->action));
+
+        return View::make($view, $data);
+    }
+
+    public function getAction()
+    {
+        return $this->action;
+    }
+
+    public function getLayout()
+    {
+        return $this->layout;
     }
 }

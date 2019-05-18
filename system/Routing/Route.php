@@ -144,7 +144,7 @@ class Route
                 return '(?:' .$result;
             }
 
-            // Not an optional parameter.
+            // The variable is not optional.
             else if ($optionals > 0) {
                 throw new LogicException("Route pattern [{$path}] cannot reference variable [{$name}] after optional variables.");
             }
