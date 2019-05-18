@@ -1,6 +1,9 @@
 #!/usr/bin/env php
 <?php
 
+use System\Console\Application as ConsoleApplication;
+
+
 //--------------------------------------------------------------------------
 // Define The Application Paths
 //--------------------------------------------------------------------------
@@ -14,13 +17,11 @@ define('APPPATH', BASEPATH .'app' .DS);
 
 define('WEBPATH', BASEPATH .'webroot' .DS);
 
-
 //--------------------------------------------------------------------------
 // Register The Auto Loader
 //--------------------------------------------------------------------------
 
 require BASEPATH .'vendor' .DS .'autoload.php';
-
 
 //--------------------------------------------------------------------------
 // Turn On The Lights
@@ -28,29 +29,27 @@ require BASEPATH .'vendor' .DS .'autoload.php';
 
 $app = require_once APPPATH .'Platform' .DS .'Bootstrap.php';
 
+//--------------------------------------------------------------------------
+// Load The Forge Console Application
+//--------------------------------------------------------------------------
+
 $app->setRequestForConsoleEnvironment();
 
-//--------------------------------------------------------------------------
-// Register Booted Start Files
-//--------------------------------------------------------------------------
-
-$app->booted(function() use ($app)
-{
-
+$forge = ConsoleApplication::start($app);
 
 //--------------------------------------------------------------------------
-// Load The Boootstrap Script
+// Run The Forge Application
 //--------------------------------------------------------------------------
 
-$path = $app['path'] .DS .'Console.php';
-
-if (is_readable($path)) require $path;
-
-});
-
+$status = $forge->handle(
+    new Symfony\Component\Console\Input\ArgvInput,
+    new Symfony\Component\Console\Output\ConsoleOutput
+);
 
 //--------------------------------------------------------------------------
-// Boot The Application
+// Shutdown The Application
 //--------------------------------------------------------------------------
 
-$app->boot();
+$app->terminate();
+
+exit($status);

@@ -18,7 +18,7 @@ class Dispatcher
     /**
      * @var array  The event firing stack.
      */
-    protected $firing = array();
+    protected $dispatching = array();
 
 
     /**
@@ -66,9 +66,9 @@ class Dispatcher
      *
      * @return string
      */
-    public function firing()
+    public function dispatching()
     {
-        return last($this->firing);
+        return last($this->dispatching);
     }
 
     /**
@@ -79,7 +79,7 @@ class Dispatcher
      * @param  bool    $halt
      * @return array|null
      */
-    public function fire($event, $payload = array(), $halt = false)
+    public function dispatch($event, $payload = array(), $halt = false)
     {
         $responses = array();
 
@@ -92,13 +92,13 @@ class Dispatcher
             $payload = array($payload);
         }
 
-        $this->firing[] = $event;
+        $this->dispatching[] = $event;
 
         foreach ($this->getListeners($event) as $listener) {
             $response = call_user_func_array($listener, $payload);
 
             if (! is_null($response) && $halt) {
-                array_pop($this->firing);
+                array_pop($this->dispatching);
 
                 return $response;
             } else if ($response === false) {
@@ -108,7 +108,7 @@ class Dispatcher
             $responses[] = $response;
         }
 
-        array_pop($this->firing);
+        array_pop($this->dispatching);
 
         return $halt ? null : $responses;
     }

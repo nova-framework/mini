@@ -91,7 +91,10 @@ return array(
         'System\Validation\ValidationServiceProvider',
         'System\View\ViewServiceProvider',
 
-        //
+        // The Forge Providers.
+        'System\Foundation\Console\ConsoleSupportServiceProvider',
+
+        // The Application Providers
         'App\Providers\AppServiceProvider',
         'App\Providers\EventServiceProvider',
         'App\Providers\RouteServiceProvider',
@@ -112,6 +115,7 @@ return array(
         'DB'        => 'System\Support\Facades\DB',
         'Event'     => 'System\Support\Facades\Event',
         'File'      => 'System\Support\Facades\File',
+        'Forge'     => 'System\Support\Facades\Forge',
         'Hash'      => 'System\Support\Facades\Hash',
         'Input'     => 'System\Support\Facades\Input',
         'Lang'      => 'System\Support\Facades\Lang',
@@ -120,6 +124,7 @@ return array(
         'Redirect'  => 'System\Support\Facades\Redirect',
         'Response'  => 'System\Support\Facades\Response',
         'Route'     => 'System\Support\Facades\Route',
+        'Schedule'  => 'System\Support\Facades\Schedule',
         'Session'   => 'System\Support\Facades\Session',
         'URL'       => 'System\Support\Facades\URL',
         'Validator' => 'System\Support\Facades\Validator',

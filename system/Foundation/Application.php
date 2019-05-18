@@ -304,7 +304,7 @@ class Application extends Container
             }
         }
 
-        $this->fireAppCallbacks($this->terminatingCallbacks);
+        $this->terminate();
     }
 
     /**
@@ -318,6 +318,16 @@ class Application extends Container
         $this->terminatingCallbacks[] = $callback;
 
         return $this;
+    }
+
+    /**
+     * Call the "terminating" callbacks assigned to the application.
+    *
+     * @return void
+     */
+    public function terminate()
+    {
+        $this->fireAppCallbacks($this->terminatingCallbacks);
     }
 
     /**

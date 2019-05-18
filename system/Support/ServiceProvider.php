@@ -61,6 +61,25 @@ abstract class ServiceProvider
     }
 
     /**
+     * Register the package's custom Forge commands.
+     *
+     * @param  array  $commands
+     * @return void
+     */
+    public function commands($commands)
+    {
+        $commands = is_array($commands) ? $commands : func_get_args();
+
+        //
+        $events = $this->app['events'];
+
+        $events->listen('forge.start', function($forge) use ($commands)
+        {
+            $forge->resolveCommands($commands);
+        });
+    }
+
+    /**
      * Dynamically handle missing method calls.
      *
      * @param  string  $method
