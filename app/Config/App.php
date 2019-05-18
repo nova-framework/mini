@@ -92,6 +92,7 @@ return array(
         'System\View\ViewServiceProvider',
 
         // The Forge Providers.
+        'System\Cache\ConsoleServiceProvider',
         'System\Foundation\Console\ConsoleSupportServiceProvider',
         'System\Mail\ConsoleServiceProvider',
 
