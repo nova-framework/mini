@@ -1,6 +1,6 @@
 <?php
 
-namespace System\Cache\Contracts;
+namespace System\Cache;
 
 
 interface StoreInterface
