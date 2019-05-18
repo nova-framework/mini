@@ -98,7 +98,7 @@ class RouteCollection implements Countable
      */
     public function hasNamedRoute($name)
     {
-        return ! is_null($this->getByName($name));
+        return array_has($this->namedRoutes, $name);
     }
 
     /**
