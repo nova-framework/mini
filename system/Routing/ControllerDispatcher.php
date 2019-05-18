@@ -3,9 +3,6 @@
 namespace System\Routing;
 
 use System\Container\Container;
-use System\Routing\RouteDependencyResolverTrait;
-
-use Closure;
 
 
 class ControllerDispatcher
@@ -14,7 +11,7 @@ class ControllerDispatcher
     /**
      * Dispatch a request to a given controller and method.
      *
-     * @param  \System\Routing\Controller  $controller
+     * @param  mixed  $controller
      * @param  string  $method
      * @param  array  $parameters
      * @return mixed
@@ -31,7 +28,7 @@ class ControllerDispatcher
     /**
      * Get the middleware for the controller instance.
      *
-     * @param  \System\Routing\Controller  $controller
+     * @param  mixed  $controller
      * @param  string  $method
      * @return array
      */
