@@ -54,8 +54,8 @@ class ServeCommand extends Command
      */
     protected function checkPhpVersion()
     {
-        if (version_compare(PHP_VERSION, '5.5.0', '<')) {
-            throw new \Exception('This PHP binary is not version 5.5 or greater.');
+        if (version_compare(PHP_VERSION, '7.1.3', '<')) {
+            throw new \Exception('This PHP binary is not version 7.1.3 or greater.');
         }
     }
 
