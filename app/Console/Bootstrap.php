@@ -11,3 +11,9 @@
 Forge::resolveCommands(array(
     //'App\Console\Commands\MagicWand',
 ));
+
+
+/**
+ * Schedule the flushing of Mailer's Messages Spool.
+ */
+Schedule::command('spool:flush')->everyMinute();

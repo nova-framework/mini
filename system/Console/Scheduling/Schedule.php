@@ -3,9 +3,9 @@
 namespace System\Console\Scheduling;
 
 use System\Foundation\Application;
+use System\Support\ProcessUtils;
 
 use Symfony\Component\Process\PhpExecutableFinder;
-use Symfony\Component\Process\ProcessUtils;
 
 
 class Schedule

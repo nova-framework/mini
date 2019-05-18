@@ -93,6 +93,7 @@ return array(
 
         // The Forge Providers.
         'System\Foundation\Console\ConsoleSupportServiceProvider',
+        'System\Mail\ConsoleServiceProvider',
 
         // The Application Providers
         'App\Providers\AppServiceProvider',

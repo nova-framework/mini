@@ -22,7 +22,17 @@ class ScheduleServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $this->commands('System\Console\Scheduling\ScheduleRunCommand');
+        $this->app->singleton('schedule', function ($app)
+        {
+            return new Schedule($app);
+        });
+
+        $this->app->singleton('command.schedule.run', function ($app)
+        {
+            return new ScheduleRunCommand($app['schedule']);
+        });
+
+        $this->commands('command.schedule.run');
     }
 
     /**
@@ -33,7 +43,7 @@ class ScheduleServiceProvider extends ServiceProvider
     public function provides()
     {
         return array(
-            'System\Console\Scheduling\ScheduleRunCommand',
+            'schedule', 'command.schedule.run'
         );
     }
 }
