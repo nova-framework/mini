@@ -122,12 +122,14 @@ class RouteListCommand extends Command
     {
         $methods = implode('|', $route->getMethods());
 
+        $middleware = implode(', ', $this->getMiddleware($route));
+
         return $this->filterRoute(array(
             'method'     => $methods,
             'uri'        => $route->getPath(),
             'name'       => $route->getName(),
             'action'     => $route->getActionName(),
-            'middleware' => $this->getMiddleware($route)
+            'middleware' => $middleware
         ));
     }
 
@@ -152,9 +154,11 @@ class RouteListCommand extends Command
      */
     protected function getMiddleware($route)
     {
-        $middleware = $route->middleware();
+        return array_map(function ($middleware)
+        {
+            return ($middleware instanceof Closure) ? 'Closure' : $middleware;
 
-        return implode(', ', $middleware);
+        }, $route->middleware());
     }
 
     /**
