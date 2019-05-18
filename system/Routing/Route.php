@@ -187,15 +187,11 @@ class Route
             $parameters, new ReflectionMethod($controller, $method)
         );
 
-        if (method_exists($controller, $callerMethod = 'callAction')) {
-            $callback = array($controller, $callerMethod);
-
-            $parameters = $this->resolveCallParameters(
-                array($method, $parameters), new ReflectionMethod($controller, $callerMethod)
-            );
+        if (! method_exists($controller, 'callAction')) {
+            return call_user_func_array($callback, $parameters);
         }
 
-        return call_user_func_array($callback, $parameters);
+        return $controller->callAction($method, $parameters);
     }
 
     /**
