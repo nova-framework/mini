@@ -32,13 +32,6 @@ class RouteListCommand extends Command
     protected $description = 'List all registered routes';
 
     /**
-    * The router instance.
-    *
-    * @var \System\Routing\Router
-    */
-    protected $router;
-
-    /**
     * An array of all the registered routes.
     *
     * @var \System\Routing\RouteCollection
@@ -71,8 +64,7 @@ class RouteListCommand extends Command
     {
         parent::__construct();
 
-        $this->router = $router;
-
+        //
         $this->routes = $router->getRoutes();
     }
 
@@ -89,7 +81,11 @@ class RouteListCommand extends Command
             return $this->error("Your application doesn't have any routes.");
         }
 
-        $this->displayRoutes($this->getRoutes());
+        $routes = $this->getRoutes();
+
+        $this->table->setHeaders($this->headers)->setRows($routes);
+
+        $this->table->render($this->getOutput());
     }
 
     /**
@@ -99,14 +95,11 @@ class RouteListCommand extends Command
     */
     protected function getRoutes()
     {
-        $routes = $this->routes->getRoutes();
+        $results = array_map(function ($route)
+        {
+            return $this->getRouteInformation($route);
 
-        //
-        $results = array();
-
-        foreach($routes as $route) {
-            $results[] = $this->getRouteInformation($route);
-        }
+        }, $this->routes->getRoutes());
 
         return array_filter($results);
     }
@@ -131,19 +124,6 @@ class RouteListCommand extends Command
             'action'     => $route->getActionName(),
             'middleware' => $middleware
         ));
-    }
-
-    /**
-    * Display the route information on the console.
-    *
-    * @param  array  $routes
-    * @return void
-    */
-    protected function displayRoutes(array $routes)
-    {
-        $this->table->setHeaders($this->headers)->setRows($routes);
-
-        $this->table->render($this->getOutput());
     }
 
     /**
