@@ -78,9 +78,9 @@ class RouteCollection implements Countable
         $path = rawurldecode('/' .trim($request->path(), '/'));
 
         //
-        $routes = $this->get($method);
+        $route = array_get($routes = $this->get($method), $path);
 
-        if (! is_null($route = array_get($routes, $path)) && $route->matches($request, true)) {
+        if (! is_null($route) && $route->matches($path, $method)) {
             return $route;
         }
 
