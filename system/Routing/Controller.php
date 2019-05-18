@@ -31,26 +31,13 @@ class Controller
     }
 
     /**
-     * Get the middleware for a given method.
+     * Get the middleware assigned to the controller.
      *
-     * @param  string  $method
      * @return array
      */
-    public function gatherMiddleware($method)
+    public function getMiddleware()
     {
-        $result = array();
-
-        foreach ($this->middleware as $middleware => $options) {
-            if (isset($options['only']) && ! in_array($method, (array) $options['only'])) {
-                continue;
-            } else if (! empty($options['except']) && in_array($method, (array) $options['except'])) {
-                continue;
-            }
-
-            $result[] = $middleware;
-        }
-
-        return $result;
+        return $this->middleware;
     }
 
     /**

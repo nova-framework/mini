@@ -147,11 +147,9 @@ class Route
             $parameters, new ReflectionMethod($controller, $method)
         );
 
-        if (! method_exists($controller, 'callAction')) {
-            return call_user_func_array($callback, $parameters);
-        }
+        $dispatcher = new ControllerDispatcher();
 
-        return $controller->callAction($method, $parameters);
+        return $dispatcher->dispatch($controller, $method, $parameters);
     }
 
     /**
@@ -267,7 +265,9 @@ class Route
         if (is_array($callback = $this->resolveCallback())) {
             list ($controller, $method) = $callback;
 
-            $middleware = array_merge($middleware, $controller->gatherMiddleware($method));
+            $middleware = array_merge(
+                $middleware, ControllerDispatcher::getMiddleware($controller, $method)
+            );
         }
 
         return array_unique($middleware, SORT_REGULAR);
