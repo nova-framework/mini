@@ -95,6 +95,7 @@ return array(
         'System\Cache\ConsoleServiceProvider',
         'System\Foundation\Console\ConsoleSupportServiceProvider',
         'System\Mail\ConsoleServiceProvider',
+        'System\Routing\ConsoleServiceProvider',
 
         // The Application Providers
         'App\Providers\AppServiceProvider',
