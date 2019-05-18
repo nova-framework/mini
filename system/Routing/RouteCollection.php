@@ -78,9 +78,9 @@ class RouteCollection implements Countable
         $path = rawurldecode('/' .trim($request->path(), '/'));
 
         //
-        $routes = array_get($this->routes, $method, array());
+        $routes = $this->get($method);
 
-        if (! is_null($route = array_get($routes, $path))) {
+        if (! is_null($route = array_get($routes, $path)) && $route->matches($request, true)) {
             return $route;
         }
 
@@ -110,6 +110,21 @@ class RouteCollection implements Countable
     public function getByName($name)
     {
         return array_get($this->namedRoutes, $name);
+    }
+
+    /**
+     * Get all of the routes in the collection.
+     *
+     * @param  string|null  $method
+     * @return array
+     */
+    protected function get($method = null)
+    {
+        if (is_null($method)) {
+            return $this->getRoutes();
+        }
+
+        return array_get($this->routes, $method, array());
     }
 
     /**
