@@ -45,15 +45,15 @@ class ControllerDispatcher
             $parameters, new ReflectionMethod($controller, $method)
         );
 
-        if (method_exists($controller, $callerMethod = 'callAction')) {
-            $callback = array($controller, $callerMethod);
-
-            $parameters = $this->resolveMethodDependencies(
-                array($method, $parameters), new ReflectionMethod($controller, $callerMethod)
-            );
+        if (! method_exists($controller, $callerMethod = 'callAction')) {
+            return call_user_func_array($callback, $parameters);
         }
 
-        return call_user_func_array($callback, $parameters);
+        $callback = array($controller, $callerMethod);
+
+        return call_user_func_array($callback, $this->resolveMethodDependencies(
+            array($method, $parameters), new ReflectionMethod($controller, $callerMethod)
+        ));
     }
 
     /**
@@ -69,7 +69,7 @@ class ControllerDispatcher
             return array();
         }
 
-        $results = array_filter($controller->getMiddleware(), function ($options) use ($method)
+        $results = array_filter($controller->getMiddleware(), function ($options, $middleware) use ($method)
         {
             return ! static::methodExcludedByOptions($method, $options);
 
