@@ -14,7 +14,7 @@ class ControllerDispatcher
     /**
      * The container instance.
      *
-     * @var \Mini\Container\Container
+     * @var \System\Container\Container
      */
     protected $container;
 
@@ -22,7 +22,7 @@ class ControllerDispatcher
     /**
      * Create a new controller dispatcher instance.
      *
-     * @param  \Mini\Container\Container  $container
+     * @param  \System\Container\Container  $container
      * @return void
      */
     public function __construct(Container $container)
