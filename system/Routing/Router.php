@@ -100,9 +100,24 @@ class Router
      */
     public function any($route, $action)
     {
-        return $this->match(
-            array('GET', 'POST', 'PUT', 'DELETE', 'PATCH'), $route, $action
-        );
+        $methods = array('GET', 'POST', 'PUT', 'DELETE', 'PATCH');
+
+        return $this->addRoute($methods, $route, $action);
+    }
+
+    /**
+     * Add a route to the underlying route lists.
+     *
+     * @param  array|string  $methods
+     * @param  string  $path
+     * @param  mixed  $action
+     * @return \Nova\Routing\Route
+     */
+    public function match($methods, $path, $action)
+    {
+        $methods = array_map('strtoupper', (array) $methods);
+
+        return $this->addRoute($methods, $path, $action);
     }
 
     /**
@@ -166,18 +181,16 @@ class Router
     }
 
     /**
-     * Add a route to the underlying route lists.
+     * Add a route to the underlying route collection.
      *
      * @param  array|string  $methods
      * @param  string  $path
      * @param  mixed  $action
-     * @return \Nova\Routing\Route
+     * @return \System\Routing\Route
      */
-    public function match($methods, $path, $action)
+    protected function addRoute($methods, $path, $action)
     {
-        $methods = array_map('strtoupper', (array) $methods);
-
-        $route = $this->createRoute($methods, $path, $action)->setContainer($this->container);
+        $route = $this->createRoute($methods, $path, $action);
 
         return $this->routes->add($route);
     }
@@ -185,12 +198,12 @@ class Router
     /**
      * Create a new route instance.
      *
-     * @param  array  $methods
+     * @param  array|string  $methods
      * @param  string  $path
      * @param  mixed   $action
      * @return \System\Routing\Route
      */
-    protected function createRoute(array $methods, $path, $action)
+    protected function createRoute($methods, $path, $action)
     {
         if (! is_array($action)) {
             $action = array('uses' => $action);
@@ -226,7 +239,7 @@ class Router
             array_merge($this->patterns, array_get($action, 'where', array()))
         );
 
-        return $route;
+        return $route->setContainer($this->container);
     }
 
     /**
@@ -409,7 +422,7 @@ class Router
         if (in_array($key = strtoupper($method), static::$verbs)) {
             array_unshift($parameters, $key);
 
-            return call_user_func_array(array($this, 'match'), $parameters);
+            return call_user_func_array(array($this, 'addRoute'), $parameters);
         }
 
         throw new BadMethodCallException("Method [${method}] does not exist.");
