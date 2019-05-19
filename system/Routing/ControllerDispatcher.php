@@ -69,17 +69,13 @@ class ControllerDispatcher
             return array();
         }
 
-        $results = array();
+        $results = array_filter($controller->getMiddleware(), function ($options) use ($method)
+        {
+            return ! static::methodExcludedByOptions($method, $options);
 
-        foreach ($controller->getMiddleware() as $middleware => $options) {
-            if (static::methodExcludedByOptions($method, $options)) {
-                continue;
-            }
+        }, ARRAY_FILTER_USE_BOTH);
 
-            $results[] = $middleware;
-        }
-
-        return $results;
+        return array_keys($results);
     }
 
     /**
