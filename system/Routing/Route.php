@@ -10,12 +10,13 @@ use Closure;
 use DomainException;
 use LogicException;
 use ReflectionFunction;
-use ReflectionFunctionAbstract;
 use UnexpectedValueException;
 
 
 class Route
 {
+    use RouteDependencyResolverTrait;
+
     /**
      * The Container instance.
      *
@@ -123,15 +124,12 @@ class Route
         $parameters = $this->getParameters();
 
         if (is_array($callback = $this->resolveCallback())) {
-            list ($controller, $method) = $callback;
+            $dispatcher = new ControllerDispatcher($this->container);
 
-            // Create a new Controller Dispatcher instance.
-            $dispatcher = new ControllerDispatcher();
-
-            return $dispatcher->dispatch($controller, $method, $parameters);
+            return $dispatcher->dispatch($callback, $parameters);
         }
 
-        return call_user_func_array($callback, static::resolveCallParameters(
+        return call_user_func_array($callback, $this->resolveMethodDependencies(
             $parameters, new ReflectionFunction($callback)
         ));
     }
@@ -171,26 +169,6 @@ class Route
         }
 
         return $this->callback = array($controller, $method);
-    }
-
-    /**
-     * Resolve the method parameters.
-     *
-     * @param array $parameters
-     * @param \ReflectionFunctionAbstract $reflector
-     * @return array
-     */
-    public static function resolveCallParameters(array $parameters, ReflectionFunctionAbstract $reflector)
-    {
-        foreach ($reflector->getParameters() as $key => $parameter) {
-            if (! is_null($class = $parameter->getClass())) {
-                $instance = $this->container->make($class->getName());
-
-                array_splice($parameters, $key, 0, array($instance));
-            }
-        }
-
-        return $parameters;
     }
 
     /**

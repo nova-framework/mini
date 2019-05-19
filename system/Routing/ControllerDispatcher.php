@@ -9,26 +9,51 @@ use ReflectionMethod;
 
 class ControllerDispatcher
 {
+    use RouteDependencyResolverTrait;
 
     /**
-     * Dispatch a request to a given controller and method.
+     * The container instance.
      *
-     * @param  mixed  $controller
-     * @param  string  $method
+     * @var \Mini\Container\Container
+     */
+    protected $container;
+
+
+    /**
+     * Create a new controller dispatcher instance.
+     *
+     * @param  \Mini\Container\Container  $container
+     * @return void
+     */
+    public function __construct(Container $container)
+    {
+        $this->container = $container;
+    }
+
+    /**
+     * Dispatch a request to a given controller callback.
+     *
+     * @param  array  $callback
      * @param  array  $parameters
      * @return mixed
      */
-    public function dispatch($controller, $method, array $parameters)
+    public function dispatch(array $callback, array $parameters)
     {
-        $parameters = Route::resolveCallParameters(
+        list ($controller, $method) = $callback;
+
+        $parameters = $this->resolveMethodDependencies(
             $parameters, new ReflectionMethod($controller, $method)
         );
 
-        if (! method_exists($controller, 'callAction')) {
-            return call_user_func_array(array($controller, $method), $parameters);
+        if (method_exists($controller, $callerMethod = 'callAction')) {
+            $callback = array($controller, $callerMethod);
+
+            $parameters = $this->resolveMethodDependencies(
+                array($method, $parameters), new ReflectionMethod($controller, $callerMethod)
+            );
         }
 
-        return $controller->callAction($method, $parameters);
+        return call_user_func_array($callback, $parameters);
     }
 
     /**
