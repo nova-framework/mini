@@ -90,7 +90,7 @@ class Route
             return false;
         }
 
-        $pattern = $this->compilePattern();
+        $pattern = with(new RouteCompiler($this))->compile();
 
         if (preg_match($pattern, $path, $matches) !== 1) {
             return false;
@@ -103,16 +103,6 @@ class Route
         }, ARRAY_FILTER_USE_BOTH);
 
         return true;
-    }
-
-    /**
-     * Compile the Route pattern.
-     *
-     * @return string
-     */
-    protected function compilePattern()
-    {
-        return with(new RouteCompiler($this))->compile();
     }
 
     /**
@@ -153,7 +143,7 @@ class Route
             return $this->callback = $callback;
         }
 
-        // The action callback could be either a Closure instance or a string.
+        // The action callback must be either a Closure instance or a string.
         else if (! is_string($callback)) {
             throw new LogicException("Invalid route action");
         }
