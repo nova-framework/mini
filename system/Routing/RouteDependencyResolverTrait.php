@@ -31,7 +31,7 @@ trait RouteDependencyResolverTrait
                 $this->spliceIntoParameters($parameters, $key, $instance);
             }
 
-            // The parameter does not reference a class.
+            // The parameter does not references a class.
             else if (! isset($values[$key - $instanceCount]) && $parameter->isDefaultValueAvailable()) {
                 $this->spliceIntoParameters($parameters, $key, $parameter->getDefaultValue());
             }
