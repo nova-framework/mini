@@ -63,17 +63,17 @@ class Route
      * @param  array  $methods
      * @param  string $path
      * @param  array  $action
-     * @param  array  $patterns
-     * @param  \System\Container\Container $container
      * @return void
      */
-    public function __construct(array $methods, $path, array $action, array $patterns = array())
+    public function __construct(array $methods, $path, array $action)
     {
         $this->methods = $methods;
         $this->path    = $path;
         $this->action  = $action;
 
-        $this->patterns = array_merge($patterns, array_get($action, 'where', array()));
+        if (in_array('GET', $this->methods) && ! in_array('HEAD', $this->methods)) {
+            $this->methods[] = 'HEAD';
+        }
     }
 
     /**

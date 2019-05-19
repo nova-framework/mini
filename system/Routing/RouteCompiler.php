@@ -39,9 +39,11 @@ class RouteCompiler
         $variables = array();
 
         //
-        $patterns = $this->route->getPatterns();
+        $route = $this->getRoute();
 
-        $path = $this->route->getPath();
+        $patterns = $route->getPatterns();
+
+        $path = $route->getPath();
 
         $pattern = preg_replace_callback('#/\{(.*?)(\?)?\}#', function ($matches) use ($path, $patterns, &$optionals, &$variables)
         {

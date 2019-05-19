@@ -170,17 +170,28 @@ class Router
      *
      * @param  array|string  $methods
      * @param  string  $path
-     * @param  \Closure|array|string  $action
+     * @param  mixed  $action
      * @return \Nova\Routing\Route
      */
-    public function match(array $methods, $path, $action)
+    public function match($methods, $path, $action)
     {
-        $methods = array_map('strtoupper', $methods);
+        $methods = array_map('strtoupper', (array) $methods);
 
-        if (in_array('GET', $methods) && ! in_array('HEAD', $methods)) {
-            $methods[] = 'HEAD';
-        }
+        $route = $this->createRoute($methods, $path, $action)->setContainer($this->container);
 
+        return $this->routes->add($route);
+    }
+
+    /**
+     * Create a new route instance.
+     *
+     * @param  array  $methods
+     * @param  string  $path
+     * @param  mixed   $action
+     * @return \System\Routing\Route
+     */
+    protected function createRoute(array $methods, $path, $action)
+    {
         if (! is_array($action)) {
             $action = array('uses' => $action);
         }
@@ -209,11 +220,13 @@ class Router
         $path = '/' .trim($path, '/');
 
         // Create a new Route instance.
-        $route = new Route($methods, $path, $action, $this->patterns);
+        $route = new Route($methods, $path, $action);
 
-        $route->setContainer($this->container);
+        $route->where(
+            array_merge($this->patterns, array_get($action, 'where', array()))
+        );
 
-        return $this->routes->add($route);
+        return $route;
     }
 
     /**
@@ -394,7 +407,7 @@ class Router
     public function __call($method, $parameters)
     {
         if (in_array($key = strtoupper($method), static::$verbs)) {
-            array_unshift($parameters, array($key));
+            array_unshift($parameters, $key);
 
             return call_user_func_array(array($this, 'match'), $parameters);
         }
