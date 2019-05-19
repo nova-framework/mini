@@ -51,10 +51,7 @@ class RoutingServiceProvider extends ServiceProvider
         {
             $router = $app['router'];
 
-            //
-            $routes = $router->getRoutes()->getNamedRoutes();
-
-            $url = new UrlGenerator($routes, $app->rebinding('request', function ($app, $request)
+            $url = new UrlGenerator($router->getRoutes(), $app->rebinding('request', function ($app, $request)
             {
                 $app['url']->setRequest($request);
             }));

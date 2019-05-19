@@ -620,7 +620,7 @@ class Model implements ArrayableInterface, JsonableInterface, \ArrayAccess
      * @param  \System\Database\Query\Builder  $query
      * @return bool
      */
-    protected function performUpdate(QueryBuilder $query)
+    protected function performUpdate(Builder $query)
     {
         if (! empty($dirty = $this->getDirty())) {
             if ($this->fireModelEvent('updating') === false) {
@@ -649,7 +649,7 @@ class Model implements ArrayableInterface, JsonableInterface, \ArrayAccess
      * @param  \System\Database\Query\Builder  $query
      * @return bool
      */
-    protected function performInsert(QueryBuilder $query)
+    protected function performInsert(Builder $query)
     {
         if ($this->fireModelEvent('creating') === false) {
             return false;
