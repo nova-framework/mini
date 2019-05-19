@@ -33,27 +33,22 @@ class ControllerDispatcher
     /**
      * Dispatch a request to a given controller callback.
      *
-     * @param  array  $callback
-     * @param  array  $parameters
+     * @param  \System\Routing\Route  $route
+     * @param  mixed  $controller
+     * @param  string  $method
      * @return mixed
      */
-    public function dispatch(array $callback, array $parameters)
+    public function dispatch(Route $route, $controller, $method)
     {
-        list ($controller, $method) = $callback;
-
         $parameters = $this->resolveMethodDependencies(
-            $parameters, new ReflectionMethod($controller, $method)
+            $route->getParameters(), new ReflectionMethod($controller, $method)
         );
 
-        if (! method_exists($controller, $callerMethod = 'callAction')) {
-            return call_user_func_array($callback, $parameters);
+        if (! method_exists($controller, 'callAction')) {
+            return call_user_func_array(array($controller, $method), $parameters);
         }
 
-        $callback = array($controller, $callerMethod);
-
-        return call_user_func_array($callback, $this->resolveMethodDependencies(
-            array($method, $parameters), new ReflectionMethod($controller, $callerMethod)
-        ));
+        return $controller->callAction($method, $parameters);
     }
 
     /**

@@ -112,16 +112,17 @@ class Route
      */
     public function run()
     {
-        $parameters = $this->getParameters();
-
         if (is_array($callback = $this->resolveCallback())) {
+            extract($callback);
+
+            //
             $dispatcher = new ControllerDispatcher($this->container);
 
-            return $dispatcher->dispatch($callback, $parameters);
+            return $dispatcher->dispatch($this, $controller, $method);
         }
 
         return call_user_func_array($callback, $this->resolveMethodDependencies(
-            $parameters, new ReflectionFunction($callback)
+            $this->getParameters(), new ReflectionFunction($callback)
         ));
     }
 
@@ -159,7 +160,7 @@ class Route
             throw new LogicException("Controller [{$className}] has no method [${method}].");
         }
 
-        return $this->callback = array($controller, $method);
+        return $this->callback = compact('controller', 'method');
     }
 
     /**
@@ -216,7 +217,7 @@ class Route
         $middleware = array_get($this->action, 'middleware', array());
 
         if (is_array($callback = $this->resolveCallback())) {
-            list ($controller, $method) = $callback;
+            extract($callback);
 
             $middleware = array_merge(
                 $middleware, ControllerDispatcher::getMiddleware($controller, $method)
