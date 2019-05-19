@@ -112,18 +112,19 @@ class Route
      */
     public function run()
     {
-        if (is_array($callback = $this->resolveCallback())) {
-            extract($callback);
+        $callback = $this->resolveCallback();
 
-            //
-            $dispatcher = new ControllerDispatcher($this->container);
+        if ($callback instanceof Closure) {
+            $parameters = $this->resolveMethodDependencies(
+                $this->getParameters(), new ReflectionFunction($callback)
+            );
 
-            return $dispatcher->dispatch($this, $controller, $method);
+            return call_user_func_array($callback, $parameters);
         }
 
-        return call_user_func_array($callback, $this->resolveMethodDependencies(
-            $this->getParameters(), new ReflectionFunction($callback)
-        ));
+        extract($callback);
+
+        return with(new ControllerDispatcher($this->container))->dispatch($this, $controller, $method);
     }
 
     /**
