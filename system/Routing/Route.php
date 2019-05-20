@@ -112,19 +112,17 @@ class Route
      */
     public function run()
     {
-        $callback = $this->resolveCallback();
+        if (is_array($callback = $this->resolveCallback())) {
+            extract($callback);
 
-        if ($callback instanceof Closure) {
-            $parameters = $this->resolveMethodDependencies(
-                $this->getParameters(), new ReflectionFunction($callback)
-            );
-
-            return call_user_func_array($callback, $parameters);
+            return with(new ControllerDispatcher($this->container))->dispatch($this, $controller, $method);
         }
 
-        extract($callback);
+        $parameters = $this->resolveMethodDependencies(
+            $this->getParameters(), new ReflectionFunction($callback)
+        );
 
-        return with(new ControllerDispatcher($this->container))->dispatch($this, $controller, $method);
+        return call_user_func_array($callback, $parameters);
     }
 
     /**
@@ -143,11 +141,6 @@ class Route
 
         if ($callback instanceof Closure) {
             return $this->callback = $callback;
-        }
-
-        // The action callback must be either a Closure instance or a string.
-        else if (! is_string($callback)) {
-            throw new LogicException("Invalid route action");
         }
 
         list ($className, $method) = array_pad(explode('@', $callback, 2), 2, null);
@@ -220,9 +213,7 @@ class Route
         if (is_array($callback = $this->resolveCallback())) {
             extract($callback);
 
-            $middleware = array_merge(
-                $middleware, ControllerDispatcher::getMiddleware($controller, $method)
-            );
+            $middleware = array_merge($middleware, ControllerDispatcher::getMiddleware($controller, $method));
         }
 
         return array_unique($middleware, SORT_REGULAR);
