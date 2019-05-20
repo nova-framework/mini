@@ -6,8 +6,6 @@ use Mini\Foundation\Console\ClearLogCommand;
 use Mini\Foundation\Console\KeyGenerateCommand;
 use Mini\Foundation\Console\OptimizeCommand;
 use Mini\Foundation\Console\ServeCommand;
-use Mini\Foundation\Forge;
-use Mini\Support\Composer;
 use Mini\Support\ServiceProvider;
 
 
