@@ -112,20 +112,20 @@ class Route
      */
     public function run()
     {
-        if (is_array($callback = $this->resolveCallback())) {
-            extract($callback);
+        if (! is_array($callback = $this->resolveCallback())) {
+            $parameters = $this->resolveMethodDependencies(
+                $this->getParameters(), new ReflectionFunction($callback)
+            );
 
-            //
-            $dispatcher = new ControllerDispatcher($this->container);
-
-            return $dispatcher->dispatch($this, $controller, $method);
+            return call_user_func_array($callback, $parameters);
         }
 
-        $parameters = $this->resolveMethodDependencies(
-            $this->getParameters(), new ReflectionFunction($callback)
-        );
+        extract($callback);
 
-        return call_user_func_array($callback, $parameters);
+        // Create a Controller Dispatcher instance.
+        $dispatcher = new ControllerDispatcher($this->container);
+
+        return $dispatcher->dispatch($this, $controller, $method);
     }
 
     /**
