@@ -190,7 +190,45 @@ class Router
      */
     protected function addRoute($methods, $path, $action)
     {
-        $route = $this->createRoute($methods, $path, $action);
+        if (is_callable($action) || is_string($action)) {
+            $action = array('uses' => $action);
+        }
+
+        $group = ! empty($this->groupStack) ? last($this->groupStack) : array();
+
+        if (isset($action['uses']) && is_string($action['uses'])) {
+            $uses = $action['uses'];
+
+            if (isset($group['namespace'])) {
+                $action['uses'] = $uses = $group['namespace'] .'\\' .$uses;
+            }
+
+            $action['controller'] = $uses;
+        }
+
+        //
+        else if (! isset($action['uses'])) {
+            $action['uses'] = $this->findActionClosure($action);
+        }
+
+        if (is_string($middleware = array_get($action, 'middleware', array()))) {
+            $action['middleware'] = explode('|', $middleware);
+        }
+
+        $action = static::mergeGroup($action, $group);
+
+        if (isset($action['prefix'])) {
+            $path = trim($action['prefix'], '/') .'/' .trim($path, '/');
+        }
+
+        $path = '/' .trim($path, '/');
+
+        // Create a new Route instance.
+        $route = with(new Route($methods, $path, $action))->setContainer($this->container);
+
+        $route->where(
+            array_merge($this->patterns, array_get($action, 'where', array()))
+        );
 
         return $this->routes->add($route);
     }
@@ -205,41 +243,7 @@ class Router
      */
     protected function createRoute($methods, $path, $action)
     {
-        if (! is_array($action)) {
-            $action = array('uses' => $action);
-        }
 
-        //
-        else if (! isset($action['uses'])) {
-            $action['uses'] = $this->findActionClosure($action);
-        }
-
-        if (is_string($middleware = array_get($action, 'middleware', array()))) {
-            $action['middleware'] = explode('|', $middleware);
-        }
-
-        if (! empty($this->groupStack)) {
-            $action = static::mergeGroup($action, $group = last($this->groupStack));
-
-            if (is_string($uses = $action['uses']) && isset($group['namespace'])) {
-                $action['uses'] = $group['namespace'] .'\\' .$uses;
-            }
-
-            if (isset($group['prefix'])) {
-                $path = trim($group['prefix'], '/') .'/' .trim($path, '/');
-            }
-        }
-
-        $path = '/' .trim($path, '/');
-
-        // Create a new Route instance.
-        $route = new Route($methods, $path, $action);
-
-        $route->where(
-            array_merge($this->patterns, array_get($action, 'where', array()))
-        );
-
-        return $route->setContainer($this->container);
     }
 
     /**
