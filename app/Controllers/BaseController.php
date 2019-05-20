@@ -49,9 +49,9 @@ class BaseController extends Controller
         if (($response instanceof Renderable) && ! empty($layout = $this->getLayout())) {
             $view = sprintf('Layouts/%s', $layout);
 
-            $instance = View::make($view, array('content' => $response));
+            $content = View::make($view, array('content' => $response))->render();
 
-            return new Response($instance->render(), 200);
+            return new Response($content, 200);
         }
 
         return $response;
