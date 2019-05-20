@@ -234,19 +234,6 @@ class Router
     }
 
     /**
-     * Create a new route instance.
-     *
-     * @param  array|string  $methods
-     * @param  string  $path
-     * @param  mixed   $action
-     * @return \System\Routing\Route
-     */
-    protected function createRoute($methods, $path, $action)
-    {
-
-    }
-
-    /**
      * Find the Closure in an action array.
      *
      * @param  array  $action
