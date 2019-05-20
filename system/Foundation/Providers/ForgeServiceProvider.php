@@ -24,10 +24,10 @@ class ForgeServiceProvider extends ServiceProvider
      * @var array
      */
     protected $commands = array(
-        'ClearLog'         => 'command.clear-log',
-        'KeyGenerate'      => 'command.key.generate',
-        'Optimize'         => 'command.optimize',
-        'Serve'            => 'command.serve',
+        'ClearLog'     => 'command.clear-log',
+        'KeyGenerate'  => 'command.key.generate',
+        'Optimize'     => 'command.optimize',
+        'Serve'        => 'command.serve',
     );
 
     /**
