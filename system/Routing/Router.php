@@ -284,7 +284,9 @@ class Router
      */
     public function gatherMiddleware(Route $route)
     {
-        $middleware = $this->resolveMiddleware($route->middleware());
+        $middleware = $this->resolveMiddleware(
+            $route->middleware()
+        );
 
         return array_unique($middleware, SORT_REGULAR);
     }

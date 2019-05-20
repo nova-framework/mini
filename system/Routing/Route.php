@@ -171,9 +171,10 @@ class Route
     {
         $patterns = is_array($name) ? $name : array($name => $pattern);
 
-        foreach ($patterns as $name => $pattern) {
+        array_walk($patterns, function ($pattern, $name)
+        {
             $this->patterns[$name] = $pattern;
-        }
+        });
 
         return $this;
     }
@@ -277,7 +278,9 @@ class Route
      */
     public function parameter($name = null, $default = null)
     {
-        return array_get($this->getParameters(), $name, $default);
+        $parameters = $this->getParameters();
+
+        return array_get($parameters, $name, $default);
     }
 
     /**
