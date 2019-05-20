@@ -115,7 +115,10 @@ class Route
         if (is_array($callback = $this->resolveCallback())) {
             extract($callback);
 
-            return with(new ControllerDispatcher($this->container))->dispatch($this, $controller, $method);
+            //
+            $dispatcher = new ControllerDispatcher($this->container);
+
+            return $dispatcher->dispatch($this, $controller, $method);
         }
 
         $parameters = $this->resolveMethodDependencies(
@@ -213,7 +216,9 @@ class Route
         if (is_array($callback = $this->resolveCallback())) {
             extract($callback);
 
-            $middleware = array_merge($middleware, ControllerDispatcher::getMiddleware($controller, $method));
+            $middleware = array_merge(
+                $middleware, ControllerDispatcher::getMiddleware($controller, $method)
+            );
         }
 
         return array_unique($middleware, SORT_REGULAR);
