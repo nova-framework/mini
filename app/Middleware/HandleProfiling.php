@@ -2,10 +2,10 @@
 
 namespace App\Middleware;
 
-use System\Foundation\Application;
-use System\Http\Request;
-use System\Http\Response;
-use System\Support\Str;
+use Mini\Foundation\Application;
+use Mini\Http\Request;
+use Mini\Http\Response;
+use Mini\Support\Str;
 
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 
@@ -18,7 +18,7 @@ class HandleProfiling
     /**
      * The application implementation.
      *
-     * @var \System\Foundation\Application
+     * @var \Mini\Foundation\Application
      */
     protected $app;
 
@@ -26,7 +26,7 @@ class HandleProfiling
     /**
      * Create a new middleware instance.
      *
-     * @param  \System\Foundation\Application  $app
+     * @param  \Mini\Foundation\Application  $app
      * @return void
      */
     public function __construct(Application $app)

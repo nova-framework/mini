@@ -1,9 +1,9 @@
 <?php
 
-namespace System\Support;
+namespace Mini\Support;
 
-use System\Filesystem\Filesystem;
-use System\Support\ProcessUtils;
+use Mini\Filesystem\Filesystem;
+use Mini\Support\ProcessUtils;
 
 use Symfony\Component\Process\Process;
 use Symfony\Component\Process\PhpExecutableFinder;
@@ -14,7 +14,7 @@ class Composer
     /**
      * The filesystem instance.
      *
-     * @var \System\Filesystem\Filesystem
+     * @var \Mini\Filesystem\Filesystem
      */
     protected $files;
 
@@ -29,7 +29,7 @@ class Composer
     /**
      * Create a new Composer manager instance.
      *
-     * @param  \System\Filesystem\Filesystem  $files
+     * @param  \Mini\Filesystem\Filesystem  $files
      * @param  string  $workingPath
      * @return void
      */

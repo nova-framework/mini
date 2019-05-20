@@ -1,8 +1,8 @@
 <?php
 
-namespace System\Cache;
+namespace Mini\Cache;
 
-use System\Cache\StoreInterface;
+use Mini\Cache\StoreInterface;
 
 
 class ArrayStore implements StoreInterface

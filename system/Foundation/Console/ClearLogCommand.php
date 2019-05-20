@@ -1,9 +1,9 @@
 <?php
 
-namespace System\Foundation\Console;
+namespace Mini\Foundation\Console;
 
-use System\Console\Command;
-use System\Filesystem\Filesystem;
+use Mini\Console\Command;
+use Mini\Filesystem\Filesystem;
 
 
 class ClearLogCommand extends Command
@@ -11,7 +11,7 @@ class ClearLogCommand extends Command
     /**
      * The filesystem instance.
      *
-     * @var \System\Filesystem\Filesystem
+     * @var \Mini\Filesystem\Filesystem
      */
     protected $files;
 
@@ -33,7 +33,7 @@ class ClearLogCommand extends Command
     /**
      * Create a new key generator command.
      *
-     * @param \System\Filesystem\Filesystem $files
+     * @param \Mini\Filesystem\Filesystem $files
      * @author Sang Nguyen
      */
     public function __construct(Filesystem $files)

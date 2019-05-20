@@ -1,10 +1,10 @@
 <?php
 
-namespace System\Console;
+namespace Mini\Console;
 
-use System\Container\Container;
-use System\Console\Command;
-use System\Events\Dispatcher;
+use Mini\Container\Container;
+use Mini\Console\Command;
+use Mini\Events\Dispatcher;
 
 use Symfony\Component\Console\Application as SymfonyApplication;
 use Symfony\Component\Console\Input\ArrayInput;
@@ -28,7 +28,7 @@ class Application extends SymfonyApplication
     /**
      * The framework application instance.
      *
-     * @var \System\Container\Container
+     * @var \Mini\Container\Container
      */
     protected $container;
 
@@ -245,7 +245,7 @@ class Application extends SymfonyApplication
     /**
      * Set the Laravel application instance.
      *
-     * @param  \System\Foundation\Application  $container
+     * @param  \Mini\Foundation\Application  $container
      * @return $this
      */
     public function setContainer($container)

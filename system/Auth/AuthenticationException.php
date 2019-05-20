@@ -1,6 +1,6 @@
 <?php
 
-namespace System\Auth;
+namespace Mini\Auth;
 
 use Exception;
 

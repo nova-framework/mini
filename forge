@@ -1,7 +1,7 @@
 #!/usr/bin/env php
 <?php
 
-use System\Console\Application as ConsoleApplication;
+use Mini\Console\Application as ConsoleApplication;
 
 
 //--------------------------------------------------------------------------

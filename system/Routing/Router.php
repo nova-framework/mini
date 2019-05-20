@@ -1,10 +1,10 @@
 <?php
 
-namespace System\Routing;
+namespace Mini\Routing;
 
-use System\Container\Container;
-use System\Http\Request;
-use System\Http\Response;
+use Mini\Container\Container;
+use Mini\Http\Request;
+use Mini\Http\Response;
 
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -19,14 +19,14 @@ class Router
     /**
      * The Container instance.
      *
-     * @var \System\Container
+     * @var \Mini\Container
      */
     protected $container;
 
     /**
      * The route collection instance.
      *
-     * @var \System\Routing\RouteCollection
+     * @var \Mini\Routing\RouteCollection
      */
     protected $routes;
 
@@ -61,7 +61,7 @@ class Router
     /**
      * The current route being dispatched.
      *
-     * @var \System\Routing\Route|null
+     * @var \Mini\Routing\Route|null
      */
     protected $currentRoute;
 
@@ -186,7 +186,7 @@ class Router
      * @param  array|string  $methods
      * @param  string  $path
      * @param  mixed  $action
-     * @return \System\Routing\Route
+     * @return \Mini\Routing\Route
      */
     protected function addRoute($methods, $path, $action)
     {
@@ -250,8 +250,8 @@ class Router
     /**
      * Dispatch the given Request instance.
      *
-     * @param  \System\Http\Request  $request
-     * @return \System\Http\Response
+     * @param  \Mini\Http\Request  $request
+     * @return \Mini\Http\Response
      */
     public function dispatch(Request $request)
     {
@@ -279,7 +279,7 @@ class Router
     /**
      * Gather the middleware from the specified route action.
      *
-     * @param \System\Routing\Route $route
+     * @param \Mini\Routing\Route $route
      * @return array
      */
     public function gatherMiddleware(Route $route)
@@ -370,7 +370,7 @@ class Router
      * Prepares a response.
      *
      * @param mixed $response
-     * @return \System\Http\Response
+     * @return \Mini\Http\Response
      */
     public function prepareResponse($request, $response)
     {

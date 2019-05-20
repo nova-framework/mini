@@ -2,9 +2,9 @@
 
 namespace App\Middleware;
 
-use System\Http\Request;
-use System\Session\Store as SessionStore;
-use System\Session\TokenMismatchException;
+use Mini\Http\Request;
+use Mini\Session\Store as SessionStore;
+use Mini\Session\TokenMismatchException;
 
 use Closure;
 

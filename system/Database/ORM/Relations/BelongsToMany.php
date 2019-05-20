@@ -1,11 +1,11 @@
 <?php
 
-namespace System\Database\ORM\Relations;
+namespace Mini\Database\ORM\Relations;
 
-use System\Database\ORM\Model;
-use System\Database\ORM\ModelNotFoundException;
-use System\Database\ORM\Pivot;
-use System\Database\ORM\Relation;
+use Mini\Database\ORM\Model;
+use Mini\Database\ORM\ModelNotFoundException;
+use Mini\Database\ORM\Pivot;
+use Mini\Database\ORM\Relation;
 
 
 class BelongsToMany extends Relation
@@ -56,8 +56,8 @@ class BelongsToMany extends Relation
     /**
      * Create a new has many relationship instance.
      *
-     * @param  \System\Database\ORM\Builder  $query
-     * @param  \System\Database\ORM\Model  $parent
+     * @param  \Mini\Database\ORM\Builder  $query
+     * @param  \Mini\Database\ORM\Model  $parent
      * @param  string  $table
      * @param  string  $foreignKey
      * @param  string  $otherKey
@@ -147,9 +147,9 @@ class BelongsToMany extends Relation
     /**
      * Save a new model and attach it to the parent model.
      *
-     * @param  \System\Database\ORM\Model  $model
+     * @param  \Mini\Database\ORM\Model  $model
      * @param  array  $joining
-     * @return \System\Database\ORM\Model
+     * @return \Mini\Database\ORM\Model
      */
     public function save(Model $model, array $joining = array())
     {
@@ -165,7 +165,7 @@ class BelongsToMany extends Relation
      *
      * @param  array  $attributes
      * @param  array  $joining
-     * @return \System\Database\ORM\Model
+     * @return \Mini\Database\ORM\Model
      */
     public function create(array $attributes, array $joining = array())
     {
@@ -318,7 +318,7 @@ class BelongsToMany extends Relation
     /**
      * Set the JOIN clause on the query builder for the relationship.
      *
-     * @param  \System\Database\ORM\Builder|null
+     * @param  \Mini\Database\ORM\Builder|null
      * @return $this
      */
     protected function setJoin($query = null)
@@ -394,7 +394,7 @@ class BelongsToMany extends Relation
     /**
      * Create a new query builder for the pivot table.
      *
-     * @return \System\Database\Query\Builder
+     * @return \Mini\Database\Query\Builder
      */
     protected function newPivotQuery()
     {
@@ -406,7 +406,7 @@ class BelongsToMany extends Relation
     /**
      * Get a new plain query builder for the pivot table.
      *
-     * @return \System\Database\Query\Builder
+     * @return \Mini\Database\Query\Builder
      */
     public function newPivotStatement()
     {
@@ -418,7 +418,7 @@ class BelongsToMany extends Relation
      *
      * @param  array  $attributes
      * @param  bool   $exists
-     * @return \System\Database\ORM\Relations\Pivot
+     * @return \Mini\Database\ORM\Relations\Pivot
      */
     public function newPivot(array $attributes = array(), $exists = false)
     {

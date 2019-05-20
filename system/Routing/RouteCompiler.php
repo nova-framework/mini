@@ -1,6 +1,6 @@
 <?php
 
-namespace System\Routing;
+namespace Mini\Routing;
 
 use DomainException;
 use LogicException;
@@ -11,14 +11,14 @@ class RouteCompiler
     /**
      * The route instance.
      *
-     * @var \System\Routing\Route
+     * @var \Mini\Routing\Route
      */
     protected $route;
 
     /**
      * Create a new Route compiler instance.
      *
-     * @param  \System\Routing\Route  $route
+     * @param  \Mini\Routing\Route  $route
      * @return void
      */
     public function __construct(Route $route)
@@ -81,7 +81,7 @@ class RouteCompiler
     /**
      * Get the inner Route instance.
      *
-     * @return \System\Routing\Route
+     * @return \Mini\Routing\Route
      */
     public function getRoute()
     {

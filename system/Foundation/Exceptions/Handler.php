@@ -1,11 +1,11 @@
 <?php
 
-namespace System\Foundation\Exceptions;
+namespace Mini\Foundation\Exceptions;
 
-use System\Auth\AuthenticationException;
-use System\Container\Container;
-use System\Http\Request;
-use System\Http\Response;
+use Mini\Auth\AuthenticationException;
+use Mini\Container\Container;
+use Mini\Http\Request;
+use Mini\Http\Response;
 
 use Symfony\Component\Debug\Exception\FatalThrowableError;
 use Symfony\Component\Debug\Exception\FlattenException;
@@ -24,7 +24,7 @@ class Handler
     /**
      * The Container instance.
      *
-     * @var \System\Container\Container
+     * @var \Mini\Container\Container
      */
     protected $container;
 
@@ -57,7 +57,7 @@ class Handler
     /**
      * Handle an uncaught exception from the application.
      *
-     * @param  \System\Http\Request
+     * @param  \Mini\Http\Request
      * @param  \Exception|\Throwable  $e
      * @return void
      */
@@ -98,7 +98,7 @@ class Handler
      * Render an exception as an HTTP response and send it.
      *
      * @param  \Exception  $e
-     * @param  \System\Http\Request
+     * @param  \Mini\Http\Request
      * @return void
      */
     public function render(Exception $e, Request $request)
@@ -117,7 +117,7 @@ class Handler
     /**
      * Render an exception for console.
      *
-     * @param  \System\Http\Request
+     * @param  \Mini\Http\Request
      * @param  \Exception  $e
      * @return void
      */

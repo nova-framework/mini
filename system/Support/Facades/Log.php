@@ -1,10 +1,10 @@
 <?php
 
-namespace System\Support\Facades;
+namespace Mini\Support\Facades;
 
 
 /**
-* @see \System\Log\Writer
+* @see \Mini\Log\Writer
 */
 class Log extends Facade
 {

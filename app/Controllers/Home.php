@@ -2,7 +2,7 @@
 
 namespace App\Controllers;
 
-use System\Http\Request;
+use Mini\Http\Request;
 
 use App\Controllers\BaseController;
 

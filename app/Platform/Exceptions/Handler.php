@@ -2,16 +2,16 @@
 
 namespace App\Platform\Exceptions;
 
-use System\Auth\AuthenticationException;
-use System\Foundation\Exceptions\Handler as BaseHandler;
-use System\Foundation\Exceptions\HandlerInterface;
-use System\Http\Exceptions\HttpException;
-use System\Http\Request;
-use System\Session\TokenMismatchException;
-use System\Support\Facades\Config;
-use System\Support\Facades\Redirect;
-use System\Support\Facades\Response;
-use System\Support\Facades\View;
+use Mini\Auth\AuthenticationException;
+use Mini\Foundation\Exceptions\Handler as BaseHandler;
+use Mini\Foundation\Exceptions\HandlerInterface;
+use Mini\Http\Exceptions\HttpException;
+use Mini\Http\Request;
+use Mini\Session\TokenMismatchException;
+use Mini\Support\Facades\Config;
+use Mini\Support\Facades\Redirect;
+use Mini\Support\Facades\Response;
+use Mini\Support\Facades\View;
 
 use Symfony\Component\Debug\Exception\FlattenException;
 
@@ -26,8 +26,8 @@ class Handler extends BaseHandler implements HandlerInterface
      * @var array
      */
     protected $dontReport = array(
-        'System\Session\TokenMismatchException',
-        'System\Auth\AuthenticationException,',
+        'Mini\Session\TokenMismatchException',
+        'Mini\Auth\AuthenticationException,',
         'Symfony\Component\HttpKernel\Exception\HttpException',
     );
 

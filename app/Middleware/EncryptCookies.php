@@ -2,7 +2,7 @@
 
 namespace App\Middleware;
 
-use System\Cookie\Middleware\EncryptCookies as BaseEncrypter;
+use Mini\Cookie\Middleware\EncryptCookies as BaseEncrypter;
 
 
 class EncryptCookies extends BaseEncrypter

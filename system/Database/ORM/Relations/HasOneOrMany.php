@@ -1,10 +1,10 @@
 <?php
 
-namespace System\Database\ORM\Relations;
+namespace Mini\Database\ORM\Relations;
 
-use System\Database\ORM\Builder;
-use System\Database\ORM\Model;
-use System\Database\ORM\Relation;
+use Mini\Database\ORM\Builder;
+use Mini\Database\ORM\Model;
+use Mini\Database\ORM\Relation;
 
 use Carbon\Carbon;
 
@@ -29,8 +29,8 @@ class HasOneOrMany extends Relation
     /**
      * Create a new has many relationship instance.
      *
-     * @param  \System\Database\ORM\Builder  $query
-     * @param  \System\Database\ORM\Model  $parent
+     * @param  \Mini\Database\ORM\Builder  $query
+     * @param  \Mini\Database\ORM\Model  $parent
      * @param  string  $foreignKey
      * @param  string  $localKey
      * @return void
@@ -104,8 +104,8 @@ class HasOneOrMany extends Relation
     /**
      * Attach a model instance to the parent model.
      *
-     * @param  \System\Database\ORM\Model  $model
-     * @return \System\Database\ORM\Model
+     * @param  \Mini\Database\ORM\Model  $model
+     * @return \Mini\Database\ORM\Model
      */
     public function save(Model $model)
     {
@@ -118,7 +118,7 @@ class HasOneOrMany extends Relation
      * Create a new instance of the related model.
      *
      * @param  array  $attributes
-     * @return \System\Database\ORM\Model
+     * @return \Mini\Database\ORM\Model
      */
     public function create(array $attributes)
     {

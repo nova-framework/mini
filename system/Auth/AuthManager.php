@@ -1,11 +1,11 @@
 <?php
 
-namespace System\Auth;
+namespace Mini\Auth;
 
-use System\Auth\Guards\RequestGuard;
-use System\Auth\Guards\SessionGuard;
-use System\Auth\Guards\TokenGuard;
-use System\Foundation\Application;
+use Mini\Auth\Guards\RequestGuard;
+use Mini\Auth\Guards\SessionGuard;
+use Mini\Auth\Guards\TokenGuard;
+use Mini\Foundation\Application;
 
 use Closure;
 use InvalidArgumentException;
@@ -16,7 +16,7 @@ class AuthManager
     /**
      * The application instance.
      *
-     * @var \System\Foundation\Application
+     * @var \Mini\Foundation\Application
      */
     protected $app;
 
@@ -47,7 +47,7 @@ class AuthManager
     /**
      * Create a new manager instance.
      *
-     * @param  \System\Foundation\Application  $app
+     * @param  \Mini\Foundation\Application  $app
      * @return void
      */
     public function __construct(Application $app)
@@ -64,7 +64,7 @@ class AuthManager
      * Attempt to get the guard from the local cache.
      *
      * @param  string  $name
-     * @return \System\Auth\Guard
+     * @return \Mini\Auth\Guard
      */
     public function guard($name = null)
     {
@@ -83,7 +83,7 @@ class AuthManager
      * Resolve the given guard.
      *
      * @param  string  $name
-     * @return \System\Auth\Guard
+     * @return \Mini\Auth\Guard
      *
      * @throws \InvalidArgumentException
      */
@@ -127,7 +127,7 @@ class AuthManager
     /**
      * Create an instance of the database driver.
      *
-     * @return \System\Auth\Guard
+     * @return \Mini\Auth\Guard
      */
     public function createSessionDriver($name, array $config)
     {
@@ -145,7 +145,7 @@ class AuthManager
      *
      * @param  string  $name
      * @param  array  $config
-     * @return \System\Auth\TokenGuard
+     * @return \Mini\Auth\TokenGuard
      */
     public function createTokenDriver($name, $config)
     {

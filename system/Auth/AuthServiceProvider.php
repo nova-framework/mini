@@ -1,8 +1,8 @@
 <?php
 
-namespace System\Auth;
+namespace Mini\Auth;
 
-use System\Support\ServiceProvider;
+use Mini\Support\ServiceProvider;
 
 
 class AuthServiceProvider extends ServiceProvider
@@ -49,7 +49,7 @@ class AuthServiceProvider extends ServiceProvider
      */
     protected function registerUserResolver()
     {
-        $this->app->bind('System\Auth\UserInterface', function ($app)
+        $this->app->bind('Mini\Auth\UserInterface', function ($app)
         {
             $callback = $app['auth']->userResolver();
 

@@ -1,9 +1,9 @@
 <?php
 
-namespace System\Foundation;
+namespace Mini\Foundation;
 
-use System\Console\Application as ConsoleApplication;
-use System\Foundation\Application;
+use Mini\Console\Application as ConsoleApplication;
+use Mini\Foundation\Application;
 
 
 class Forge
@@ -11,14 +11,14 @@ class Forge
     /**
      * The application instance.
      *
-     * @var \System\Foundation\Application
+     * @var \Mini\Foundation\Application
      */
     protected $app;
 
     /**
      * The forge console instance.
      *
-     * @var  \System\Console\Application
+     * @var  \Mini\Console\Application
      */
     protected $forge;
 
@@ -26,7 +26,7 @@ class Forge
     /**
      * Create a new forge command runner instance.
      *
-     * @param  \System\Foundation\Application  $app
+     * @param  \Mini\Foundation\Application  $app
      * @return void
      */
     public function __construct(Application $app)
@@ -37,7 +37,7 @@ class Forge
     /**
      * Get the forge console instance.
      *
-     * @return \System\Console\Application
+     * @return \Mini\Console\Application
      */
     protected function getForge()
     {

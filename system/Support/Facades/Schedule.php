@@ -1,9 +1,9 @@
 <?php
 
-namespace System\Support\Facades;
+namespace Mini\Support\Facades;
 
 /**
- * @see \System\Console\Scheduling\Schedule
+ * @see \Mini\Console\Scheduling\Schedule
  */
 class Schedule extends Facade
 {

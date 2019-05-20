@@ -1,12 +1,12 @@
 <?php
 
-namespace System\Support\Facades;
+namespace Mini\Support\Facades;
 
-use System\Support\Facades\Facade;
+use Mini\Support\Facades\Facade;
 
 
 /**
- * @see \System\Cookie\CookieJar
+ * @see \Mini\Cookie\CookieJar
  */
 class Cookie extends Facade
 {

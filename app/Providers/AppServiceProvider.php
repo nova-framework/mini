@@ -2,7 +2,7 @@
 
 namespace App\Providers;
 
-use System\Support\ServiceProvider;
+use Mini\Support\ServiceProvider;
 
 
 class AppServiceProvider extends ServiceProvider

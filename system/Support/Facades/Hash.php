@@ -1,10 +1,10 @@
 <?php
 
-namespace System\Support\Facades;
+namespace Mini\Support\Facades;
 
 
 /**
-* @see \System\Hashing\BcryptHasher
+* @see \Mini\Hashing\BcryptHasher
 */
 class Hash extends Facade
 {

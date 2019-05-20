@@ -1,9 +1,9 @@
 <?php
 
-namespace System\Console\Scheduling;
+namespace Mini\Console\Scheduling;
 
-use System\Foundation\Application;
-use System\Support\ProcessUtils;
+use Mini\Foundation\Application;
+use Mini\Support\ProcessUtils;
 
 use Symfony\Component\Process\PhpExecutableFinder;
 
@@ -23,7 +23,7 @@ class Schedule
      *
      * @param  string  $command
      * @param  array  $parameters
-     * @return \System\Console\Scheduling\Event
+     * @return \Mini\Console\Scheduling\Event
      */
     public function command($command, array $parameters = array())
     {
@@ -47,7 +47,7 @@ class Schedule
      *
      * @param  string  $command
      * @param  array  $parameters
-     * @return \System\Console\Scheduling\Event
+     * @return \Mini\Console\Scheduling\Event
      */
     public function exec($command, array $parameters = array())
     {
@@ -92,7 +92,7 @@ class Schedule
     /**
      * Get all of the events on the schedule that are due.
      *
-     * @param  \System\Foundation\Application  $app
+     * @param  \Mini\Foundation\Application  $app
      * @return array
      */
     public function dueEvents(Application $app)

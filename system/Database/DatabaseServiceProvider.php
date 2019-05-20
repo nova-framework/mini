@@ -1,9 +1,9 @@
 <?php
 
-namespace System\Database;
+namespace Mini\Database;
 
-use System\Database\ORM\Model;
-use System\Support\ServiceProvider;
+use Mini\Database\ORM\Model;
+use Mini\Support\ServiceProvider;
 
 
 class DatabaseServiceProvider extends ServiceProvider

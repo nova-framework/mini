@@ -1,11 +1,11 @@
 <?php
 
-namespace System\Mail;
+namespace Mini\Mail;
 
-use System\Log\Writer;
-use System\View\Factory;
-use System\Events\Dispatcher;
-use System\Container\Container;
+use Mini\Log\Writer;
+use Mini\View\Factory;
+use Mini\Events\Dispatcher;
+use Mini\Container\Container;
 
 use Swift_Mailer;
 use Swift_Message;
@@ -19,7 +19,7 @@ class Mailer
     /**
      * The view factory instance.
      *
-     * @var \System\View\Factory
+     * @var \Mini\View\Factory
      */
     protected $views;
 
@@ -40,7 +40,7 @@ class Mailer
     /**
      * The event dispatcher instance.
      *
-     * @var \System\Events\Dispatcher
+     * @var \Mini\Events\Dispatcher
      */
     protected $events;
 
@@ -54,14 +54,14 @@ class Mailer
     /**
      * The log writer instance.
      *
-     * @var \System\Log\Writer
+     * @var \Mini\Log\Writer
      */
     protected $logger;
 
     /**
      * The IoC container instance.
      *
-     * @var \System\Container\Container
+     * @var \Mini\Container\Container
      */
     protected $container;
 
@@ -83,10 +83,10 @@ class Mailer
     /**
      * Create a new Mailer instance.
      *
-     * @param  \System\View\Factory  $views
+     * @param  \Mini\View\Factory  $views
      * @param  \Swift_Mailer  $swift
      * @param  \Swift_Mailer  $swiftSpool
-     * @param  \System\Events\Dispatcher  $events
+     * @param  \Mini\Events\Dispatcher  $events
      * @return void
      */
     public function __construct(Factory $views, Swift_Mailer $swift, Swift_Mailer $swiftSpool, Dispatcher $events = null)
@@ -197,7 +197,7 @@ class Mailer
     /**
      * Add the content to a given message.
      *
-     * @param  \System\Mail\Message  $message
+     * @param  \Mini\Mail\Message  $message
      * @param  string  $view
      * @param  string  $plain
      * @param  array   $data
@@ -255,7 +255,7 @@ class Mailer
      * Call the provided message builder.
      *
      * @param  \Closure|string  $callback
-     * @param  \System\Mail\Message  $message
+     * @param  \Mini\Mail\Message  $message
      * @return mixed
      *
      * @throws \InvalidArgumentException
@@ -296,7 +296,7 @@ class Mailer
      *
      * @param  string  $view
      * @param  array   $data
-     * @return \System\View\View
+     * @return \Mini\View\View
      */
     protected function getView($view, $data)
     {
@@ -327,7 +327,7 @@ class Mailer
     /**
      * Get the view factory instance.
      *
-     * @return \System\View\Factory
+     * @return \Mini\View\Factory
      */
     public function getFactory()
     {
@@ -381,7 +381,7 @@ class Mailer
     /**
      * Set the IoC container instance.
      *
-     * @param  \System\Container\Container  $container
+     * @param  \Mini\Container\Container  $container
      * @return void
      */
     public function setContainer(Container $container)

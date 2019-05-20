@@ -2,8 +2,8 @@
 
 namespace App\Providers;
 
-use System\Events\Dispatcher;
-use System\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
+use Mini\Events\Dispatcher;
+use Mini\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
 
 class EventServiceProvider extends ServiceProvider
@@ -23,7 +23,7 @@ class EventServiceProvider extends ServiceProvider
     /**
      * Register any other events for your application.
      *
-     * @param  \System\Events\Dispatcher  $events
+     * @param  \Mini\Events\Dispatcher  $events
      * @return void
      */
     public function boot(Dispatcher $events)

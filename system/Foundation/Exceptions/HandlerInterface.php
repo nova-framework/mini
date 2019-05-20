@@ -1,8 +1,8 @@
 <?php
 
-namespace System\Foundation\Exceptions;
+namespace Mini\Foundation\Exceptions;
 
-use System\Http\Request;
+use Mini\Http\Request;
 
 use Exception;
 
@@ -22,8 +22,8 @@ interface HandlerInterface
      * Render an exception into an HTTP response.
      *
      * @param  \Exception  $e
-     * @param  \System\Http\Request  $request
-     * @return \System\Http\Response
+     * @param  \Mini\Http\Request  $request
+     * @return \Mini\Http\Response
      */
     public function render(Exception $e, Request $request);
 }

@@ -1,9 +1,9 @@
 <?php
 
-namespace System\Mail;
+namespace Mini\Mail;
 
-use System\Mail\LogTransport;
-use System\Support\ServiceProvider;
+use Mini\Mail\LogTransport;
+use Mini\Support\ServiceProvider;
 
 use Swift_Mailer;
 use Swift_SmtpTransport as SmtpTransport;

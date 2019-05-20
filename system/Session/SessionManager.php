@@ -1,8 +1,8 @@
 <?php
 
-namespace System\Session;
+namespace Mini\Session;
 
-use System\Support\Manager;
+use Mini\Support\Manager;
 
 use Symfony\Component\HttpFoundation\Session\Storage\Handler\NullSessionHandler;
 
@@ -23,7 +23,7 @@ class SessionManager extends Manager
     /**
      * Create an instance of the "array" session driver.
      *
-     * @return \System\Session\Store
+     * @return \Mini\Session\Store
      */
     protected function createArrayDriver()
     {
@@ -35,7 +35,7 @@ class SessionManager extends Manager
     /**
      * Create an instance of the file session driver.
      *
-     * @return \System\Session\Store
+     * @return \Mini\Session\Store
      */
     protected function createFileDriver()
     {
@@ -51,7 +51,7 @@ class SessionManager extends Manager
     /**
      * Create an instance of the database session driver.
      *
-     * @return \System\Session\Store
+     * @return \Mini\Session\Store
      */
     protected function createDatabaseDriver()
     {
@@ -67,7 +67,7 @@ class SessionManager extends Manager
     /**
      * Get the database connection for the database driver.
      *
-     * @return \System\Database\Connection
+     * @return \Mini\Database\Connection
      */
     protected function getDatabaseConnection()
     {
@@ -80,7 +80,7 @@ class SessionManager extends Manager
      * Build the session instance.
      *
      * @param  \SessionHandlerInterface  $handler
-     * @return \System\Session\Store
+     * @return \Mini\Session\Store
      */
     protected function buildSession($handler)
     {

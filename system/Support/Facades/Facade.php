@@ -1,8 +1,8 @@
 <?php
 
-namespace System\Support\Facades;
+namespace Mini\Support\Facades;
 
-use System\Container\Container;
+use Mini\Container\Container;
 
 
 abstract class Facade

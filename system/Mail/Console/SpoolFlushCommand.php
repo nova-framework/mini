@@ -1,9 +1,9 @@
 <?php
 
-namespace System\Mail\Console;
+namespace Mini\Mail\Console;
 
-use System\Console\Command;
-use System\Filesystem\Filesystem;
+use Mini\Console\Command;
+use Mini\Filesystem\Filesystem;
 
 
 class SpoolFlushCommand extends Command

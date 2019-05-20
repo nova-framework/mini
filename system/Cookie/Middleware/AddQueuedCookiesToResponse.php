@@ -1,8 +1,8 @@
 <?php
 
-namespace System\Cookie\Middleware;
+namespace Mini\Cookie\Middleware;
 
-use System\Foundation\Application;
+use Mini\Foundation\Application;
 
 use Closure;
 

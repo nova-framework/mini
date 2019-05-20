@@ -1,13 +1,13 @@
 <?php
 
-namespace System\Support\Facades;
+namespace Mini\Support\Facades;
 
-use System\Support\Facades\Facade;
+use Mini\Support\Facades\Facade;
 
 
 /**
- * @see \System\Cache\CacheManager
- * @see \System\Cache\Repository
+ * @see \Mini\Cache\CacheManager
+ * @see \Mini\Cache\Repository
  */
 class Cache extends Facade
 {

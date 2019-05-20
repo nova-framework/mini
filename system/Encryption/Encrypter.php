@@ -6,11 +6,11 @@
  * @version 3.0
  */
 
-namespace System\Encryption;
+namespace Mini\Encryption;
 
-use System\Support\Str;
-use System\Encryption\EncryptException;
-use System\Encryption\DecryptException;
+use Mini\Support\Str;
+use Mini\Encryption\EncryptException;
+use Mini\Encryption\DecryptException;
 
 use RuntimeException;
 
@@ -74,7 +74,7 @@ class Encrypter
      * @param  string $value
      * @return string
      *
-     * @throws \System\Encryption\EncryptException
+     * @throws \Mini\Encryption\EncryptException
      */
     public function encrypt($value)
     {
@@ -97,7 +97,7 @@ class Encrypter
      * @param  string $payload
      * @return string
      *
-     * @throws \System\Encryption\DecryptException
+     * @throws \Mini\Encryption\DecryptException
      */
     public function decrypt($payload)
     {
@@ -142,7 +142,7 @@ class Encrypter
      * @param  string $payload
      * @return array
      *
-     * @throws \System\Encryption\DecryptException
+     * @throws \Mini\Encryption\DecryptException
      */
     protected function getJsonPayload($payload)
     {

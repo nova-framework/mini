@@ -1,8 +1,8 @@
 <?php
 
-namespace System\Mail;
+namespace Mini\Mail;
 
-use System\Support\ServiceProvider;
+use Mini\Support\ServiceProvider;
 
 
 class ConsoleServiceProvider extends ServiceProvider

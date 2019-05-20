@@ -1,15 +1,15 @@
 <?php
 
-namespace System\Foundation;
+namespace Mini\Foundation;
 
-use System\Container\Container;
-use System\Events\EventServiceProvider;
-use System\Exceptions\ExceptionServiceProvider;
-use System\Http\Request;
-use System\Http\Response;
-use System\Log\LogServiceProvider;
-use System\Pipeline\Pipeline;
-use System\Support\ServiceProvider;
+use Mini\Container\Container;
+use Mini\Events\EventServiceProvider;
+use Mini\Exceptions\ExceptionServiceProvider;
+use Mini\Http\Request;
+use Mini\Http\Response;
+use Mini\Log\LogServiceProvider;
+use Mini\Pipeline\Pipeline;
+use Mini\Support\ServiceProvider;
 
 use Symfony\Component\Debug\Exception\FatalThrowableError;
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
@@ -225,9 +225,9 @@ class Application extends Container
     /**
      * Run the application.
      *
-     * @param  \System\Http\Request|null  $request
+     * @param  \Mini\Http\Request|null  $request
      *
-     * @return \System\Http\Response
+     * @return \Mini\Http\Response
      */
     public function run(Request $request = null)
     {
@@ -333,10 +333,10 @@ class Application extends Container
     /**
      * Handle an exception occured while dispatching the HTTP request.
      *
-     * @param  \System\Http\Request  $request
+     * @param  \Mini\Http\Request  $request
      * @param  \Exception  $e
      *
-     * @return \System\Http\Response
+     * @return \Mini\Http\Response
      */
     protected function handleException(Request $request, $e)
     {
@@ -344,7 +344,7 @@ class Application extends Container
             $e = new FatalThrowableError($e);
         }
 
-        $handler = $this->make('System\Foundation\Exceptions\HandlerInterface');
+        $handler = $this->make('Mini\Foundation\Exceptions\HandlerInterface');
 
         if (! $e instanceof HttpException) {
             $handler->report($e);
@@ -356,10 +356,10 @@ class Application extends Container
     /**
      * Register a service provider with the application.
      *
-     * @param  \System\Support\ServiceProvider|string  $provider
+     * @param  \Mini\Support\ServiceProvider|string  $provider
      * @param  array  $options
      * @param  bool  $force
-     * @return \System\Support\ServiceProvider
+     * @return \Mini\Support\ServiceProvider
      */
     public function register($provider, $options = array(), $force = false)
     {
@@ -389,8 +389,8 @@ class Application extends Container
     /**
      * Get the registered service provider instnace if it exists.
      *
-     * @param  \System\Support\ServiceProvider|string  $provider
-     * @return \System\Support\ServiceProvider|null
+     * @param  \Mini\Support\ServiceProvider|string  $provider
+     * @return \Mini\Support\ServiceProvider|null
      */
     public function getRegistered($provider)
     {
@@ -408,7 +408,7 @@ class Application extends Container
      * Resolve a service provider instance from the class name.
      *
      * @param  string  $provider
-     * @return \System\Support\ServiceProvider
+     * @return \Mini\Support\ServiceProvider
      */
     public function resolveProviderClass($provider)
     {
@@ -418,7 +418,7 @@ class Application extends Container
     /**
      * Mark the given provider as registered.
      *
-     * @param  \System\Support\ServiceProvider
+     * @param  \Mini\Support\ServiceProvider
      * @return void
      */
     protected function markAsRegistered($provider)
@@ -485,7 +485,7 @@ class Application extends Container
     /**
      * Resolve the given type from the container.
      *
-     * (Overriding \System\Container::make)
+     * (Overriding \Mini\Container::make)
      *
      * @param  string  $abstract
      * @param  array  $parameters
@@ -516,7 +516,7 @@ class Application extends Container
     /**
      * Get the service provider repository instance.
      *
-     * @return \System\ProviderRepository
+     * @return \Mini\ProviderRepository
      */
     public function getProviderRepository()
     {
@@ -533,21 +533,21 @@ class Application extends Container
     public function registerCoreContainerAliases()
     {
         $aliases = array(
-            'app'           => array('System\Foundation\Application', 'System\Container\Container'),
-            'config'        => 'System\Config\Config',
-            'cookie'        => 'System\Cookie\CookieJar',
-            'encrypter'     => 'System\Encryption\Encrypter',
-            'db'            => 'System\Database\DatabaseManager',
-            'events'        => 'System\Events\Dispatcher',
-            'hash'          => 'System\Hashing\HasherInterface',
-            'log'           => array('System\Log\Writer', 'Psr\Log\LoggerInterface'),
-            'redirect'      => 'System\Routing\Redirector',
-            'request'       => 'System\Http\Request',
-            'router'        => 'System\Routing\Router',
-            'session'       => 'System\Session\SessionManager',
-            'session.store' => 'System\Session\Store',
-            'url'           => 'System\Routing\UrlGenerator',
-            'view'          => 'System\View\Factory',
+            'app'           => array('Mini\Foundation\Application', 'Mini\Container\Container'),
+            'config'        => 'Mini\Config\Config',
+            'cookie'        => 'Mini\Cookie\CookieJar',
+            'encrypter'     => 'Mini\Encryption\Encrypter',
+            'db'            => 'Mini\Database\DatabaseManager',
+            'events'        => 'Mini\Events\Dispatcher',
+            'hash'          => 'Mini\Hashing\HasherInterface',
+            'log'           => array('Mini\Log\Writer', 'Psr\Log\LoggerInterface'),
+            'redirect'      => 'Mini\Routing\Redirector',
+            'request'       => 'Mini\Http\Request',
+            'router'        => 'Mini\Routing\Router',
+            'session'       => 'Mini\Session\SessionManager',
+            'session.store' => 'Mini\Session\Store',
+            'url'           => 'Mini\Routing\UrlGenerator',
+            'view'          => 'Mini\View\Factory',
         );
 
         foreach ($aliases as $key => $value) {

@@ -1,6 +1,6 @@
 <?php
 
-namespace System\Cookie;
+namespace Mini\Cookie;
 
 use Symfony\Component\HttpFoundation\Cookie;
 

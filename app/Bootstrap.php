@@ -1,6 +1,6 @@
 <?php
 
-use System\Http\Request;
+use Mini\Http\Request;
 
 
 Route::middleware('test', function (Request $request, Closure $next, $value)

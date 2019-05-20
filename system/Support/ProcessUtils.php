@@ -1,6 +1,6 @@
 <?php
 
-namespace System\Support;
+namespace Mini\Support;
 
 /**
  * ProcessUtils is a bunch of utility methods.

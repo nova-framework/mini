@@ -1,9 +1,9 @@
 <?php
 
-namespace System\Cache;
+namespace Mini\Cache;
 
-use System\Cache\StoreInterface;
-use System\Support\Manager;
+use Mini\Cache\StoreInterface;
+use Mini\Support\Manager;
 
 use Closure;
 
@@ -24,7 +24,7 @@ class CacheManager extends Manager
     /**
      * Create an instance of the file cache driver.
      *
-     * @return \System\Cache\FileStore
+     * @return \Mini\Cache\FileStore
      */
     protected function createFileDriver()
     {
@@ -36,7 +36,7 @@ class CacheManager extends Manager
     /**
      * Create an instance of the database cache driver.
      *
-     * @return \System\Cache\DatabaseStore
+     * @return \Mini\Cache\DatabaseStore
      */
     protected function createDatabaseDriver()
     {
@@ -55,7 +55,7 @@ class CacheManager extends Manager
     /**
      * Get the database connection for the database driver.
      *
-     * @return \System\Database\Connection
+     * @return \Mini\Database\Connection
      */
     protected function getDatabaseConnection()
     {
@@ -88,8 +88,8 @@ class CacheManager extends Manager
     /**
      * Create a new cache repository with the given implementation.
      *
-     * @param  \System\Cache\Contracts\StoreInterface  $store
-     * @return \System\Cache\Repository
+     * @param  \Mini\Cache\Contracts\StoreInterface  $store
+     * @return \Mini\Cache\Repository
      */
     protected function repository(StoreInterface $store)
     {

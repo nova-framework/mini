@@ -1,9 +1,9 @@
 <?php
 
-namespace System\Database;
+namespace Mini\Database;
 
-use System\Database\Query\Expression;
-use System\Support\Str;
+use Mini\Database\Query\Expression;
+use Mini\Support\Str;
 
 use Closure;
 use DateTime;
@@ -38,7 +38,7 @@ class Connection
     /**
      * The database query grammar instance.
      *
-     * @var \System\Database\Query\Grammar
+     * @var \Mini\Database\Query\Grammar
      */
     protected $grammar;
 
@@ -108,7 +108,7 @@ class Connection
      * Begin a Fluent Query against a database table.
      *
      * @param  string  $table
-     * @return \System\Database\Query\Builder
+     * @return \Mini\Database\Query\Builder
      */
     public function table($table)
     {
@@ -121,7 +121,7 @@ class Connection
      * Get a new raw query expression.
      *
      * @param  mixed  $value
-     * @return \System\Database\Query\Expression
+     * @return \Mini\Database\Query\Expression
      */
     public function raw($value)
     {
@@ -335,7 +335,7 @@ class Connection
      * @param  \Closure  $callback
      * @return mixed
      *
-     * @throws \System\Database\QueryException
+     * @throws \Mini\Database\QueryException
      */
     protected function run($query, $bindings, Closure $callback)
     {
@@ -365,7 +365,7 @@ class Connection
      * @param  \Closure  $callback
      * @return mixed
      *
-     * @throws \System\Database\QueryException
+     * @throws \Mini\Database\QueryException
      */
     protected function runQueryCallback($query, $bindings, Closure $callback)
     {
@@ -380,13 +380,13 @@ class Connection
     /**
      * Handle a query exception that occurred during query execution.
      *
-     * @param  \System\Database\QueryException  $e
+     * @param  \Mini\Database\QueryException  $e
      * @param  string    $query
      * @param  array     $bindings
      * @param  \Closure  $callback
      * @return mixed
      *
-     * @throws \System\Database\QueryException
+     * @throws \Mini\Database\QueryException
      */
     protected function tryAgainIfCausedByLostConnection(QueryException $e, $query, $bindings, Closure $callback)
     {
@@ -471,7 +471,7 @@ class Connection
     /**
      * Get the Connector instance.
      *
-     * @return \System\Database\Query\Grammar
+     * @return \Mini\Database\Query\Grammar
      */
     public function getGrammar()
     {
@@ -481,7 +481,7 @@ class Connection
     /**
      * Get the Connector instance.
      *
-     * @return \System\Database\Connector
+     * @return \Mini\Database\Connector
      */
     public function getConnector()
     {

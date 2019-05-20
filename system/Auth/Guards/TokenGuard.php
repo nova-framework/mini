@@ -1,9 +1,9 @@
 <?php
 
-namespace System\Auth\Guards;
+namespace Mini\Auth\Guards;
 
-use System\Auth\Guard;
-use System\Http\Request;
+use Mini\Auth\Guard;
+use Mini\Http\Request;
 
 
 class TokenGuard extends Guard
@@ -11,7 +11,7 @@ class TokenGuard extends Guard
     /**
      * The request instance.
      *
-     * @var \System\Http\Request
+     * @var \Mini\Http\Request
      */
     protected $request;
 
@@ -34,7 +34,7 @@ class TokenGuard extends Guard
      * Create a new authentication guard.
      *
      * @param  string  $model
-     * @param  \System\Http\Request|null  $request
+     * @param  \Mini\Http\Request|null  $request
      * @return void
      */
     public function __construct($model, Request $request = null)
@@ -48,7 +48,7 @@ class TokenGuard extends Guard
     /**
      * Get the currently authenticated user.
      *
-     * @return \System\Auth\UserInterface|null
+     * @return \Mini\Auth\UserInterface|null
      */
     public function user()
     {
@@ -109,7 +109,7 @@ class TokenGuard extends Guard
     /**
      * Set the current request instance.
      *
-     * @param  \System\Http\Request  $request
+     * @param  \Mini\Http\Request  $request
      * @return $this
      */
     public function setRequest(Request $request)

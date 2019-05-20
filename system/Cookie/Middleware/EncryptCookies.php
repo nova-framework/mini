@@ -1,9 +1,9 @@
 <?php
 
-namespace System\Cookie\Middleware;
+namespace Mini\Cookie\Middleware;
 
-use System\Encryption\DecryptException;
-use System\Encryption\Encrypter;
+use Mini\Encryption\DecryptException;
+use Mini\Encryption\Encrypter;
 
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\Request;
@@ -17,7 +17,7 @@ class EncryptCookies
     /**
      * The encrypter instance.
      *
-     * @var \System\Encryption\Encrypter
+     * @var \Mini\Encryption\Encrypter
      */
     protected $encrypter;
 
@@ -32,7 +32,7 @@ class EncryptCookies
     /**
      * Create a new CookieGuard instance.
      *
-     * @param  \System\Encryption\Encrypter  $encrypter
+     * @param  \Mini\Encryption\Encrypter  $encrypter
      * @return void
      */
     public function __construct(Encrypter $encrypter)
@@ -54,7 +54,7 @@ class EncryptCookies
     /**
      * Handle an incoming request.
      *
-     * @param  \System\Http\Request  $request
+     * @param  \Mini\Http\Request  $request
      * @param  \Closure  $next
      * @return mixed
      */

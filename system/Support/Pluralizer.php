@@ -1,6 +1,6 @@
 <?php
 
-namespace System\Support;
+namespace Mini\Support;
 
 use Doctrine\Common\Inflector\Inflector;
 

@@ -1,12 +1,12 @@
 <?php
 
-namespace System\Support\Facades;
+namespace Mini\Support\Facades;
 
-use System\Support\Facades\Facade;
+use Mini\Support\Facades\Facade;
 
 
 /**
- * @see \System\Auth\AuthManager
+ * @see \Mini\Auth\AuthManager
  */
 class Auth extends Facade
 {

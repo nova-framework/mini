@@ -1,9 +1,9 @@
 <?php
 
-namespace System\View;
+namespace Mini\View;
 
-use System\View\Factory;
-use System\Support\ServiceProvider;
+use Mini\View\Factory;
+use Mini\Support\ServiceProvider;
 
 
 class ViewServiceProvider extends ServiceProvider

@@ -1,6 +1,6 @@
 <?php
 
-namespace System\Container;
+namespace Mini\Container;
 
 
 class BindingResolutionException extends \Exception {};

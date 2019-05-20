@@ -1,10 +1,10 @@
 <?php
 
-namespace System\Support\Facades;
+namespace Mini\Support\Facades;
 
 
 /**
-* @see \System\Session\Store
+* @see \Mini\Session\Store
 */
 class Session extends Facade
 {

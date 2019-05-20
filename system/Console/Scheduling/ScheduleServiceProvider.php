@@ -1,8 +1,8 @@
 <?php
 
-namespace System\Console\Scheduling;
+namespace Mini\Console\Scheduling;
 
-use System\Support\ServiceProvider;
+use Mini\Support\ServiceProvider;
 
 
 class ScheduleServiceProvider extends ServiceProvider

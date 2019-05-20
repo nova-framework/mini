@@ -1,13 +1,13 @@
 <?php
 
-namespace System\Database\ORM;
+namespace Mini\Database\ORM;
 
-use System\Database\Query\Builder as QueryBuilder;
-use System\Database\ConnectionResolverInterface as Resolver;
-use System\Events\Dispatcher;
-use System\Support\Contracts\ArrayableInterface;
-use System\Support\Contracts\JsonableInterface;
-use System\Support\Str;
+use Mini\Database\Query\Builder as QueryBuilder;
+use Mini\Database\ConnectionResolverInterface as Resolver;
+use Mini\Events\Dispatcher;
+use Mini\Support\Contracts\ArrayableInterface;
+use Mini\Support\Contracts\JsonableInterface;
+use Mini\Support\Str;
 
 use Carbon\Carbon;
 
@@ -131,14 +131,14 @@ class Model implements ArrayableInterface, JsonableInterface, \ArrayAccess
     /**
      * The connection resolver instance.
      *
-     * @var \System\Database\ConnectionResolverInterface
+     * @var \Mini\Database\ConnectionResolverInterface
      */
     protected static $resolver;
 
     /**
      * The event dispatcher instance.
      *
-     * @var \System\Events\Dispatcher
+     * @var \Mini\Events\Dispatcher
      */
     protected static $dispatcher;
 
@@ -261,7 +261,7 @@ class Model implements ArrayableInterface, JsonableInterface, \ArrayAccess
     /**
      * Begin querying the model.
      *
-     * @return \System\Database\Query\Builder
+     * @return \Mini\Database\Query\Builder
      */
     public static function query()
     {
@@ -274,7 +274,7 @@ class Model implements ArrayableInterface, JsonableInterface, \ArrayAccess
      * Begin querying the model on a given connection.
      *
      * @param  string  $connection
-     * @return \System\Database\Query\Builder
+     * @return \Mini\Database\Query\Builder
      */
     public static function on($connection = null)
     {
@@ -319,7 +319,7 @@ class Model implements ArrayableInterface, JsonableInterface, \ArrayAccess
      * @param  array  $columns
      * @return array|static
      *
-     * @throws \System\Database\ORM\ModelNotFoundException
+     * @throws \Mini\Database\ORM\ModelNotFoundException
      */
     public static function findOrFail($id, $columns = array('*'))
     {
@@ -351,7 +351,7 @@ class Model implements ArrayableInterface, JsonableInterface, \ArrayAccess
      * Being querying a model with eager loading.
      *
      * @param  array|string  $relations
-     * @return \System\Database\ORM\Builder|static
+     * @return \Mini\Database\ORM\Builder|static
      */
     public static function with($relations)
     {
@@ -368,7 +368,7 @@ class Model implements ArrayableInterface, JsonableInterface, \ArrayAccess
      * @param  string  $related
      * @param  string  $foreignKey
      * @param  string  $localKey
-     * @return \System\Database\ORM\Relations\HasOne
+     * @return \Mini\Database\ORM\Relations\HasOne
      */
     public function hasOne($related, $foreignKey = null, $localKey = null)
     {
@@ -388,7 +388,7 @@ class Model implements ArrayableInterface, JsonableInterface, \ArrayAccess
      * @param  string  $foreignKey
      * @param  string  $otherKey
      * @param  string  $relation
-     * @return \System\Database\ORM\Relations\BelongsTo
+     * @return \Mini\Database\ORM\Relations\BelongsTo
      */
     public function belongsTo($related, $foreignKey = null, $otherKey = null, $relation = null)
     {
@@ -415,7 +415,7 @@ class Model implements ArrayableInterface, JsonableInterface, \ArrayAccess
      * @param  string  $related
      * @param  string  $foreignKey
      * @param  string  $localKey
-     * @return \System\Database\ORM\Relations\HasMany
+     * @return \Mini\Database\ORM\Relations\HasMany
      */
     public function hasMany($related, $foreignKey = null, $localKey = null)
     {
@@ -436,7 +436,7 @@ class Model implements ArrayableInterface, JsonableInterface, \ArrayAccess
      * @param  string  $foreignKey
      * @param  string  $otherKey
      * @param  string  $relation
-     * @return \System\Database\ORM\Relations\BelongsToMany
+     * @return \Mini\Database\ORM\Relations\BelongsToMany
      */
     public function belongsToMany($related, $table = null, $foreignKey = null, $otherKey = null, $relation = null)
     {
@@ -510,7 +510,7 @@ class Model implements ArrayableInterface, JsonableInterface, \ArrayAccess
             $relation = call_user_func(array($this, $camelKey));
 
             if (! $relation instanceof Relation) {
-                throw new LogicException('Relationship method must return an instance of [System\Database\ORM\Relation]');
+                throw new LogicException('Relationship method must return an instance of [Mini\Database\ORM\Relation]');
             }
 
             return $this->relations[$key] = $relation->getResults();
@@ -617,7 +617,7 @@ class Model implements ArrayableInterface, JsonableInterface, \ArrayAccess
     /**
      * Perform a model update operation.
      *
-     * @param  \System\Database\Query\Builder  $query
+     * @param  \Mini\Database\Query\Builder  $query
      * @return bool
      */
     protected function performUpdate(Builder $query)
@@ -646,7 +646,7 @@ class Model implements ArrayableInterface, JsonableInterface, \ArrayAccess
     /**
      * Perform a model insert operation.
      *
-     * @param  \System\Database\Query\Builder  $query
+     * @param  \Mini\Database\Query\Builder  $query
      * @return bool
      */
     protected function performInsert(Builder $query)
@@ -1053,7 +1053,7 @@ class Model implements ArrayableInterface, JsonableInterface, \ArrayAccess
     /**
      * Get a new query for the model's table.
      *
-     * @return \System\Database\Query\Builder
+     * @return \Mini\Database\Query\Builder
      */
     public function newQuery()
     {
@@ -1067,7 +1067,7 @@ class Model implements ArrayableInterface, JsonableInterface, \ArrayAccess
     /**
      * Get a new query builder instance for the connection.
      *
-     * @return \System\Database\Query\Builder
+     * @return \Mini\Database\Query\Builder
      */
     protected function newBaseQuery()
     {
@@ -1110,12 +1110,12 @@ class Model implements ArrayableInterface, JsonableInterface, \ArrayAccess
     /**
      * Create a new pivot model instance.
      *
-     * @param  \System\Database\ORM\Model  $parent
+     * @param  \Mini\Database\ORM\Model  $parent
      * @param  array   $attributes
      * @param  string  $table
      * @param  bool    $exists
      * @param  string|null  $using
-     * @return \System\Database\ORM\Pivot
+     * @return \Mini\Database\ORM\Pivot
      */
     public function newPivot(Model $parent, array $attributes, $table, $exists, $using = null)
     {
@@ -1217,7 +1217,7 @@ class Model implements ArrayableInterface, JsonableInterface, \ArrayAccess
     /**
      * Get the database Connection instance.
      *
-     * @return \System\Database\Connection
+     * @return \Mini\Database\Connection
      */
     public function getConnection()
     {
@@ -1238,7 +1238,7 @@ class Model implements ArrayableInterface, JsonableInterface, \ArrayAccess
      * Set the Connection associated with the Model.
      *
      * @param  string  $name
-     * @return \System\Database\Model
+     * @return \Mini\Database\Model
      */
     public function setConnection($name)
     {
@@ -1250,7 +1250,7 @@ class Model implements ArrayableInterface, JsonableInterface, \ArrayAccess
     /**
      * Get the connection resolver instance.
      *
-     * @return \System\Database\Manager
+     * @return \Mini\Database\Manager
      */
     public static function getConnectionResolver()
     {
@@ -1260,7 +1260,7 @@ class Model implements ArrayableInterface, JsonableInterface, \ArrayAccess
     /**
      * Set the connection resolver instance.
      *
-     * @param  \System\Database\ConnectionResolverInterface  $resolver
+     * @param  \Mini\Database\ConnectionResolverInterface  $resolver
      * @return void
      */
     public static function setConnectionResolver(Resolver $resolver)
@@ -1281,7 +1281,7 @@ class Model implements ArrayableInterface, JsonableInterface, \ArrayAccess
     /**
      * Get the event dispatcher instance.
      *
-     * @return \System\Events\Dispatcher
+     * @return \Mini\Events\Dispatcher
      */
     public static function getEventDispatcher()
     {
@@ -1291,7 +1291,7 @@ class Model implements ArrayableInterface, JsonableInterface, \ArrayAccess
     /**
      * Set the event dispatcher instance.
      *
-     * @param  \System\Events\Dispatcher  $dispatcher
+     * @param  \Mini\Events\Dispatcher  $dispatcher
      * @return void
      */
     public static function setEventDispatcher(Dispatcher $dispatcher)

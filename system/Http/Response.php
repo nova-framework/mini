@@ -1,7 +1,7 @@
-<?php namespace System\Http;
+<?php namespace Mini\Http;
 
-use System\Support\Contracts\JsonableInterface;
-use System\Support\Contracts\RenderableInterface;
+use Mini\Support\Contracts\JsonableInterface;
+use Mini\Support\Contracts\RenderableInterface;
 
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
@@ -25,7 +25,7 @@ class Response extends SymfonyResponse
      * @param  string  $key
      * @param  string  $value
      * @param  bool    $replace
-     * @return \System\Http\Response
+     * @return \Mini\Http\Response
      */
     public function header($key, $value, $replace = true)
     {
@@ -38,7 +38,7 @@ class Response extends SymfonyResponse
      * Add a cookie to the response.
      *
      * @param  \Symfony\Component\HttpFoundation\Cookie  $cookie
-     * @return \System\Http\Response
+     * @return \Mini\Http\Response
      */
     public function withCookie(Cookie $cookie)
     {

@@ -1,8 +1,8 @@
 <?php
 
-namespace System\Session;
+namespace Mini\Session;
 
-use System\Support\ServiceProvider;
+use Mini\Support\ServiceProvider;
 
 
 class SessionServiceProvider extends ServiceProvider
@@ -19,7 +19,7 @@ class SessionServiceProvider extends ServiceProvider
         $this->registerSessionManager();
 
         //
-        $this->app->singleton('System\Session\Middleware\StartSession');
+        $this->app->singleton('Mini\Session\Middleware\StartSession');
     }
 
     /**

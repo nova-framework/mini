@@ -1,9 +1,9 @@
 <?php
 
-namespace System\Session;
+namespace Mini\Session;
 
-use System\Session\ExistenceAwareInterface;
-use System\Session\SessionInterface;
+use Mini\Session\ExistenceAwareInterface;
+use Mini\Session\SessionInterface;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\SessionBagInterface;

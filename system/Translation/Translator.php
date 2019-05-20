@@ -1,8 +1,8 @@
 <?php
 
-namespace System\Translation;
+namespace Mini\Translation;
 
-use System\Filesystem\Filesystem;
+use Mini\Filesystem\Filesystem;
 
 use Symfony\Component\Translation\MessageSelector;
 use Symfony\Component\Translation\TranslatorInterface;
@@ -13,7 +13,7 @@ class Translator implements TranslatorInterface
     /**
      * The filesystem instance.
      *
-     * @var \System\Filesystem\Filesystem
+     * @var \Mini\Filesystem\Filesystem
      */
     protected $files;
 
@@ -49,7 +49,7 @@ class Translator implements TranslatorInterface
     /**
      * Create a new translator instance.
      *
-     * @param  \System\Filesystem\Filesystem  $files
+     * @param  \Mini\Filesystem\Filesystem  $files
      * @param  string  $path
      * @param  string  $locale
      * @return void

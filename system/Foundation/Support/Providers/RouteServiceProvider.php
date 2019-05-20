@@ -1,9 +1,9 @@
 <?php
 
-namespace System\Foundation\Support\Providers;
+namespace Mini\Foundation\Support\Providers;
 
-use System\Routing\Router;
-use System\Support\ServiceProvider;
+use Mini\Routing\Router;
+use Mini\Support\ServiceProvider;
 
 
 class RouteServiceProvider extends ServiceProvider
@@ -19,7 +19,7 @@ class RouteServiceProvider extends ServiceProvider
     /**
      * Bootstrap any application services.
      *
-     * @param  \System\Routing\Router  $router
+     * @param  \Mini\Routing\Router  $router
      * @return void
      */
     public function boot(Router $router)

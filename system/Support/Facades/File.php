@@ -1,10 +1,10 @@
 <?php
 
-namespace System\Support\Facades;
+namespace Mini\Support\Facades;
 
 
 /**
-* @see \System\Filesystem\Filesystem
+* @see \Mini\Filesystem\Filesystem
 */
 class File extends Facade
 {

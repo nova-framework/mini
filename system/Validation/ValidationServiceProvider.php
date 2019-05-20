@@ -1,8 +1,8 @@
 <?php
 
-namespace System\Validation;
+namespace Mini\Validation;
 
-use System\Support\ServiceProvider;
+use Mini\Support\ServiceProvider;
 
 
 class ValidationServiceProvider extends ServiceProvider

@@ -1,9 +1,9 @@
 <?php
 
-namespace System\Routing\Middleware;
+namespace Mini\Routing\Middleware;
 
-use System\Cache\RateLimiter;
-use System\Http\Response;
+use Mini\Cache\RateLimiter;
+use Mini\Http\Response;
 
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 
@@ -15,14 +15,14 @@ class ThrottleRequests
     /**
      * The rate limiter instance.
      *
-     * @var \System\Cache\RateLimiter
+     * @var \Mini\Cache\RateLimiter
      */
     protected $limiter;
 
     /**
      * Create a new request throttler.
      *
-     * @param  \System\Cache\RateLimiter  $limiter
+     * @param  \Mini\Cache\RateLimiter  $limiter
      * @return void
      */
     public function __construct(RateLimiter $limiter)
@@ -33,7 +33,7 @@ class ThrottleRequests
     /**
      * Handle an incoming request.
      *
-     * @param  \System\Http\Request  $request
+     * @param  \Mini\Http\Request  $request
      * @param  \Closure  $next
      * @param  int  $maxAttempts
      * @param  int  $decayMinutes
@@ -60,7 +60,7 @@ class ThrottleRequests
     /**
      * Resolve request signature.
      *
-     * @param  \System\Http\Request  $request
+     * @param  \Mini\Http\Request  $request
      * @return string
      */
     protected function resolveRequestSignature($request)
@@ -73,7 +73,7 @@ class ThrottleRequests
      *
      * @param  string  $key
      * @param  int  $maxAttempts
-     * @return \System\Http\Response
+     * @return \Mini\Http\Response
      */
     protected function buildResponse($key, $maxAttempts)
     {
@@ -95,7 +95,7 @@ class ThrottleRequests
      * @param  int  $maxAttempts
      * @param  int  $remainingAttempts
      * @param  int|null  $retryAfter
-     * @return \System\Http\Response
+     * @return \Mini\Http\Response
      */
     protected function addHeaders(SymfonyResponse $response, $maxAttempts, $remainingAttempts, $retryAfter = null)
     {

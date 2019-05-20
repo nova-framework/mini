@@ -1,6 +1,6 @@
 <?php
 
-namespace System\Http\Middleware;
+namespace Mini\Http\Middleware;
 
 use Closure;
 
@@ -10,9 +10,9 @@ class FrameGuard
     /**
      * Handle the given request and get the response.
      *
-     * @param  \System\Http\Request  $request
+     * @param  \Mini\Http\Request  $request
      * @param  \Closure  $next
-     * @return \System\Http\Response
+     * @return \Mini\Http\Response
      */
     public function handle($request, Closure $next)
     {

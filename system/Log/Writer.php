@@ -1,6 +1,6 @@
 <?php
 
-namespace System\Log;
+namespace Mini\Log;
 
 use Psr\Log\AbstractLogger;
 

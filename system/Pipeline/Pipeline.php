@@ -1,8 +1,8 @@
 <?php
 
-namespace System\Pipeline;
+namespace Mini\Pipeline;
 
-use System\Container\Container;
+use Mini\Container\Container;
 
 use Closure;
 use LogicException;

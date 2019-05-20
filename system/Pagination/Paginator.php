@@ -1,9 +1,9 @@
 <?php
 
-namespace System\Pagination;
+namespace Mini\Pagination;
 
-use System\Support\Contracts\JsonableInterface;
-use System\Support\Contracts\ArrayableInterface;
+use Mini\Support\Contracts\JsonableInterface;
+use Mini\Support\Contracts\ArrayableInterface;
 
 use ArrayAccess;
 use Countable;

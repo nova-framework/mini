@@ -1,8 +1,8 @@
 <?php
 
-namespace System\Http;
+namespace Mini\Http;
 
-use System\Support\Str;
+use Mini\Support\Str;
 
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\HttpFoundation\Request as SymfonyRequest;
@@ -37,7 +37,7 @@ class Request extends SymfonyRequest
     /**
      * Return the Request instance.
      *
-     * @return \System\Http\Request
+     * @return \Mini\Http\Request
      */
     public function instance()
     {
@@ -558,7 +558,7 @@ class Request extends SymfonyRequest
      * Create an Framework request from a Symfony instance.
      *
      * @param  \Symfony\Component\HttpFoundation\Request  $request
-     * @return \System\Http\Request
+     * @return \Mini\Http\Request
      */
     public static function createFromBase(SymfonyRequest $request)
     {
@@ -579,7 +579,7 @@ class Request extends SymfonyRequest
     /**
      * Get the session associated with the request.
      *
-     * @return \System\Session\Store
+     * @return \Mini\Session\Store
      *
      * @throws \RuntimeException
      */
@@ -609,7 +609,7 @@ class Request extends SymfonyRequest
      *
      * @param string|null $parameter
      *
-     * @return \System\Routing\Route|mixed
+     * @return \Mini\Routing\Route|mixed
      */
     public function route($parameter = null)
     {

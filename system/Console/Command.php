@@ -1,6 +1,6 @@
 <?php
 
-namespace System\Console;
+namespace Mini\Console;
 
 use Symfony\Component\Console\Command\Command as SymfonyCommand;
 use Symfony\Component\Console\Helper\Table;
@@ -18,7 +18,7 @@ class Command extends SymfonyCommand
     /**
      * The framework application instance.
      *
-     * @var \System\Container\Container
+     * @var \Mini\Container\Container
      */
     protected $container;
 
@@ -364,7 +364,7 @@ class Command extends SymfonyCommand
     /**
      * Get the Mini-Nova application instance.
      *
-     * @return \System\Foundation\Application
+     * @return \Mini\Foundation\Application
      */
     public function getContainer()
     {
@@ -374,7 +374,7 @@ class Command extends SymfonyCommand
     /**
      * Set the Mini-Nova application instance.
      *
-     * @param  \System\Foundation\Application  $container
+     * @param  \Mini\Foundation\Application  $container
      * @return void
      */
     public function setContainer($container)

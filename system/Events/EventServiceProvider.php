@@ -1,8 +1,8 @@
 <?php
 
-namespace System\Events;
+namespace Mini\Events;
 
-use System\Support\ServiceProvider;
+use Mini\Support\ServiceProvider;
 
 
 class EventServiceProvider extends ServiceProvider

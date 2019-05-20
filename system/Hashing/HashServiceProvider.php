@@ -1,9 +1,9 @@
 <?php
 
-namespace System\Hashing;
+namespace Mini\Hashing;
 
-use System\Hashing\BcryptHasher;
-use System\Support\ServiceProvider;
+use Mini\Hashing\BcryptHasher;
+use Mini\Support\ServiceProvider;
 
 
 class HashServiceProvider extends ServiceProvider

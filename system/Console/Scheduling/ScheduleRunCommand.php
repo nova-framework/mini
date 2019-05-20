@@ -1,8 +1,8 @@
 <?php
 
-namespace System\Console\Scheduling;
+namespace Mini\Console\Scheduling;
 
-use System\Console\Command;
+use Mini\Console\Command;
 
 
 class ScheduleRunCommand extends Command
@@ -24,7 +24,7 @@ class ScheduleRunCommand extends Command
     /**
      * The schedule instance.
      *
-     * @var \System\Console\Scheduling\Schedule
+     * @var \Mini\Console\Scheduling\Schedule
      */
     protected $schedule;
 
@@ -32,7 +32,7 @@ class ScheduleRunCommand extends Command
     /**
      * Create a new command instance.
      *
-     * @param  \System\Console\Scheduling\Schedule  $schedule
+     * @param  \Mini\Console\Scheduling\Schedule  $schedule
      * @return void
      */
     public function __construct(Schedule $schedule)

@@ -1,10 +1,10 @@
 <?php
 
-namespace System\Database\ORM;
+namespace Mini\Database\ORM;
 
-use System\Database\Query\Builder as QueryBuilder;
-use System\Pagination\Paginator;
-use System\Pagination\SimplePaginator;
+use Mini\Database\Query\Builder as QueryBuilder;
+use Mini\Pagination\Paginator;
+use Mini\Pagination\SimplePaginator;
 
 
 class Builder
@@ -12,21 +12,21 @@ class Builder
     /**
      * The model instance being queried.
      *
-     * @var System\Database\ORM\Model
+     * @var Mini\Database\ORM\Model
      */
     public $model;
 
     /**
      * The master relation instance, if any.
      *
-     * @var System\Database\ORM\Relation
+     * @var Mini\Database\ORM\Relation
      */
     public $relation;
 
     /**
      * The fluent Query Builder for the query instance.
      *
-     * @var \System\Database\Query\Builder
+     * @var \Mini\Database\Query\Builder
      */
     public $query;
 
@@ -52,7 +52,7 @@ class Builder
     /**
      * Create a new ORM query builder instance.
      *
-     * @param  \System\Database\Query\Builder  $query
+     * @param  \Mini\Database\Query\Builder  $query
      * @return void
      */
     public function __construct(QueryBuilder $query)
@@ -153,7 +153,7 @@ class Builder
      *
      * @param  \Closure|array  $columns
      * @param  \Closure|null  $callback
-     * @return \System\Database\ORM\Model|static|mixed
+     * @return \Mini\Database\ORM\Model|static|mixed
      */
     public function firstOr($columns = array('*'), Closure $callback = null)
     {
@@ -249,7 +249,7 @@ class Builder
      * @param  array  $columns
      * @param  string  $pageName
      * @param  int|null  $page
-     * @return \System\Pagination\Paginator
+     * @return \Mini\Pagination\Paginator
      *
      * @throws \InvalidArgumentException
      */
@@ -277,7 +277,7 @@ class Builder
      * @param  array  $columns
      * @param  string  $pageName
      * @param  int|null  $page
-     * @return \System\Pagination\SimplePaginator
+     * @return \Mini\Pagination\SimplePaginator
      */
     public function simplePaginate($perPage = null, $columns = array('*'), $pageName = 'page', $page = null)
     {
@@ -357,7 +357,7 @@ class Builder
      *
      * @param  array  $columns
      * @param  \Closure|null  $callback
-     * @return \System\Database\ORM\Model[]
+     * @return \Mini\Database\ORM\Model[]
      */
     public function getModels($columns = array('*'), Closure $callback = null)
     {
@@ -430,7 +430,7 @@ class Builder
      * Get the relation instance for the given relation name.
      *
      * @param  string  $relation
-     * @return \System\Database\ORM\Relations\Relation
+     * @return \Mini\Database\ORM\Relations\Relation
      */
     public function getRelation($relation)
     {
@@ -527,7 +527,7 @@ class Builder
     /**
      * Get the underlying query builder instance.
      *
-     * @return \System\Database\Query\Builder|static
+     * @return \Mini\Database\Query\Builder|static
      */
     public function getQuery()
     {
@@ -537,7 +537,7 @@ class Builder
     /**
      * Set the underlying query builder instance.
      *
-     * @param  \System\Database\Query\Builder  $query
+     * @param  \Mini\Database\Query\Builder  $query
      * @return void
      */
     public function setQuery($query)
@@ -569,7 +569,7 @@ class Builder
     /**
      * Get the model instance being queried.
      *
-     * @return \System\Database\ORM\Model
+     * @return \Mini\Database\ORM\Model
      */
     public function getModel()
     {
@@ -579,7 +579,7 @@ class Builder
     /**
      * Set a model instance for the model being queried.
      *
-     * @param  \System\Database\ORM\Model  $model
+     * @param  \Mini\Database\ORM\Model  $model
      * @return $this
      */
     public function setModel(Model $model)
@@ -594,7 +594,7 @@ class Builder
     /**
      * Set a master relation instance.
      *
-     * @param  \System\Database\ORM\Relation  $relation
+     * @param  \Mini\Database\ORM\Relation  $relation
      * @return $this
      */
     public function setRelation(Relation $relation)

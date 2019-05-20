@@ -1,10 +1,10 @@
 <?php
 
-namespace System\Routing;
+namespace Mini\Routing;
 
-use System\Container\Container;
-use System\Http\Request;
-use System\Support\Str;
+use Mini\Container\Container;
+use Mini\Http\Request;
+use Mini\Support\Str;
 
 use Closure;
 use DomainException;
@@ -20,7 +20,7 @@ class Route
     /**
      * The Container instance.
      *
-     * @var \System\Container\Container
+     * @var \Mini\Container\Container
      */
     protected $container;
 

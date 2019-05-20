@@ -1,9 +1,9 @@
 <?php
 
-namespace System\Cache;
+namespace Mini\Cache;
 
-use System\Cache\StoreInterface;
-use System\Filesystem\Filesystem;
+use Mini\Cache\StoreInterface;
+use Mini\Filesystem\Filesystem;
 
 
 class FileStore implements StoreInterface
@@ -11,7 +11,7 @@ class FileStore implements StoreInterface
     /**
      * The Nova Filesystem instance.
      *
-     * @var \System\Filesystem\Filesystem
+     * @var \Mini\Filesystem\Filesystem
      */
     protected $files;
 
@@ -25,7 +25,7 @@ class FileStore implements StoreInterface
     /**
      * Create a new file cache store instance.
      *
-     * @param  \System\Filesystem\Filesystem  $files
+     * @param  \Mini\Filesystem\Filesystem  $files
      * @param  string  $directory
      * @return void
      */

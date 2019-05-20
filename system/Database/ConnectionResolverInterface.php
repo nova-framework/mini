@@ -1,6 +1,6 @@
 <?php
 
-namespace System\Database;
+namespace Mini\Database;
 
 
 interface ConnectionResolverInterface

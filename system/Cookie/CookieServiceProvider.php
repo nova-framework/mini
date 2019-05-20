@@ -1,8 +1,8 @@
 <?php
 
-namespace System\Cookie;
+namespace Mini\Cookie;
 
-use System\Support\ServiceProvider;
+use Mini\Support\ServiceProvider;
 
 
 class CookieServiceProvider extends ServiceProvider

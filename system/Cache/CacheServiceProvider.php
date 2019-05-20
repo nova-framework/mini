@@ -1,8 +1,8 @@
 <?php
 
-namespace System\Cache;
+namespace Mini\Cache;
 
-use System\Support\ServiceProvider;
+use Mini\Support\ServiceProvider;
 
 
 class CacheServiceProvider extends ServiceProvider

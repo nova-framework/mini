@@ -1,15 +1,15 @@
 <?php
 
-namespace System\Auth\Guards;
+namespace Mini\Auth\Guards;
 
-use System\Auth\Guard;
-use System\Auth\UserInterface;
-use System\Cookie\CookieJar;
-use System\Events\Dispatcher;
-use System\Http\Request;
-use System\Hashing\HasherInterface;
-use System\Session\Store as SessionStore;
-use System\Support\Str;
+use Mini\Auth\Guard;
+use Mini\Auth\UserInterface;
+use Mini\Cookie\CookieJar;
+use Mini\Events\Dispatcher;
+use Mini\Http\Request;
+use Mini\Hashing\HasherInterface;
+use Mini\Session\Store as SessionStore;
+use Mini\Support\Str;
 
 use RuntimeException;
 
@@ -28,7 +28,7 @@ class SessionGuard extends Guard
     /**
      * The user we last attempted to retrieve.
      *
-     * @var \System\Auth\UserInterface
+     * @var \Mini\Auth\UserInterface
      */
     protected $lastAttempted;
 
@@ -42,14 +42,14 @@ class SessionGuard extends Guard
     /**
      * The session store used by the guard.
      *
-     * @var \System\Session\Store
+     * @var \Mini\Session\Store
      */
     protected $session;
 
     /**
      * The Nova cookie creator service.
      *
-     * @var \System\Cookie\CookieJar
+     * @var \Mini\Cookie\CookieJar
      */
     protected $cookies;
 
@@ -63,14 +63,14 @@ class SessionGuard extends Guard
     /**
      * The hasher implementation.
      *
-     * @var \System\Hashing\HasherInterface
+     * @var \Mini\Hashing\HasherInterface
      */
     protected $hasher;
 
     /**
      * The event dispatcher instance.
      *
-     * @var \System\Events\Dispatcher
+     * @var \Mini\Events\Dispatcher
      */
     protected $events;
 
@@ -94,11 +94,11 @@ class SessionGuard extends Guard
      *
      * @param  string  $name
      * @param  string  $model
-     * @param  \System\Session\Store  $session
-     * @param  \System\Cookie\CookieJar  $cookies
-     * @param  \System\Hashing\HasherInterface  $hasher
-     * @param  \System\Events\Dispatcher  $events
-     * @param  \System\Http\Request|null  $request
+     * @param  \Mini\Session\Store  $session
+     * @param  \Mini\Cookie\CookieJar  $cookies
+     * @param  \Mini\Hashing\HasherInterface  $hasher
+     * @param  \Mini\Events\Dispatcher  $events
+     * @param  \Mini\Http\Request|null  $request
      * @return void
      */
     public function __construct($name, $model, SessionStore $session, CookieJar $cookies, HasherInterface $hasher, Dispatcher $events, Request $request = null)
@@ -117,7 +117,7 @@ class SessionGuard extends Guard
     /**
      * Get the authenticated user.
      *
-     * @return \System\Auth\UserInterface|null
+     * @return \Mini\Auth\UserInterface|null
      */
     public function user()
     {
@@ -291,7 +291,7 @@ class SessionGuard extends Guard
     /**
      * Log a User in.
      *
-     * @param  \System\Auth\UserInterface $user
+     * @param  \Mini\Auth\UserInterface $user
      * @param  bool $remember
      * @return void
      */
@@ -321,7 +321,7 @@ class SessionGuard extends Guard
      *
      * @param  mixed  $id
      * @param  bool   $remember
-     * @return \System\Auth\UserInterface
+     * @return \Mini\Auth\UserInterface
      */
     public function loginUsingId($id, $remember = false)
     {
@@ -378,7 +378,7 @@ class SessionGuard extends Guard
     /**
      * Refresh the "Remember me" Token for the User.
      *
-     * @param  \System\Auth\UserInterface $user
+     * @param  \Mini\Auth\UserInterface $user
      * @return string
      */
     protected function refreshRememberToken(UserInterface $user)
@@ -403,7 +403,7 @@ class SessionGuard extends Guard
     /**
      * Get the cookie creator instance used by the guard.
      *
-     * @return \System\Cookie\CookieJar
+     * @return \Mini\Cookie\CookieJar
      *
      * @throws \RuntimeException
      */
@@ -415,7 +415,7 @@ class SessionGuard extends Guard
     /**
      * Get the event dispatcher instance.
      *
-     * @return \System\Events\Dispatcher
+     * @return \Mini\Events\Dispatcher
      */
     public function getDispatcher()
     {
@@ -425,7 +425,7 @@ class SessionGuard extends Guard
     /**
      * Get the session store used by the guard.
      *
-     * @return \System\Session\Store
+     * @return \Mini\Session\Store
      */
     public function getSession()
     {
@@ -458,7 +458,7 @@ class SessionGuard extends Guard
     /**
      * Get the last user we attempted to authenticate.
      *
-     * @return \System\Auth\UserInterface
+     * @return \Mini\Auth\UserInterface
      */
     public function getLastAttempted()
     {

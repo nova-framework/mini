@@ -1,9 +1,9 @@
 <?php
 
-namespace System\Auth\Middleware;
+namespace Mini\Auth\Middleware;
 
-use System\Auth\AuthManager;
-use System\Auth\AuthenticationException;
+use Mini\Auth\AuthManager;
+use Mini\Auth\AuthenticationException;
 
 use Closure;
 
@@ -13,7 +13,7 @@ class Authenticate
     /**
      * The authentication factory instance.
      *
-     * @var \System\Auth\AuthManager
+     * @var \Mini\Auth\AuthManager
      */
     protected $auth;
 
@@ -21,7 +21,7 @@ class Authenticate
     /**
      * Create a new middleware instance.
      *
-     * @param  \System\Auth\AuthManager  $auth
+     * @param  \Mini\Auth\AuthManager  $auth
      * @return void
      */
     public function __construct(AuthManager $auth)
@@ -32,7 +32,7 @@ class Authenticate
     /**
      * Handle an incoming request.
      *
-     * @param  \System\Http\Request  $request
+     * @param  \Mini\Http\Request  $request
      * @param  \Closure  $next
      * @return mixed
      */
@@ -51,7 +51,7 @@ class Authenticate
      * @param  array  $guards
      * @return void
      *
-     * @throws \System\Auth\AuthenticationException
+     * @throws \Mini\Auth\AuthenticationException
      */
     protected function authenticate(array $guards)
     {

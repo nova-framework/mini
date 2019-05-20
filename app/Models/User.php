@@ -2,9 +2,9 @@
 
 namespace App\Models;
 
-use System\Auth\UserInterface;
-use System\Auth\UserTrait;
-use System\Database\ORM\Model;
+use Mini\Auth\UserInterface;
+use Mini\Auth\UserTrait;
+use Mini\Database\ORM\Model;
 
 
 

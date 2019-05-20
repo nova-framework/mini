@@ -1,10 +1,10 @@
 <?php
 
-namespace System\Foundation\Console;
+namespace Mini\Foundation\Console;
 
-use System\Support\Str;
-use System\Console\Command;
-use System\Filesystem\Filesystem;
+use Mini\Support\Str;
+use Mini\Console\Command;
+use Mini\Filesystem\Filesystem;
 
 
 class KeyGenerateCommand extends Command
@@ -26,7 +26,7 @@ class KeyGenerateCommand extends Command
     /**
      * Create a new Key Generator command.
      *
-     * @param  \System\Filesystem\Filesystem  $files
+     * @param  \Mini\Filesystem\Filesystem  $files
      * @return void
      */
     public function __construct(Filesystem $files)

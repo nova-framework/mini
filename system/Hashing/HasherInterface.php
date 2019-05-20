@@ -1,6 +1,6 @@
 <?php
 
-namespace System\Hashing;
+namespace Mini\Hashing;
 
 interface HasherInterface
 {

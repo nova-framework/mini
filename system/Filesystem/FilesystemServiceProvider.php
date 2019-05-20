@@ -1,8 +1,8 @@
 <?php
 
-namespace System\Filesystem;
+namespace Mini\Filesystem;
 
-use System\Support\ServiceProvider;
+use Mini\Support\ServiceProvider;
 
 
 class FilesystemServiceProvider extends ServiceProvider

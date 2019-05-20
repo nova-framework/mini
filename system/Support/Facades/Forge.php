@@ -1,6 +1,6 @@
 <?php
 
-namespace System\Support\Facades;
+namespace Mini\Support\Facades;
 
 
 /**

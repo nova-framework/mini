@@ -1,10 +1,10 @@
 <?php
 
-namespace System\Support\Facades;
+namespace Mini\Support\Facades;
 
 
 /**
-* @see \System\Database\DatabaseManager
+* @see \Mini\Database\DatabaseManager
 */
 class DB extends Facade
 {

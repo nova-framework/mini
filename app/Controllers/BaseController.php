@@ -2,10 +2,10 @@
 
 namespace App\Controllers;
 
-use System\Http\Response;
-use System\Routing\Controller;
-use System\Support\Contracts\RenderableInterface as Renderable;
-use System\Support\Facades\View;
+use Mini\Http\Response;
+use Mini\Routing\Controller;
+use Mini\Support\Contracts\RenderableInterface as Renderable;
+use Mini\Support\Facades\View;
 
 use BadMethodCallException;
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace System\Validation;
+namespace Mini\Validation;
 
 
 class MessageFormatter
@@ -8,7 +8,7 @@ class MessageFormatter
     /**
      * The Validator instance.
      *
-     * @var \System\Validation\Validator
+     * @var \Mini\Validation\Validator
      */
     protected $validator;
 
@@ -16,7 +16,7 @@ class MessageFormatter
     /**
      * Create a new Message Formatter instance.
      *
-     * @param  $validaror  \System\Validation\Validator
+     * @param  $validaror  \Mini\Validation\Validator
      * @return void
      */
     public function __construct(Validator $validator)

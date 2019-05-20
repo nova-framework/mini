@@ -1,8 +1,8 @@
 <?php
 
-namespace System\Foundation\Console;
+namespace Mini\Foundation\Console;
 
-use System\Console\Command;
+use Mini\Console\Command;
 
 use Symfony\Component\Console\Input\InputOption;
 

@@ -1,8 +1,8 @@
 <?php
 
-namespace System\Translation;
+namespace Mini\Translation;
 
-use System\Support\ServiceProvider;
+use Mini\Support\ServiceProvider;
 
 
 class TranslationServiceProvider extends ServiceProvider

@@ -1,10 +1,10 @@
 <?php
 
-namespace System\Routing;
+namespace Mini\Routing;
 
-use System\Http\Request;
-use System\Support\Arr;
-use System\Support\Str;
+use Mini\Http\Request;
+use Mini\Support\Arr;
+use Mini\Support\Str;
 
 use InvalidArgumentException;
 
@@ -14,14 +14,14 @@ class UrlGenerator
     /**
      * The Route Collection instance used by Router.
      *
-     * @var \System\Routing\RouteCollection
+     * @var \Mini\Routing\RouteCollection
      */
     protected $routes;
 
     /**
      * The request instance.
      *
-     * @var \System\Http\Request
+     * @var \Mini\Http\Request
      */
     protected $request;
 
@@ -60,7 +60,7 @@ class UrlGenerator
     /**
      * Create a new URL Generator instance.
      *
-     * @param  \System\Routing\RouteCollection   $routes
+     * @param  \Mini\Routing\RouteCollection   $routes
      * @param  \Symfony\Component\HttpFoundation\Request   $request
      * @return void
      */
@@ -332,7 +332,7 @@ class UrlGenerator
     /**
      * Set the current request instance.
      *
-     * @param  \System\Http\Request  $request
+     * @param  \Mini\Http\Request  $request
      * @return void
      */
     public function setRequest(Request $request)
@@ -355,7 +355,7 @@ class UrlGenerator
     /**
      * Get the session implementation from the resolver.
      *
-     * @return \System\Session\Store|null
+     * @return \Mini\Session\Store|null
      */
     protected function getSession()
     {

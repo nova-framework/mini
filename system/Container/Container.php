@@ -1,6 +1,6 @@
 <?php
 
-namespace System\Container;
+namespace Mini\Container;
 
 use ArrayAccess;
 use Closure;

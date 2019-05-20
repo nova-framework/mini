@@ -1,6 +1,6 @@
 <?php
 
-namespace System\Support;
+namespace Mini\Support;
 
 use BadMethodCallException;
 
@@ -10,7 +10,7 @@ abstract class ServiceProvider
     /**
      * The application instance.
      *
-     * @var \System\Foundation\Application
+     * @var \Mini\Foundation\Application
      */
     protected $app;
 
@@ -25,7 +25,7 @@ abstract class ServiceProvider
     /**
      * Create a new service provider instance.
      *
-     * @param  \System\Foundation\Application $app
+     * @param  \Mini\Foundation\Application $app
      * @return void
      */
     public function __construct($app)

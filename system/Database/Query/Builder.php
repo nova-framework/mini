@@ -1,10 +1,10 @@
 <?php
 
-namespace System\Database\Query;
+namespace Mini\Database\Query;
 
-use System\Database\Connection;
-use System\Pagination\Paginator;
-use System\Pagination\SimplePaginator;
+use Mini\Database\Connection;
+use Mini\Pagination\Paginator;
+use Mini\Pagination\SimplePaginator;
 
 use PDO;
 use Closure;
@@ -16,14 +16,14 @@ class Builder
     /**
      * The database connection instance.
      *
-     * @var \System\Database\Connection
+     * @var \Mini\Database\Connection
      */
     protected $connection;
 
     /**
      * The database query grammar instance.
      *
-     * @var \System\Database\Query\Grammar
+     * @var \Mini\Database\Query\Grammar
      */
     protected $grammar;
 
@@ -1183,7 +1183,7 @@ class Builder
      * Create a raw database expression.
      *
      * @param  mixed $value
-     * @return \System\Database\Expression
+     * @return \Mini\Database\Expression
      */
     public function raw($value)
     {
@@ -1206,7 +1206,7 @@ class Builder
     /**
      * Get the Connector instance.
      *
-     * @return \System\Database\Query\Grammar
+     * @return \Mini\Database\Query\Grammar
      */
     public function getGrammar()
     {

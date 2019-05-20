@@ -1,10 +1,10 @@
 <?php
 
-namespace System\Routing;
+namespace Mini\Routing;
 
-use System\Foundation\Exceptions\HandlerInterface as ExceptionHandler;
-use System\Http\Request;
-use System\Pipeline\Pipeline as BasePipeline;
+use Mini\Foundation\Exceptions\HandlerInterface as ExceptionHandler;
+use Mini\Http\Request;
+use Mini\Pipeline\Pipeline as BasePipeline;
 
 use Closure;
 use Exception;

@@ -1,9 +1,9 @@
 <?php
 
-namespace System\Foundation\Support\Providers;
+namespace Mini\Foundation\Support\Providers;
 
-use System\Events\Dispatcher;
-use System\Support\ServiceProvider;
+use Mini\Events\Dispatcher;
+use Mini\Support\ServiceProvider;
 
 
 class EventServiceProvider extends ServiceProvider
@@ -26,7 +26,7 @@ class EventServiceProvider extends ServiceProvider
     /**
      * Register the application's event listeners.
      *
-     * @param  \System\Events\Dispatcher  $events
+     * @param  \Mini\Events\Dispatcher  $events
      * @return void
      */
     public function boot(Dispatcher $events)

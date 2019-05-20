@@ -2,12 +2,12 @@
 
 namespace App\Middleware;
 
-use System\Container\Container;
-use System\Http\Request;
-use System\Support\Facades\Auth;
-use System\Support\Facades\Config;
-use System\Support\Facades\Redirect;
-use System\Support\Facades\Response;
+use Mini\Container\Container;
+use Mini\Http\Request;
+use Mini\Support\Facades\Auth;
+use Mini\Support\Facades\Config;
+use Mini\Support\Facades\Redirect;
+use Mini\Support\Facades\Response;
 
 use Closure;
 
@@ -17,7 +17,7 @@ class RedirectIfAuthenticated
     /**
      * Handle an incoming request.
      *
-     * @param  \System\Http\Request  $request
+     * @param  \Mini\Http\Request  $request
      * @param  \Closure  $next
      * @param  string|null  $guard
      * @return mixed

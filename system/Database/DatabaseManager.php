@@ -1,9 +1,9 @@
 <?php
 
-namespace System\Database;
+namespace Mini\Database;
 
-use System\Container\Container;
-use System\Database\Connection;
+use Mini\Container\Container;
+use Mini\Database\Connection;
 
 use InvalidArgumentException;
 
@@ -13,14 +13,14 @@ class DatabaseManager implements ConnectionResolverInterface
     /**
      * The application instance.
      *
-     * @var \System\Container\Container
+     * @var \Mini\Container\Container
      */
     protected $container;
 
     /**
      * The Connection instances.
      *
-     * @var \System\Database\Connection[]
+     * @var \Mini\Database\Connection[]
      */
     protected $instances = array();
 

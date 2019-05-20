@@ -1,11 +1,11 @@
 <?php
 
-namespace System\Http;
+namespace Mini\Http;
 
-use System\Session\Store as SessionStore;
-use System\Support\Contracts\MessageProviderInterface;
-use System\Support\MessageBag;
-use System\Support\ViewErrorBag;
+use Mini\Session\Store as SessionStore;
+use Mini\Support\Contracts\MessageProviderInterface;
+use Mini\Support\MessageBag;
+use Mini\Support\ViewErrorBag;
 
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\RedirectResponse as SymfonyRedirectResponse;
@@ -16,14 +16,14 @@ class RedirectResponse extends SymfonyRedirectResponse
     /**
      * The request instance.
      *
-     * @var \System\Http\Request
+     * @var \Mini\Http\Request
      */
     protected $request;
 
     /**
      * The session store implementation.
      *
-     * @var \System\Session\Store
+     * @var \Mini\Session\Store
      */
     protected $session;
 
@@ -33,7 +33,7 @@ class RedirectResponse extends SymfonyRedirectResponse
      * @param  string  $key
      * @param  string  $value
      * @param  bool  $replace
-     * @return \System\Http\RedirectResponse
+     * @return \Mini\Http\RedirectResponse
      */
     public function header($key, $value, $replace = true)
     {
@@ -47,7 +47,7 @@ class RedirectResponse extends SymfonyRedirectResponse
      *
      * @param  string  $key
      * @param  mixed   $value
-     * @return \System\Http\RedirectResponse
+     * @return \Mini\Http\RedirectResponse
      */
     public function with($key, $value = null)
     {
@@ -64,7 +64,7 @@ class RedirectResponse extends SymfonyRedirectResponse
      * Add a cookie to the response.
      *
      * @param  \Symfony\Component\HttpFoundation\Cookie  $cookie
-     * @return \System\Http\RedirectResponse
+     * @return \Mini\Http\RedirectResponse
      */
     public function withCookie(Cookie $cookie)
     {
@@ -77,7 +77,7 @@ class RedirectResponse extends SymfonyRedirectResponse
      * Flash an array of input to the session.
      *
      * @param  array  $input
-     * @return \System\Http\RedirectResponse
+     * @return \Mini\Http\RedirectResponse
      */
     public function withInput(array $input = null)
     {
@@ -92,7 +92,7 @@ class RedirectResponse extends SymfonyRedirectResponse
      * Flash an array of input to the session.
      *
      * @param  dynamic  string
-     * @return \System\Http\RedirectResponse
+     * @return \Mini\Http\RedirectResponse
      */
     public function onlyInput()
     {
@@ -103,7 +103,7 @@ class RedirectResponse extends SymfonyRedirectResponse
      * Flash an array of input to the session.
      *
      * @param  dynamic  string
-     * @return \System\Http\RedirectResponse
+     * @return \Mini\Http\RedirectResponse
      */
     public function exceptInput()
     {
@@ -113,8 +113,8 @@ class RedirectResponse extends SymfonyRedirectResponse
     /**
      * Flash a container of errors to the session.
      *
-     * @param  \System\Support\Contracts\MessageProviderInterface|array  $provider
-     * @return \System\Http\RedirectResponse
+     * @param  \Mini\Support\Contracts\MessageProviderInterface|array  $provider
+     * @return \Mini\Http\RedirectResponse
      */
     public function withErrors($provider, $key = 'default')
     {
@@ -147,7 +147,7 @@ class RedirectResponse extends SymfonyRedirectResponse
     /**
      * Get the request instance.
      *
-     * @return  \System\Http\Request
+     * @return  \Mini\Http\Request
      */
     public function getRequest()
     {
@@ -157,7 +157,7 @@ class RedirectResponse extends SymfonyRedirectResponse
     /**
      * Set the request instance.
      *
-     * @param  \System\Http\Request  $request
+     * @param  \Mini\Http\Request  $request
      * @return void
      */
     public function setRequest(Request $request)
@@ -168,7 +168,7 @@ class RedirectResponse extends SymfonyRedirectResponse
     /**
      * Get the session store implementation.
      *
-     * @return \System\Session\Store
+     * @return \Mini\Session\Store
      */
     public function getSession()
     {
@@ -178,7 +178,7 @@ class RedirectResponse extends SymfonyRedirectResponse
     /**
      * Set the session store implementation.
      *
-     * @param  \System\Session\Store  $store
+     * @param  \Mini\Session\Store  $store
      * @return void
      */
     public function setSession(SessionStore $session)

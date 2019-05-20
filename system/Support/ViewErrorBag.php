@@ -1,6 +1,6 @@
 <?php
 
-namespace System\Support;
+namespace Mini\Support;
 
 use Countable;
 
@@ -30,7 +30,7 @@ class ViewErrorBag implements Countable
      * Get a MessageBag instance from the bags.
      *
      * @param  string  $key
-     * @return \System\Support\MessageBag
+     * @return \Mini\Support\MessageBag
      */
     public function getBag($key)
     {
@@ -51,7 +51,7 @@ class ViewErrorBag implements Countable
      * Add a new MessageBag instance to the bags.
      *
      * @param  string  $key
-     * @param  \System\Support\MessageBag  $bag
+     * @param  \Mini\Support\MessageBag  $bag
      * @return $this
      */
     public function put($key, MessageBag $bag)
@@ -87,7 +87,7 @@ class ViewErrorBag implements Countable
      * Dynamically access a view error bag.
      *
      * @param  string  $key
-     * @return \System\Support\MessageBag
+     * @return \Mini\Support\MessageBag
      */
     public function __get($key)
     {
@@ -98,7 +98,7 @@ class ViewErrorBag implements Countable
      * Dynamically set a view error bag.
      *
      * @param  string  $key
-     * @param  \System\Support\MessageBag  $value
+     * @param  \Mini\Support\MessageBag  $value
      * @return void
      */
     public function __set($key, $value)

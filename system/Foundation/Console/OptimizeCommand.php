@@ -1,9 +1,9 @@
 <?php
 
-namespace System\Foundation\Console;
+namespace Mini\Foundation\Console;
 
-use System\Console\Command;
-use System\Support\Composer;
+use Mini\Console\Command;
+use Mini\Support\Composer;
 
 use Symfony\Component\Console\Input\InputOption;
 
@@ -30,14 +30,14 @@ class OptimizeCommand extends Command
     /**
      * The composer instance.
      *
-     * @var \System\Foundation\Composer
+     * @var \Mini\Foundation\Composer
      */
     protected $composer;
 
     /**
      * Create a new optimize command instance.
      *
-     * @param  \System\Foundation\Composer  $composer
+     * @param  \Mini\Foundation\Composer  $composer
      * @return void
      */
     public function __construct(Composer $composer)

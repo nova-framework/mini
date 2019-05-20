@@ -1,6 +1,6 @@
 <?php
 
-namespace System\Routing;
+namespace Mini\Routing;
 
 use ReflectionFunctionAbstract;
 use ReflectionMethod;

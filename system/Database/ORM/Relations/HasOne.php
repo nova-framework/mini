@@ -1,6 +1,6 @@
 <?php
 
-namespace System\Database\ORM\Relations;
+namespace Mini\Database\ORM\Relations;
 
 
 class HasOne extends HasOneOrMany
@@ -9,7 +9,7 @@ class HasOne extends HasOneOrMany
     /**
      * Get the properly hydrated results for the relationship.
      *
-     * @return \System\Database\ORM\Model
+     * @return \Mini\Database\ORM\Model
      */
     public function getResults()
     {

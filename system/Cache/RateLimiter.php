@@ -1,8 +1,8 @@
 <?php
 
-namespace System\Cache;
+namespace Mini\Cache;
 
-use System\Cache\Repository;
+use Mini\Cache\Repository;
 
 
 class RateLimiter
@@ -10,7 +10,7 @@ class RateLimiter
     /**
      * The cache store implementation.
      *
-     * @var \System\Cache\Repository
+     * @var \Mini\Cache\Repository
      */
     protected $cache;
 
@@ -18,7 +18,7 @@ class RateLimiter
     /**
      * Create a new rate limiter instance.
      *
-     * @param  \System\Cache\Repository  $cache
+     * @param  \Mini\Cache\Repository  $cache
      * @return void
      */
     public function __construct(Repository $cache)

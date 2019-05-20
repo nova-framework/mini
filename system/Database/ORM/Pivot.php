@@ -1,6 +1,6 @@
 <?php
 
-namespace System\Database\ORM;
+namespace Mini\Database\ORM;
 
 
 class Pivot extends Model
@@ -8,7 +8,7 @@ class Pivot extends Model
     /**
      * The parent model of the relationship.
      *
-     * @var \System\Database\ORM\Model
+     * @var \Mini\Database\ORM\Model
      */
     protected $parent;
 
@@ -37,7 +37,7 @@ class Pivot extends Model
     /**
      * Create a new pivot model instance.
      *
-     * @param  \System\Database\ORM\Model  $parent
+     * @param  \Mini\Database\ORM\Model  $parent
      * @param  array   $attributes
      * @param  string  $table
      * @param  bool    $exists
@@ -65,8 +65,8 @@ class Pivot extends Model
     /**
      * Set the keys for a save update query.
      *
-     * @param  \System\Database\ORM\Builder
-     * @return \System\Database\ORM\Builder
+     * @param  \Mini\Database\ORM\Builder
+     * @return \Mini\Database\ORM\Builder
      */
     protected function setKeysForSaveQuery(Builder $query)
     {
@@ -88,7 +88,7 @@ class Pivot extends Model
     /**
      * Get the query builder for a delete operation on the pivot.
      *
-     * @return \System\Database\ORM\Builder
+     * @return \Mini\Database\ORM\Builder
      */
     protected function getDeleteQuery()
     {

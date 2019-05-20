@@ -1,8 +1,8 @@
 <?php
 
-namespace System\View;
+namespace Mini\View;
 
-use System\Support\Contracts\RenderableInterface;
+use Mini\Support\Contracts\RenderableInterface;
 
 use BadMethodCallException;
 use Exception;
@@ -12,7 +12,7 @@ use Throwable;
 class View implements RenderableInterface
 {
     /**
-     * @var \System\View\Factory The View Factory instance.
+     * @var \Mini\View\Factory The View Factory instance.
      */
     protected $factory = null;
 
@@ -167,7 +167,7 @@ class View implements RenderableInterface
      *
      * @param  string  $method
      * @param  array   $params
-     * @return \System\View\View|static|void
+     * @return \Mini\View\View|static|void
      *
      * @throws \BadMethodCallException
      */

@@ -1,6 +1,6 @@
 <?php
 
-namespace System\Session;
+namespace Mini\Session;
 
 
 interface ExistenceAwareInterface

@@ -1,9 +1,9 @@
 <?php
 
-namespace System\Encryption;
+namespace Mini\Encryption;
 
-use System\Encryption\Encrypter;
-use System\Support\ServiceProvider;
+use Mini\Encryption\Encrypter;
+use Mini\Support\ServiceProvider;
 
 
 class EncryptionServiceProvider extends ServiceProvider

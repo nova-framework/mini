@@ -1,10 +1,10 @@
 <?php
 
-namespace System\Exceptions;
+namespace Mini\Exceptions;
 
-use System\Container\Container;
-use System\Config\Store as Config;
-use System\Http\Request;
+use Mini\Container\Container;
+use Mini\Config\Store as Config;
+use Mini\Http\Request;
 
 use Symfony\Component\Debug\Exception\FatalThrowableError;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -19,7 +19,7 @@ class Handler
     /**
      * The Container instance.
      *
-     * @var \System\Container\Container
+     * @var \Mini\Container\Container
      */
     protected $container;
 
@@ -37,7 +37,7 @@ class Handler
     /**
      * Register the exception / error handlers for the application.
      *
-     * @return \System\Exceptions\Handler
+     * @return \Mini\Exceptions\Handler
      */
     public function register()
     {
@@ -81,7 +81,7 @@ class Handler
             $e = new FatalThrowableError($e);
         }
 
-        $handler = $this->container->make('System\Foundation\Exceptions\HandlerInterface');
+        $handler = $this->container->make('Mini\Foundation\Exceptions\HandlerInterface');
 
         if (! $e instanceof HttpException) {
             $handler->report($e);

@@ -1,10 +1,10 @@
 <?php
 
-namespace System\Cache;
+namespace Mini\Cache;
 
-use System\Cache\StoreInterface;
-use System\Database\Connection;
-use System\Encryption\Encrypter;
+use Mini\Cache\StoreInterface;
+use Mini\Database\Connection;
+use Mini\Encryption\Encrypter;
 
 
 class DatabaseStore implements StoreInterface
@@ -12,14 +12,14 @@ class DatabaseStore implements StoreInterface
     /**
      * The database connection instance.
      *
-     * @var \System\Database\Connection
+     * @var \Mini\Database\Connection
      */
     protected $connection;
 
     /**
      * The encrypter instance.
      *
-     * @var \System\Encryption\Encrypter
+     * @var \Mini\Encryption\Encrypter
      */
     protected $encrypter;
 
@@ -40,8 +40,8 @@ class DatabaseStore implements StoreInterface
     /**
      * Create a new database store.
      *
-     * @param  \System\Database\Connection  $connection
-     * @param  \System\Encryption\Encrypter  $encrypter
+     * @param  \Mini\Database\Connection  $connection
+     * @param  \Mini\Encryption\Encrypter  $encrypter
      * @param  string  $table
      * @param  string  $prefix
      * @return void
@@ -177,7 +177,7 @@ class DatabaseStore implements StoreInterface
     /**
      * Get a query builder for the cache table.
      *
-     * @return \System\Database\Query\Builder
+     * @return \Mini\Database\Query\Builder
      */
     protected function table()
     {
@@ -187,7 +187,7 @@ class DatabaseStore implements StoreInterface
     /**
      * Get the underlying database connection.
      *
-     * @return \System\Database\Connection
+     * @return \Mini\Database\Connection
      */
     public function getConnection()
     {
@@ -197,7 +197,7 @@ class DatabaseStore implements StoreInterface
     /**
      * Get the encrypter instance.
      *
-     * @return \System\Encryption\Encrypter
+     * @return \Mini\Encryption\Encrypter
      */
     public function getEncrypter()
     {

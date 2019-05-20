@@ -1,10 +1,10 @@
 <?php
 
-namespace System\Validation;
+namespace Mini\Validation;
 
-use System\Container\Container;
-use System\Str;
-use System\Translation\Translator;
+use Mini\Container\Container;
+use Mini\Str;
+use Mini\Translation\Translator;
 
 use Closure;
 
@@ -14,14 +14,14 @@ class Factory
     /**
      * The translator implementation.
      *
-     * @var \System\Translation\Translator
+     * @var \Mini\Translation\Translator
      */
     protected $translator;
 
     /**
      * The databae presence verifier implementation.
      *
-     * @var \System\Validation\DatabasePresenceVerifier
+     * @var \Mini\Validation\DatabasePresenceVerifier
      */
     protected $verifier;
 
@@ -71,8 +71,8 @@ class Factory
     /**
      * Create a new Validator factory instance.
      *
-     * @param  \System\Translation\Translator  $translator
-     * @param  \System\Container\Container  $container
+     * @param  \Mini\Translation\Translator  $translator
+     * @param  \Mini\Container\Container  $container
      * @return void
      */
     public function __construct(Translator $translator, Container $container = null)
@@ -87,7 +87,7 @@ class Factory
      * @param  array  $data
      * @param  array  $rules
      * @param  array  $messages
-     * @return \System\Validation\Validator
+     * @return \Mini\Validation\Validator
      */
     public function make(array $data, array $rules, array $messages = array(), array $customAttributes = array())
     {
@@ -118,7 +118,7 @@ class Factory
      * @param  array  $data
      * @param  array  $rules
      * @param  array  $messages
-     * @return \System\Validation\Validator
+     * @return \Mini\Validation\Validator
      */
     protected function resolve($data, $rules, $messages, $customAttributes)
     {
@@ -193,7 +193,7 @@ class Factory
     /**
      * Get the Translator implementation.
      *
-     * @return \System\Translation\Translator
+     * @return \Mini\Translation\Translator
      */
     public function getTranslator()
     {
@@ -203,7 +203,7 @@ class Factory
     /**
      * Get the database presence verifier implementation.
      *
-     * @return \System\Validation\DatabasePresenceVerifier
+     * @return \Mini\Validation\DatabasePresenceVerifier
      */
     public function getPresenceVerifier()
     {
@@ -213,7 +213,7 @@ class Factory
     /**
      * Set the database presence verifier implementation.
      *
-     * @param  \System\Validation\DatabasePresenceVerifier  $presenceVerifier
+     * @param  \Mini\Validation\DatabasePresenceVerifier  $presenceVerifier
      * @return void
      */
     public function setPresenceVerifier(DatabasePresenceVerifier $presenceVerifier)

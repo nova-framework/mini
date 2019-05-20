@@ -2,16 +2,16 @@
 
 namespace App\Controllers;
 
-use System\Http\Request;
-use System\Support\Facades\Auth;
-use System\Support\Facades\DB;
-use System\Support\Facades\Hash;
-use System\Support\Facades\Input;
-use System\Support\Facades\Redirect;
-use System\Support\Facades\Request as RequestFacade;
-use System\Support\Facades\Session;
-use System\Support\Facades\Validator;
-use System\Support\Facades\View;
+use Mini\Http\Request;
+use Mini\Support\Facades\Auth;
+use Mini\Support\Facades\DB;
+use Mini\Support\Facades\Hash;
+use Mini\Support\Facades\Input;
+use Mini\Support\Facades\Redirect;
+use Mini\Support\Facades\Request as RequestFacade;
+use Mini\Support\Facades\Session;
+use Mini\Support\Facades\Validator;
+use Mini\Support\Facades\View;
 
 use App\Controllers\BaseController;
 use App\Models\User;

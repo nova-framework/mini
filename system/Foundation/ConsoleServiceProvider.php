@@ -1,10 +1,10 @@
 <?php
 
-namespace System\Foundation;
+namespace Mini\Foundation;
 
-use System\Foundation\Forge;
-use System\Support\Composer;
-use System\Support\ServiceProvider;
+use Mini\Foundation\Forge;
+use Mini\Support\Composer;
+use Mini\Support\ServiceProvider;
 
 
 class ConsoleServiceProvider extends ServiceProvider
@@ -49,7 +49,7 @@ class ConsoleServiceProvider extends ServiceProvider
         $this->registerCommands();
 
         // Register the additional service providers.
-        $this->app->register('System\Console\Scheduling\ScheduleServiceProvider');
+        $this->app->register('Mini\Console\Scheduling\ScheduleServiceProvider');
     }
 
     protected function registerCommands()

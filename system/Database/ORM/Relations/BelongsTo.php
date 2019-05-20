@@ -1,10 +1,10 @@
 <?php
 
-namespace System\Database\ORM\Relations;
+namespace Mini\Database\ORM\Relations;
 
-use System\Database\ORM\Builder;
-use System\Database\ORM\Model;
-use System\Database\ORM\Relation;
+use Mini\Database\ORM\Builder;
+use Mini\Database\ORM\Model;
+use Mini\Database\ORM\Relation;
 
 
 class BelongsTo extends Relation

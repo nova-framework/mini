@@ -1,11 +1,11 @@
 <?php
 
-namespace System\Support\Facades;
+namespace Mini\Support\Facades;
 
 
 /**
- * @see \System\View\Factory
- * @see \System\View\View
+ * @see \Mini\View\Factory
+ * @see \Mini\View\View
  */
 class View extends Facade
 {

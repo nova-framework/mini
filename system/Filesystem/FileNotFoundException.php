@@ -1,6 +1,6 @@
 <?php
 
-namespace System\Filesystem;
+namespace Mini\Filesystem;
 
 
 class FileNotFoundException extends \Exception {}

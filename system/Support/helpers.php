@@ -1,8 +1,8 @@
 <?php
 
-use System\Container\Container;
-use System\Support\Str;
-use System\Support\Facades\Config;
+use Mini\Container\Container;
+use Mini\Support\Str;
+use Mini\Support\Facades\Config;
 
 use Symfony\Component\VarDumper\VarDumper;
 

@@ -1,10 +1,10 @@
 <?php
 
-namespace System\Support\Facades;
+namespace Mini\Support\Facades;
 
 
 /**
-* @see \System\Events\Dispatcher
+* @see \Mini\Events\Dispatcher
 */
 class Event extends Facade
 {

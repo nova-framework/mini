@@ -2,9 +2,9 @@
 
 namespace App\Middleware;
 
-use System\Http\JsonResponse;
-use System\Http\Request;
-use System\Http\Response;
+use Mini\Http\JsonResponse;
+use Mini\Http\Request;
+use Mini\Http\Response;
 
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesser;

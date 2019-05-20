@@ -1,6 +1,6 @@
 <?php
 
-namespace System\Foundation;
+namespace Mini\Foundation;
 
 
 class ProviderRepository
@@ -48,7 +48,7 @@ class ProviderRepository
     /**
      * Compile the application manifest file.
      *
-     * @param  \System\Application  $app
+     * @param  \Mini\Application  $app
      * @param  array  $providers
      * @return array
      */
@@ -74,9 +74,9 @@ class ProviderRepository
     /**
      * Create a new provider instance.
      *
-     * @param  \System\Application  $app
+     * @param  \Mini\Application  $app
      * @param  string  $provider
-     * @return \System\Support\ServiceProvider
+     * @return \Mini\Support\ServiceProvider
      */
     public function createProvider(Application $app, $provider)
     {

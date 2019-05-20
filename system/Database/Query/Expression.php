@@ -1,6 +1,6 @@
 <?php
 
-namespace System\Database\Query;
+namespace Mini\Database\Query;
 
 
 class Expression

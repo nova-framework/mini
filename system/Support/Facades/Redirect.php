@@ -1,10 +1,10 @@
 <?php
 
-namespace System\Support\Facades;
+namespace Mini\Support\Facades;
 
 
 /**
- * @see \System\Routing\Redirector
+ * @see \Mini\Routing\Redirector
  */
 class Redirect extends Facade
 {

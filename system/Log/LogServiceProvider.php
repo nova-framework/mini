@@ -1,8 +1,8 @@
 <?php
 
-namespace System\Log;
+namespace Mini\Log;
 
-use System\Support\ServiceProvider;
+use Mini\Support\ServiceProvider;
 
 
 class LogServiceProvider extends ServiceProvider

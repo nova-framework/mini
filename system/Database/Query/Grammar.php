@@ -1,8 +1,8 @@
 <?php
 
-namespace System\Database\Query;
+namespace Mini\Database\Query;
 
-use System\Database\Connection;
+use Mini\Database\Connection;
 
 
 class Grammar

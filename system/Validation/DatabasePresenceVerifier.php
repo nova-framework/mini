@@ -1,8 +1,8 @@
 <?php
 
-namespace System\Validation;
+namespace Mini\Validation;
 
-use System\Database\ConnectionResolverInterface;
+use Mini\Database\ConnectionResolverInterface;
 
 
 class DatabasePresenceVerifier
@@ -10,7 +10,7 @@ class DatabasePresenceVerifier
     /**
      * The Database Connection Resolver implementation.
      *
-     * @var  \System\Database\ConnectionResolverInterface
+     * @var  \Mini\Database\ConnectionResolverInterface
      */
     protected $db;
 
@@ -18,7 +18,7 @@ class DatabasePresenceVerifier
     /**
      * Create a new database presence verifier.
      *
-     * @param  \System\Database\ConnectionResolverInterface  $db
+     * @param  \Mini\Database\ConnectionResolverInterface  $db
      * @return void
      */
     public function __construct(ConnectionResolverInterface $db)
@@ -75,7 +75,7 @@ class DatabasePresenceVerifier
     /**
      * Add a "where" clause to the given query.
      *
-     * @param  \System\Database\Query  $query
+     * @param  \Mini\Database\Query  $query
      * @param  string  $key
      * @param  string  $value
      * @return void
@@ -95,7 +95,7 @@ class DatabasePresenceVerifier
      * Get a query builder for the given table.
      *
      * @param  string  $table
-     * @return \System\Database\Query
+     * @return \Mini\Database\Query
      */
     protected function table($table)
     {

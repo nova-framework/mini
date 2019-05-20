@@ -1,8 +1,8 @@
 <?php
 
-namespace System\Support;
+namespace Mini\Support;
 
-use System\Support\Contracts\ArrayableInterface;
+use Mini\Support\Contracts\ArrayableInterface;
 
 
 class MessageBag Implements ArrayableInterface
@@ -39,7 +39,7 @@ class MessageBag Implements ArrayableInterface
      *
      * @param  string  $key
      * @param  string  $message
-     * @return \System\Support\MessageBag
+     * @return \Mini\Support\MessageBag
      */
     public function add($key, $message)
     {
@@ -54,7 +54,7 @@ class MessageBag Implements ArrayableInterface
      * Merge a new array of messages into the bag.
      *
      * @param  array  $messages
-     * @return \System\Support\MessageBag
+     * @return \Mini\Support\MessageBag
      */
     public function merge($messages)
     {
@@ -180,7 +180,7 @@ class MessageBag Implements ArrayableInterface
     /**
      * Get the messages for the instance.
      *
-     * @return \System\Support\MessageBag
+     * @return \Mini\Support\MessageBag
      */
     public function getMessageBag()
     {
@@ -201,7 +201,7 @@ class MessageBag Implements ArrayableInterface
      * Set the default message format.
      *
      * @param  string  $format
-     * @return \System\Support\MessageBag
+     * @return \Mini\Support\MessageBag
      */
     public function setFormat($format = ':message')
     {

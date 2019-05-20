@@ -1,10 +1,10 @@
 <?php
 
-namespace System\Console\Scheduling;
+namespace Mini\Console\Scheduling;
 
-use System\Container\Container;
-use System\Foundation\Application;
-use System\Mail\Mailer;
+use Mini\Container\Container;
+use Mini\Foundation\Application;
+use Mini\Mail\Mailer;
 
 use Symfony\Component\Process\Process;
 use Symfony\Component\Process\ProcessUtils;
@@ -122,7 +122,7 @@ class Event
     /**
      * Run the given event.
      *
-     * @param  \System\Container\Container  $container
+     * @param  \Mini\Container\Container  $container
      * @return void
      */
     public function run(Container $container)
@@ -151,7 +151,7 @@ class Event
     /**
      * Run the command in the foreground.
      *
-     * @param  \System\Container\Container  $container
+     * @param  \Mini\Container\Container  $container
      * @return void
      */
     protected function runCommandInForeground(Container $container)
@@ -171,7 +171,7 @@ class Event
     /**
      * Call all of the "before" callbacks for the event.
      *
-     * @param  \System\Container\Container  $container
+     * @param  \Mini\Container\Container  $container
      * @return void
      */
     protected function callBeforeCallbacks(Container $container)
@@ -184,7 +184,7 @@ class Event
     /**
      * Call all of the "after" callbacks for the event.
      *
-     * @param  \System\Container\Container  $container
+     * @param  \Mini\Container\Container  $container
      * @return void
      */
     protected function callAfterCallbacks(Container $container)
@@ -249,7 +249,7 @@ class Event
     /**
      * Determine if the given event should run based on the Cron expression.
      *
-     * @param  \System\Foundation\Application  $app
+     * @param  \Mini\Foundation\Application  $app
      * @return bool
      */
     public function isDue(Application $app)
@@ -272,7 +272,7 @@ class Event
     /**
      * Determine if the filters pass for the event.
      *
-     * @param  \System\Foundation\Application  $app
+     * @param  \Mini\Foundation\Application  $app
      * @return bool
      */
     protected function filtersPass(Application $app)

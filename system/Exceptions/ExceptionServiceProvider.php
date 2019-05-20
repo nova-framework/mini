@@ -1,9 +1,9 @@
 <?php
 
-namespace System\Exceptions;
+namespace Mini\Exceptions;
 
-use System\Exceptions\Handler;
-use System\Support\ServiceProvider;
+use Mini\Exceptions\Handler;
+use Mini\Support\ServiceProvider;
 
 
 class ExceptionServiceProvider extends ServiceProvider

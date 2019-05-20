@@ -1,8 +1,8 @@
 <?php
 
-namespace System\Routing;
+namespace Mini\Routing;
 
-use System\Container\Container;
+use Mini\Container\Container;
 
 use ReflectionMethod;
 
@@ -14,7 +14,7 @@ class ControllerDispatcher
     /**
      * The container instance.
      *
-     * @var \System\Container\Container
+     * @var \Mini\Container\Container
      */
     protected $container;
 
@@ -22,7 +22,7 @@ class ControllerDispatcher
     /**
      * Create a new controller dispatcher instance.
      *
-     * @param  \System\Container\Container  $container
+     * @param  \Mini\Container\Container  $container
      * @return void
      */
     public function __construct(Container $container)
@@ -33,7 +33,7 @@ class ControllerDispatcher
     /**
      * Dispatch a request to a given controller callback.
      *
-     * @param  \System\Routing\Route  $route
+     * @param  \Mini\Routing\Route  $route
      * @param  mixed  $controller
      * @param  string  $method
      * @return mixed

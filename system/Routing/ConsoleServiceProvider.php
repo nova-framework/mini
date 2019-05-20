@@ -1,8 +1,8 @@
 <?php
 
-namespace System\Routing;
+namespace Mini\Routing;
 
-use System\Support\ServiceProvider;
+use Mini\Support\ServiceProvider;
 
 
 class ConsoleServiceProvider extends ServiceProvider

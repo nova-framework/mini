@@ -1,8 +1,8 @@
 <?php
 
-namespace System\Auth;
+namespace Mini\Auth;
 
-use System\Support\Str;
+use Mini\Support\Str;
 
 use RuntimeException;
 
@@ -12,7 +12,7 @@ abstract class Guard
     /**
      * The currently authenticated user.
      *
-     * @var \System\Auth\UserInterface
+     * @var \Mini\Auth\UserInterface
      */
     protected $user;
 
@@ -45,9 +45,9 @@ abstract class Guard
     /**
      * Determine if the current user is authenticated.
      *
-     * @return \System\Auth\UserInterface
+     * @return \Mini\Auth\UserInterface
      *
-     * @throws \System\Auth\AuthenticationException
+     * @throws \Mini\Auth\AuthenticationException
      */
     public function authenticate()
     {
@@ -93,7 +93,7 @@ abstract class Guard
     /**
      * Get the currently authenticated user.
      *
-     * @return \System\Auth\UserInterface|null
+     * @return \Mini\Auth\UserInterface|null
      */
     abstract public function user();
 
@@ -101,7 +101,7 @@ abstract class Guard
      * Retrieve a user by the given credentials.
      *
      * @param  array $credentials
-     * @return \System\Auth\UserInterface|null
+     * @return \Mini\Auth\UserInterface|null
      */
     public function retrieveUserByCredentials(array $credentials)
     {
@@ -120,7 +120,7 @@ abstract class Guard
      * Retrieve a user by the given id.
      *
      * @param  mixed $identifier
-     * @return \System\Auth\UserInterface|null
+     * @return \Mini\Auth\UserInterface|null
      */
     public function retrieveUserById($identifier)
     {
@@ -134,7 +134,7 @@ abstract class Guard
      *
      * @param  mixed  $identifier
      * @param  string  $token
-     * @return \System\Auth\UserInterface|null
+     * @return \Mini\Auth\UserInterface|null
      */
     public function retrieveUserByToken($identifier, $token)
     {
@@ -165,7 +165,7 @@ abstract class Guard
     /**
      * Return the currently cached user of the application.
      *
-     * @return \System\Auth\UserInterface|null
+     * @return \Mini\Auth\UserInterface|null
      */
     public function getUser()
     {
@@ -175,7 +175,7 @@ abstract class Guard
     /**
      * Set the current user.
      *
-     * @param  \System\Auth\UserInterface  $user
+     * @param  \Mini\Auth\UserInterface  $user
      * @return $this
      */
     public function setUser(UserInterface $user)

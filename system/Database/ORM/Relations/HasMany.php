@@ -1,6 +1,6 @@
 <?php
 
-namespace System\Database\ORM\Relations;
+namespace Mini\Database\ORM\Relations;
 
 
 class HasMany extends HasOneOrMany

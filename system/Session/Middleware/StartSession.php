@@ -1,11 +1,11 @@
 <?php
 
-namespace System\Session\Middleware;
+namespace Mini\Session\Middleware;
 
-use System\Http\Request;
-use System\Session\SessionManager;
-use System\Session\SessionInterface;
-use System\Session\CookieSessionHandler;
+use Mini\Http\Request;
+use Mini\Session\SessionManager;
+use Mini\Session\SessionInterface;
+use Mini\Session\CookieSessionHandler;
 
 use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\HttpFoundation\Response;
@@ -20,7 +20,7 @@ class StartSession
     /**
      * The session manager.
      *
-     * @var \System\Session\SessionManager
+     * @var \Mini\Session\SessionManager
      */
     protected $manager;
 
@@ -35,7 +35,7 @@ class StartSession
     /**
      * Create a new session middleware.
      *
-     * @param  \System\Session\SessionManager  $manager
+     * @param  \Mini\Session\SessionManager  $manager
      * @return void
      */
     public function __construct(SessionManager $manager)
@@ -46,7 +46,7 @@ class StartSession
     /**
      * Handle an incoming request.
      *
-     * @param  \System\Http\Request  $request
+     * @param  \Mini\Http\Request  $request
      * @param  \Closure  $next
      * @return mixed
      */
@@ -76,7 +76,7 @@ class StartSession
     /**
      * Perform any final actions for the request lifecycle.
      *
-     * @param  \System\Http\Request  $request
+     * @param  \Mini\Http\Request  $request
      * @param  \Symfony\Component\HttpFoundation\Response  $response
      * @return void
      */
@@ -90,8 +90,8 @@ class StartSession
     /**
      * Start the session for the given request.
      *
-     * @param  \System\Http\Request  $request
-     * @return \System\Session\SessionInterface
+     * @param  \Mini\Http\Request  $request
+     * @return \Mini\Session\SessionInterface
      */
     protected function startSession(Request $request)
     {
@@ -105,8 +105,8 @@ class StartSession
     /**
      * Get the session implementation from the manager.
      *
-     * @param  \System\Http\Request  $request
-     * @return \System\Session\SessionInterface
+     * @param  \Mini\Http\Request  $request
+     * @return \Mini\Session\SessionInterface
      */
     public function getSession(Request $request)
     {
@@ -120,8 +120,8 @@ class StartSession
     /**
      * Store the current URL for the request if necessary.
      *
-     * @param  \System\Http\Request  $request
-     * @param  \System\Session\SessionInterface  $session
+     * @param  \Mini\Http\Request  $request
+     * @param  \Mini\Session\SessionInterface  $session
      * @return void
      */
     protected function storeCurrentUrl(Request $request, $session)
@@ -134,7 +134,7 @@ class StartSession
     /**
      * Remove the garbage from the session if necessary.
      *
-     * @param  \System\Session\SessionInterface  $session
+     * @param  \Mini\Session\SessionInterface  $session
      * @return void
      */
     protected function collectGarbage(SessionInterface $session)
@@ -161,7 +161,7 @@ class StartSession
      * Add the session cookie to the application response.
      *
      * @param  \Symfony\Component\HttpFoundation\Response  $response
-     * @param  \System\Session\SessionInterface  $session
+     * @param  \Mini\Session\SessionInterface  $session
      * @return void
      */
     protected function addCookieToResponse(Response $response, SessionInterface $session)

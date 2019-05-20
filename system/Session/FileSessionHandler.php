@@ -1,8 +1,8 @@
 <?php
 
-namespace System\Session;
+namespace Mini\Session;
 
-use System\Filesystem\Filesystem;
+use Mini\Filesystem\Filesystem;
 
 use Symfony\Component\Finder\Finder;
 
@@ -14,7 +14,7 @@ class FileSessionHandler implements \SessionHandlerInterface
     /**
      * The filesystem instance.
      *
-     * @var \System\Filesystem\Filesystem
+     * @var \Mini\Filesystem\Filesystem
      */
     protected $files;
 
@@ -35,7 +35,7 @@ class FileSessionHandler implements \SessionHandlerInterface
     /**
      * Create a new file driven handler instance.
      *
-     * @param  \System\Filesystem\Filesystem  $files
+     * @param  \Mini\Filesystem\Filesystem  $files
      * @param  string  $path
      * @param  int  $minutes
      * @return void

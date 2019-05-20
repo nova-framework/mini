@@ -1,11 +1,11 @@
 <?php
 
-namespace System\Validation;
+namespace Mini\Validation;
 
-use System\Container\Container;
-use System\Support\MessageBag;
-use System\Support\Str;
-use System\Translation\Translator;
+use Mini\Container\Container;
+use Mini\Support\MessageBag;
+use Mini\Support\Str;
+use Mini\Translation\Translator;
 
 use Symfony\Component\HttpFoundation\File\File;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -19,28 +19,28 @@ class Validator
     /**
      * The Translator instance.
      *
-     * @var \System\Translation\Translator
+     * @var \Mini\Translation\Translator
      */
     protected $translator;
 
     /**
      * The Database Presence Verifier instance.
      *
-     * @var \System\Validation\DatabasePresenceVerifier
+     * @var \Mini\Validation\DatabasePresenceVerifier
      */
     protected $presenceVerifier;
 
     /**
      * The Database Message Formatter instance.
      *
-     * @var \System\Validation\MessageFormatter
+     * @var \Mini\Validation\MessageFormatter
      */
     protected $messageFormatter;
 
     /**
      * The message bag instance.
      *
-     * @var \System\Support\MessageBag
+     * @var \Mini\Support\MessageBag
      */
     protected $messages;
 
@@ -127,7 +127,7 @@ class Validator
     /**
      * Create a new Validator instance.
      *
-     * @param  \System\Translation\Translator  $translator
+     * @param  \Mini\Translation\Translator  $translator
      * @param  array  $data
      * @param  array  $rules
      * @param  array  $messages
@@ -1364,7 +1364,7 @@ class Validator
      * Set the validation rules.
      *
      * @param  array  $rules
-     * @return \System\Validation\Validator
+     * @return \Mini\Validation\Validator
      */
     public function setRules(array $rules)
     {
@@ -1377,7 +1377,7 @@ class Validator
      * Set the custom attributes on the validator.
      *
      * @param  array  $attributes
-     * @return \System\Validation\Validator
+     * @return \Mini\Validation\Validator
      */
     public function setAttributeNames(array $attributes)
     {
@@ -1400,7 +1400,7 @@ class Validator
      * Set the files under validation.
      *
      * @param  array  $files
-     * @return \System\Validation\Validator
+     * @return \Mini\Validation\Validator
      */
     public function setFiles(array $files)
     {
@@ -1412,7 +1412,7 @@ class Validator
     /**
      * Get the Database Presence Verifier implementation.
      *
-     * @return \System\Validation\DatabasePresenceVerifier
+     * @return \Mini\Validation\DatabasePresenceVerifier
      *
      * @throws \RuntimeException
      */
@@ -1428,7 +1428,7 @@ class Validator
     /**
      * Set the Database Presence Verifier implementation.
      *
-     * @param  \System\Validation\DatabasePresenceVerifier  $presenceVerifier
+     * @param  \Mini\Validation\DatabasePresenceVerifier  $presenceVerifier
      * @return void
      */
     public function setPresenceVerifier(DatabasePresenceVerifier $presenceVerifier)
@@ -1439,7 +1439,7 @@ class Validator
     /**
      * Get the Translator implementation.
      *
-     * @return \System\Translation\Translator
+     * @return \Mini\Translation\Translator
      */
     public function getTranslator()
     {
@@ -1449,7 +1449,7 @@ class Validator
     /**
      * Set the Translator implementation.
      *
-     * @param  \System\Translation\Translator  $translator
+     * @param  \Mini\Translation\Translator  $translator
      * @return void
      */
     public function setTranslator(Translator $translator)
@@ -1502,7 +1502,7 @@ class Validator
     /**
      * Get the message container for the validator.
      *
-     * @return \System\Support\MessageBag
+     * @return \Mini\Support\MessageBag
      */
     public function messages()
     {
@@ -1516,7 +1516,7 @@ class Validator
     /**
      * An alternative more semantic shortcut to the message container.
      *
-     * @return \System\Support\MessageBag
+     * @return \Mini\Support\MessageBag
      */
     public function errors()
     {
@@ -1526,7 +1526,7 @@ class Validator
     /**
      * Get the messages for the instance.
      *
-     * @return \System\Support\MessageBag
+     * @return \Mini\Support\MessageBag
      */
     public function getMessageBag()
     {
@@ -1536,7 +1536,7 @@ class Validator
     /**
      * Set the IoC container instance.
      *
-     * @param  \System\Container\Container  $container
+     * @param  \Mini\Container\Container  $container
      * @return void
      */
     public function setContainer(Container $container)

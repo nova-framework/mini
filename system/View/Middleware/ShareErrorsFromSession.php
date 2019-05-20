@@ -1,9 +1,9 @@
 <?php
 
-namespace System\View\Middleware;
+namespace Mini\View\Middleware;
 
-use System\Support\ViewErrorBag;
-use System\View\Factory as ViewFactory;
+use Mini\Support\ViewErrorBag;
+use Mini\View\Factory as ViewFactory;
 
 use Closure;
 
@@ -13,14 +13,14 @@ class ShareErrorsFromSession
     /**
      * The view factory implementation.
      *
-     * @var \System\Contracts\View\Factory
+     * @var \Mini\Contracts\View\Factory
      */
     protected $view;
 
     /**
      * Create a new error binder instance.
      *
-     * @param  \System\View\Factory  $view
+     * @param  \Mini\View\Factory  $view
      * @return void
      */
     public function __construct(ViewFactory $view)
@@ -31,7 +31,7 @@ class ShareErrorsFromSession
     /**
      * Handle an incoming request.
      *
-     * @param  \System\Http\Request  $request
+     * @param  \Mini\Http\Request  $request
      * @param  \Closure  $next
      * @return mixed
      */

@@ -1,10 +1,10 @@
 <?php
 
-namespace System\Support\Facades;
+namespace Mini\Support\Facades;
 
 
 /**
-* @see \System\Encryption\Encrypter
+* @see \Mini\Encryption\Encrypter
 */
 class Crypt extends Facade
 {

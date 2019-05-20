@@ -2,8 +2,8 @@
 
 namespace App\Providers;
 
-use System\Routing\Router;
-use System\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
+use Mini\Routing\Router;
+use Mini\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 
 
 class RouteServiceProvider extends ServiceProvider
@@ -19,7 +19,7 @@ class RouteServiceProvider extends ServiceProvider
     /**
      * Define your route pattern filters, etc.
      *
-     * @param  \System\Routing\Router  $router
+     * @param  \Mini\Routing\Router  $router
      * @return void
      */
     public function boot(Router $router)
@@ -32,7 +32,7 @@ class RouteServiceProvider extends ServiceProvider
     /**
      * Define the routes for the application.
      *
-     * @param  \System\Routing\Router  $router
+     * @param  \Mini\Routing\Router  $router
      * @return void
      */
     public function map(Router $router)

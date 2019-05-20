@@ -1,8 +1,8 @@
 <?php
 
-namespace System\Database\ORM;
+namespace Mini\Database\ORM;
 
-use System\Database\Query\Expression;
+use Mini\Database\Query\Expression;
 
 use Closure;
 
@@ -12,21 +12,21 @@ abstract class Relation
     /**
      * The ORM query builder instance.
      *
-     * @var \System\Database\ORM\Builder
+     * @var \Mini\Database\ORM\Builder
      */
     protected $query;
 
     /**
      * The parent model instance.
      *
-     * @var \System\Database\ORM\Model
+     * @var \Mini\Database\ORM\Model
      */
     protected $parent;
 
     /**
      * The related model instance.
      *
-     * @var \System\Database\ORM\Model
+     * @var \Mini\Database\ORM\Model
      */
     protected $related;
 
@@ -41,8 +41,8 @@ abstract class Relation
     /**
      * Create a new relation instance.
      *
-     * @param  \System\Database\ORM\Builder  $query
-     * @param  \System\Database\ORM\Model  $parent
+     * @param  \Mini\Database\ORM\Builder  $query
+     * @param  \Mini\Database\ORM\Model  $parent
      * @return void
      */
     public function __construct(Builder $query, Model $parent)
@@ -159,7 +159,7 @@ abstract class Relation
     /**
      * Get the underlying query for the relation.
      *
-     * @return \System\Database\ORM\Builder
+     * @return \Mini\Database\ORM\Builder
      */
     public function getQuery()
     {
@@ -169,7 +169,7 @@ abstract class Relation
     /**
      * Get the base query builder driving the ORM builder.
      *
-     * @return \System\Database\Query\Builder
+     * @return \Mini\Database\Query\Builder
      */
     public function getBaseQuery()
     {
@@ -179,7 +179,7 @@ abstract class Relation
     /**
      * Get the parent model of the relation.
      *
-     * @return \System\Database\ORM\Model
+     * @return \Mini\Database\ORM\Model
      */
     public function getParent()
     {
@@ -199,7 +199,7 @@ abstract class Relation
     /**
      * Get the related model of the relation.
      *
-     * @return \System\Database\ORM\Model
+     * @return \Mini\Database\ORM\Model
      */
     public function getRelated()
     {

@@ -1,9 +1,9 @@
 <?php
 
-namespace System\Routing;
+namespace Mini\Routing;
 
-use System\Http\RedirectResponse;
-use System\Session\Store as SessionStore;
+use Mini\Http\RedirectResponse;
+use Mini\Session\Store as SessionStore;
 
 
 class Redirector
@@ -11,21 +11,21 @@ class Redirector
     /**
      * The URL generator instance.
      *
-     * @var \System\Routing\UrlGenerator
+     * @var \Mini\Routing\UrlGenerator
      */
     protected $generator;
 
     /**
      * The session store instance.
      *
-     * @var \System\Session\Store
+     * @var \Mini\Session\Store
      */
     protected $session;
 
     /**
      * Create a new Redirector instance.
      *
-     * @param  \System\Routing\UrlGenerator  $generator
+     * @param  \Mini\Routing\UrlGenerator  $generator
      * @return void
      */
     public function __construct(UrlGenerator $generator)
@@ -37,7 +37,7 @@ class Redirector
      * Create a new redirect response to the "home" route.
      *
      * @param  int  $status
-     * @return \System\Http\RedirectResponse
+     * @return \Mini\Http\RedirectResponse
      */
     public function home($status = 302)
     {
@@ -49,7 +49,7 @@ class Redirector
      *
      * @param  int    $status
      * @param  array  $headers
-     * @return \System\Http\RedirectResponse
+     * @return \Mini\Http\RedirectResponse
      */
     public function back($status = 302, $headers = array())
     {
@@ -61,7 +61,7 @@ class Redirector
      *
      * @param  int    $status
      * @param  array  $headers
-     * @return \System\Http\RedirectResponse
+     * @return \Mini\Http\RedirectResponse
      */
     public function refresh($status = 302, $headers = array())
     {
@@ -75,7 +75,7 @@ class Redirector
      * @param  int     $status
      * @param  array   $headers
      * @param  bool    $secure
-     * @return \System\Http\RedirectResponse
+     * @return \Mini\Http\RedirectResponse
      */
     public function guest($path, $status = 302, $headers = array(), $secure = null)
     {
@@ -91,7 +91,7 @@ class Redirector
      * @param  int     $status
      * @param  array   $headers
      * @param  bool    $secure
-     * @return \System\Http\RedirectResponse
+     * @return \Mini\Http\RedirectResponse
      */
     public function intended($default = '/', $status = 302, $headers = array(), $secure = null)
     {
@@ -103,7 +103,7 @@ class Redirector
     /**
      * Create a new redirect response from the given path and arguments.
      *
-     * @return \System\Http\RedirectResponse
+     * @return \Mini\Http\RedirectResponse
      */
     public function url()
     {
@@ -131,7 +131,7 @@ class Redirector
      * @param  int     $status
      * @param  array   $headers
      * @param  bool    $secure
-     * @return \System\Http\RedirectResponse
+     * @return \Mini\Http\RedirectResponse
      */
     public function to($path, $status = 302, $headers = array(), $secure = null)
     {
@@ -146,7 +146,7 @@ class Redirector
      * @param  string  $path
      * @param  int     $status
      * @param  array   $headers
-     * @return \System\Http\RedirectResponse
+     * @return \Mini\Http\RedirectResponse
      */
     public function away($path, $status = 302, $headers = array())
     {
@@ -159,7 +159,7 @@ class Redirector
      * @param  string  $path
      * @param  int     $status
      * @param  array   $headers
-     * @return \System\Http\RedirectResponse
+     * @return \Mini\Http\RedirectResponse
      */
     public function secure($path, $status = 302, $headers = array())
     {
@@ -188,7 +188,7 @@ class Redirector
      * @param  string  $path
      * @param  int     $status
      * @param  array   $headers
-     * @return \System\Http\RedirectResponse
+     * @return \Mini\Http\RedirectResponse
      */
     protected function createRedirect($path, $status, $headers)
     {
@@ -206,7 +206,7 @@ class Redirector
     /**
      * Get the URL generator instance.
      *
-     * @return  \System\Routing\UrlGenerator
+     * @return  \Mini\Routing\UrlGenerator
      */
     public function getUrlGenerator()
     {
@@ -216,7 +216,7 @@ class Redirector
     /**
      * Set the active session store.
      *
-     * @param  \System\Session\Store  $session
+     * @param  \Mini\Session\Store  $session
      * @return void
      */
     public function setSession(SessionStore $session)

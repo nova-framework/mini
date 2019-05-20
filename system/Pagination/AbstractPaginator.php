@@ -1,8 +1,8 @@
 <?php
 
-namespace System\Pagination;
+namespace Mini\Pagination;
 
-use System\Support\Str;
+use Mini\Support\Str;
 
 use ArrayIterator;
 use Closure;
@@ -398,7 +398,7 @@ abstract class AbstractPaginator
     /**
      * Get an instance of the view factory from the resolver.
      *
-     * @return \System\Contracts\View\Factory
+     * @return \Mini\Contracts\View\Factory
      */
     public static function viewFactory()
     {

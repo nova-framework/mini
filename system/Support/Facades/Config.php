@@ -1,10 +1,10 @@
 <?php
 
-namespace System\Support\Facades;
+namespace Mini\Support\Facades;
 
 
 /**
-* @see \System\Config\Store
+* @see \Mini\Config\Store
 */
 class Config extends Facade
 {

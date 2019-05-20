@@ -1,10 +1,10 @@
 <?php
 
-namespace System\Cache\Console;
+namespace Mini\Cache\Console;
 
-use System\Console\Command;
-use System\Cache\CacheManager;
-use System\Filesystem\Filesystem;
+use Mini\Console\Command;
+use Mini\Cache\CacheManager;
+use Mini\Filesystem\Filesystem;
 
 
 class ClearCommand extends Command
@@ -26,22 +26,22 @@ class ClearCommand extends Command
     /**
      * The Cache Manager instance.
      *
-     * @var \System\Cache\CacheManager
+     * @var \Mini\Cache\CacheManager
      */
     protected $cache;
 
     /**
      * The File System instance.
      *
-     * @var \System\Filesystem\Filesystem
+     * @var \Mini\Filesystem\Filesystem
      */
     protected $files;
 
     /**
      * Create a new Cache Clear Command instance.
      *
-     * @param  \System\Cache\CacheManager  $cache
-     * @param  \System\Filesystem\Filesystem  $files
+     * @param  \Mini\Cache\CacheManager  $cache
+     * @param  \Mini\Filesystem\Filesystem  $files
      * @return void
      */
     public function __construct(CacheManager $cache, Filesystem $files)

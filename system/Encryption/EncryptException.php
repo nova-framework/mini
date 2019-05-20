@@ -1,6 +1,6 @@
 <?php
 
-namespace System\Encryption;
+namespace Mini\Encryption;
 
 use RuntimeException;
 

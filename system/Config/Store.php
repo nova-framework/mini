@@ -1,6 +1,6 @@
 <?php
 
-namespace System\Config;
+namespace Mini\Config;
 
 use ArrayAccess;
 

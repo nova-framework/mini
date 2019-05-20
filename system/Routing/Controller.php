@@ -1,8 +1,8 @@
 <?php
 
-namespace System\Routing;
+namespace Mini\Routing;
 
-use System\Support\Str;
+use Mini\Support\Str;
 
 use BadMethodCallException;
 use LogicException;

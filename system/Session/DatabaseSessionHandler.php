@@ -1,9 +1,9 @@
 <?php
 
-namespace System\Session;
+namespace Mini\Session;
 
-use System\Database\Connection;
-use System\Session\ExistenceAwareInterface;
+use Mini\Database\Connection;
+use Mini\Session\ExistenceAwareInterface;
 
 
 class DatabaseSessionHandler implements \SessionHandlerInterface, ExistenceAwareInterface
@@ -11,7 +11,7 @@ class DatabaseSessionHandler implements \SessionHandlerInterface, ExistenceAware
     /**
      * The database connection instance.
      *
-     * @var \System\Database\Connection
+     * @var \Mini\Database\Connection
      */
     protected $connection;
 
@@ -32,7 +32,7 @@ class DatabaseSessionHandler implements \SessionHandlerInterface, ExistenceAware
     /**
      * Create a new database session handler instance.
      *
-     * @param  \System\Database\Connection  $connection
+     * @param  \Mini\Database\Connection  $connection
      * @param  string  $table
      * @return void
      */
@@ -113,7 +113,7 @@ class DatabaseSessionHandler implements \SessionHandlerInterface, ExistenceAware
     /**
      * Get a fresh query builder instance for the table.
      *
-     * @return \System\Database\Query\Builder
+     * @return \Mini\Database\Query\Builder
      */
     protected function getQuery()
     {

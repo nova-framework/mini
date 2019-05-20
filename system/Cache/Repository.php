@@ -1,9 +1,9 @@
 <?php
 
-namespace System\Cache;
+namespace Mini\Cache;
 
-use System\Cache\StoreInterface;
-use System\Support\Traits\MacroableTrait;
+use Mini\Cache\StoreInterface;
+use Mini\Support\Traits\MacroableTrait;
 
 use Carbon\Carbon;
 
@@ -21,7 +21,7 @@ class Repository implements ArrayAccess
     /**
      * The cache store implementation.
      *
-     * @var \System\Cache\Contracts\StoreInterface
+     * @var \Mini\Cache\Contracts\StoreInterface
      */
     protected $store;
 
@@ -35,7 +35,7 @@ class Repository implements ArrayAccess
     /**
      * Create a new cache repository instance.
      *
-     * @param  \System\Cache\Contracts\StoreInterface  $store
+     * @param  \Mini\Cache\Contracts\StoreInterface  $store
      */
     public function __construct(StoreInterface $store)
     {
@@ -190,7 +190,7 @@ class Repository implements ArrayAccess
     /**
      * Get the cache store implementation.
      *
-     * @return \System\Cache\StoreInterface
+     * @return \Mini\Cache\StoreInterface
      */
     public function getStore()
     {

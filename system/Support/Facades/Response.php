@@ -1,11 +1,11 @@
 <?php
 
-namespace System\Support\Facades;
+namespace Mini\Support\Facades;
 
-use System\Http\JsonResponse;
-use System\Http\Response as HttpResponse;
-use System\Support\Traits\MacroableTrait;
-use System\Support\Str;
+use Mini\Http\JsonResponse;
+use Mini\Http\Response as HttpResponse;
+use Mini\Support\Traits\MacroableTrait;
+use Mini\Support\Str;
 
 use Symfony\Component\HttpFoundation\StreamedResponse;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;

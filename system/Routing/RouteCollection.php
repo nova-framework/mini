@@ -1,8 +1,8 @@
 <?php
 
-namespace System\Routing;
+namespace Mini\Routing;
 
-use System\Http\Request;
+use Mini\Http\Request;
 
 use Countable;
 
@@ -42,8 +42,8 @@ class RouteCollection implements Countable
     /**
      * Add a Route instance to the collection.
      *
-     * @param  \System\Routing\Route  $route
-     * @return \System\Routing\Route
+     * @param  \Mini\Routing\Route  $route
+     * @return \Mini\Routing\Route
      */
     public function add(Route $route)
     {
@@ -68,8 +68,8 @@ class RouteCollection implements Countable
     /**
      * Find the Route which matches the given Request.
      *
-     * @param  \System\Http\Request  $request
-     * @return \System\Routing|Route|null
+     * @param  \Mini\Http\Request  $request
+     * @return \Mini\Routing|Route|null
      */
     public function match(Request $request)
     {

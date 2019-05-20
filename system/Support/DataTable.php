@@ -1,10 +1,10 @@
 <?php
 
-namespace System\Support;
+namespace Mini\Support;
 
-use System\Database\Query\Builder as QueryBuilder;
-use System\Support\Facades\Input;
-use System\Support\Facades\Response;
+use Mini\Database\Query\Builder as QueryBuilder;
+use Mini\Support\Facades\Input;
+use Mini\Support\Facades\Response;
 
 use Closure;
 
@@ -14,7 +14,7 @@ class DataTable
     /**
      * Server Side Processor for DataTables.
      *
-     * @param System\Database\Query\Builder $query
+     * @param Mini\Database\Query\Builder $query
      * @param array $options
      * @param array $input
      *

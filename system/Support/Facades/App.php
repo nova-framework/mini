@@ -1,10 +1,10 @@
 <?php
 
-namespace System\Support\Facades;
+namespace Mini\Support\Facades;
 
 
 /**
-* @see \System\Foundation\Application
+* @see \Mini\Foundation\Application
 */
 class App extends Facade
 {

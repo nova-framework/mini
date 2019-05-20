@@ -1,13 +1,13 @@
 <?php
 
-namespace System\Routing\Console;
+namespace Mini\Routing\Console;
 
-use System\Http\Request;
-use System\Routing\ControllerDispatcher;
-use System\Routing\Route;
-use System\Routing\Router;
-use System\Console\Command;
-use System\Support\Arr;
+use Mini\Http\Request;
+use Mini\Routing\ControllerDispatcher;
+use Mini\Routing\Route;
+use Mini\Routing\Router;
+use Mini\Console\Command;
+use Mini\Support\Arr;
 
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputOption;
@@ -34,7 +34,7 @@ class RouteListCommand extends Command
     /**
     * An array of all the registered routes.
     *
-    * @var \System\Routing\RouteCollection
+    * @var \Mini\Routing\RouteCollection
     */
     protected $routes;
 
@@ -51,7 +51,7 @@ class RouteListCommand extends Command
     /**
     * Create a new route command instance.
     *
-    * @param  \System\Routing\Router  $router
+    * @param  \Mini\Routing\Router  $router
     * @return void
     */
     public function __construct(Router $router)
@@ -103,7 +103,7 @@ class RouteListCommand extends Command
     * Get the route information for a given route.
     *
     * @param  string  $name
-    * @param  \System\Routing\Route  $route
+    * @param  \Mini\Routing\Route  $route
     * @return array
     */
     protected function getRouteInformation(Route $route)
@@ -124,7 +124,7 @@ class RouteListCommand extends Command
     /**
      * Get before filters.
      *
-     * @param  \System\Routing\Route  $route
+     * @param  \Mini\Routing\Route  $route
      * @return string
      */
     protected function getMiddleware($route)

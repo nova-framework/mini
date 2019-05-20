@@ -1,6 +1,6 @@
 <?php
 
-namespace System\Container;
+namespace Mini\Container;
 
 use Closure;
 use InvalidArgumentException;
@@ -14,7 +14,7 @@ class CallbackCaller
     /**
      * Call the given Closure / class@method and inject its dependencies.
      *
-     * @param  \System\Container\Container  $container
+     * @param  \Mini\Container\Container  $container
      * @param  callable|string  $callback
      * @param  array  $parameters
      * @param  string|null  $defaultMethod
@@ -46,7 +46,7 @@ class CallbackCaller
     /**
      * Get all dependencies for a given method.
      *
-     * @param  \System\Container\Container  $container
+     * @param  \Mini\Container\Container  $container
      * @param  array  $parameters
      * @param  \ReflectionFunctionAbstract  $reflector
      * @return array

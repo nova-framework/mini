@@ -1,10 +1,10 @@
 <?php
 
-namespace System\Support\Facades;
+namespace Mini\Support\Facades;
 
 
 /**
- * @see \System\Http\Request
+ * @see \Mini\Http\Request
  */
 class Request extends Facade
 {

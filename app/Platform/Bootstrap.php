@@ -1,9 +1,9 @@
 <?php
 
-use System\Config\Store as Config;
-use System\Container\Container;
-use System\Foundation\AliasLoader;
-use System\Foundation\Application;
+use Mini\Config\Store as Config;
+use Mini\Container\Container;
+use Mini\Foundation\AliasLoader;
+use Mini\Foundation\Application;
 
 use App\Exceptions\Handler as ExceptionHandler;
 
@@ -63,7 +63,7 @@ Container::setInstance($app);
 //--------------------------------------------------------------------------
 
 $app->singleton(
-    'System\Foundation\Exceptions\HandlerInterface', 'App\Platform\Exceptions\Handler'
+    'Mini\Foundation\Exceptions\HandlerInterface', 'App\Platform\Exceptions\Handler'
 );
 
 

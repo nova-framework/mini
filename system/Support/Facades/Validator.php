@@ -1,11 +1,11 @@
 <?php
 
-namespace System\Support\Facades;
+namespace Mini\Support\Facades;
 
 
 /**
- * @see \System\Validation\Factory
- * @see \System\Validation\Validator
+ * @see \Mini\Validation\Factory
+ * @see \Mini\Validation\Validator
  */
 class Validator extends Facade
 {

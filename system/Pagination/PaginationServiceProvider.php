@@ -1,8 +1,8 @@
 <?php
 
-namespace System\Pagination;
+namespace Mini\Pagination;
 
-use System\Support\ServiceProvider;
+use Mini\Support\ServiceProvider;
 
 
 class PaginationServiceProvider extends ServiceProvider
