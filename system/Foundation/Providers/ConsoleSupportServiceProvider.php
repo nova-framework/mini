@@ -1,13 +1,13 @@
 <?php
 
-namespace Mini\Foundation;
+namespace Mini\Foundation\Providers;
 
 use Mini\Foundation\Forge;
 use Mini\Support\Composer;
 use Mini\Support\ServiceProvider;
 
 
-class ConsoleServiceProvider extends ServiceProvider
+class ConsoleSupportServiceProvider extends ServiceProvider
 {
     /**
      * Indicates if loading of the Provider is deferred.

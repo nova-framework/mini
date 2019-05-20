@@ -93,7 +93,7 @@ return array(
 
         // The Forge Providers.
         'Mini\Cache\ConsoleServiceProvider',
-        'Mini\Foundation\ConsoleServiceProvider',
+        'Mini\Foundation\Providers\ConsoleSupportServiceProvider',
         'Mini\Mail\ConsoleServiceProvider',
         'Mini\Routing\ConsoleServiceProvider',
 
