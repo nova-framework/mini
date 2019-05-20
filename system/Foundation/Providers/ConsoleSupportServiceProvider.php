@@ -16,17 +16,6 @@ class ConsoleSupportServiceProvider extends ServiceProvider
      */
     protected $defer = true;
 
-    /**
-     * The commands to be registered.
-     *
-     * @var array
-     */
-    protected $commands = array(
-        'ClearLog'         => 'command.clear-log',
-        'KeyGenerate'      => 'command.key.generate',
-        'Optimize'         => 'command.optimize',
-        'Serve'            => 'command.serve',
-    );
 
     /**
      * Register the Service Provider.
@@ -45,74 +34,9 @@ class ConsoleSupportServiceProvider extends ServiceProvider
            return new Forge($app);
         });
 
-        // Register the Console Commands.
-        $this->registerCommands();
-
         // Register the additional service providers.
+        $this->app->register('Mini\Foundation\Providers\ForgeServiceProvider');
         $this->app->register('Mini\Console\Scheduling\ScheduleServiceProvider');
-    }
-
-    protected function registerCommands()
-    {
-        foreach (array_keys($this->commands) as $command) {
-            $method = "register{$command}Command";
-
-            call_user_func_array(array($this, $method), array());
-        }
-
-        $this->commands(array_values($this->commands));
-    }
-
-    /**
-     * Register the command.
-     *
-     * @return void
-     */
-    protected function registerClearLogCommand()
-    {
-        $this->app->singleton('command.clear-log', function ($app)
-        {
-            return new Console\ClearLogCommand($app['files']);
-        });
-    }
-
-    /**
-     * Register the command.
-     *
-     * @return void
-     */
-    protected function registerKeyGenerateCommand()
-    {
-        $this->app->singleton('command.key.generate', function ($app)
-        {
-            return new Console\KeyGenerateCommand($app['files']);
-        });
-    }
-
-    /**
-     * Register the command.
-     *
-     * @return void
-     */
-    protected function registerOptimizeCommand()
-    {
-        $this->app->singleton('command.optimize', function ($app)
-        {
-            return new Console\OptimizeCommand($app['composer']);
-        });
-    }
-
-    /**
-     * Register the command.
-     *
-     * @return void
-     */
-    protected function registerServeCommand()
-    {
-        $this->app->singleton('command.serve', function ()
-        {
-            return new Console\ServeCommand();
-        });
     }
 
     /**
@@ -122,9 +46,7 @@ class ConsoleSupportServiceProvider extends ServiceProvider
      */
     public function provides()
     {
-        return array_merge(
-            array('composer', 'forge'), array_values($this->commands)
-        );
+        return array('composer', 'forge');
     }
 
 }
