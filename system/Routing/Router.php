@@ -284,9 +284,15 @@ class Router
      */
     public function gatherMiddleware(Route $route)
     {
-        $middleware = $this->resolveMiddleware(
-            $route->middleware()
-        );
+        $middleware = array_flatten(array_map(function ($name)
+        {
+            if (isset($this->middlewareGroups[$name])) {
+                return $this->parseMiddlewareGroup($name);
+            }
+
+            return $this->parseMiddleware($name);
+
+        }, $route->middleware()));
 
         return array_unique($middleware, SORT_REGULAR);
     }
@@ -294,21 +300,22 @@ class Router
     /**
      * Parse the middleware group and format it for usage.
      *
-     * @param  array  $middleware
+     * @param string $name
      * @return array
      */
-    protected function resolveMiddleware(array $middleware)
+    protected function parseMiddlewareGroup($name)
     {
         $results = array();
 
-        foreach ($middleware as $name) {
-            if (is_null($group = array_get($this->middlewareGroups, $name))) {
-                array_push($results, $this->parseMiddleware($name));
+        foreach ($this->middlewareGroups[$name] as $middleware) {
+            if (! isset($this->middlewareGroups[$middleware])) {
+                $results[] = $this->parseMiddleware($middleware);
 
                 continue;
             }
 
-            $results = array_merge($results, $this->resolveMiddleware($group));
+            // The middleware refer a middleware group.
+            $results = array_merge($results, $this->parseMiddlewareGroup($middleware));
         }
 
         return $results;
@@ -324,21 +331,23 @@ class Router
     {
         list ($name, $parameters) = array_pad(explode(':', $name, 2), 2, null);
 
+        //
         $callable = array_get($this->middleware, $name, $name);
 
-        if (empty($parameters)) {
+        if (is_null($parameters)) {
             return $callable;
-        } else if (is_string($callable)) {
+        }
+
+        // The middleware have parameters.
+        else if (is_string($callable)) {
             return $callable .':' .$parameters;
         }
 
-        $parameters = explode(',', $parameters);
-
         return function ($passable, $stack) use ($callable, $parameters)
         {
-            $parameters = array_merge(array($passable, $stack), $parameters);
-
-            return call_user_func_array($callable, $parameters);
+            return call_user_func_array(
+                $callable, array_merge(array($passable, $stack), explode(',', $parameters))
+            );
         };
     }
 
