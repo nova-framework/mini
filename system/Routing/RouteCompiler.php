@@ -9,21 +9,32 @@ use LogicException;
 class RouteCompiler
 {
     /**
-     * The route instance.
+     * The route path.
      *
-     * @var \Mini\Routing\Route
+     * @var string
      */
-    protected $route;
+    protected $path;
+
+    /**
+     * The route patterns.
+     *
+     * @var array
+     */
+    protected $patterns = array();
+
 
     /**
      * Create a new Route compiler instance.
      *
-     * @param  \Mini\Routing\Route  $route
+     * @param  string  $path
+     * @param  array  $patterns
      * @return void
      */
-    public function __construct(Route $route)
+    public function __construct($path, $patterns)
     {
-        $this->route = $route;
+        $this->path = $path;
+
+        $this->patterns = $patterns;
     }
 
     /**
@@ -39,11 +50,9 @@ class RouteCompiler
         $variables = array();
 
         //
-        $path = $this->route->getPath();
+        $path = $this->getPath();
 
-        $patterns = $this->route->getPatterns();
-
-        $pattern = preg_replace_callback('#/\{(.*?)(\?)?\}#', function ($matches) use ($path, $patterns, &$optionals, &$variables)
+        $pattern = preg_replace_callback('#/\{(.*?)(\?)?\}#', function ($matches) use ($path, &$optionals, &$variables)
         {
             list (, $name, $optional) = array_pad($matches, 3, false);
 
@@ -58,7 +67,7 @@ class RouteCompiler
             $variables[] = $name;
 
             //
-            $pattern = array_get($patterns, $name, '[^/]+');
+            $pattern = array_get($this->patterns, $name, '[^/]+');
 
             if ($optional) {
                 $optionals++;
@@ -79,12 +88,22 @@ class RouteCompiler
     }
 
     /**
-     * Get the inner Route instance.
+     * Get the route path.
      *
-     * @return \Mini\Routing\Route
+     * @return string
      */
-    public function getRoute()
+    public function getPath()
     {
-        return $this->route;
+        return $this->path;
+    }
+
+    /**
+     * Get the route patterns.
+     *
+     * @return string
+     */
+    public function getPatterns()
+    {
+        return $this->patterns;
     }
 }

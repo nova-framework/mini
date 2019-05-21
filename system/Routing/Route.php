@@ -90,7 +90,7 @@ class Route
             return false;
         }
 
-        $pattern = with(new RouteCompiler($this))->compile();
+        $pattern = $this->compilePattern();
 
         if (preg_match($pattern, $path, $matches) !== 1) {
             return false;
@@ -103,6 +103,18 @@ class Route
         }, ARRAY_FILTER_USE_BOTH);
 
         return true;
+    }
+
+    /**
+     * Compile the route pattern.
+     *
+     * @return string
+     */
+    public function compilePattern()
+    {
+        $compiler = new RouteCompiler($this->getPath(), $this->getPatterns());
+
+        return $compiler->compile();
     }
 
     /**
