@@ -64,11 +64,10 @@ class ControllerDispatcher
             return array();
         }
 
-        $results = array_filter($controller->getMiddleware(), function ($options, $middleware) use ($method)
+        $results = array_filter($controller->getMiddleware(), function ($options) use ($method)
         {
             return ! static::methodExcludedByOptions($method, $options);
-
-        }, ARRAY_FILTER_USE_BOTH);
+        });
 
         return array_keys($results);
     }
