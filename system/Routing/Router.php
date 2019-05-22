@@ -206,7 +206,7 @@ class Router
             $action['controller'] = $uses;
         }
 
-        //
+        // If the action has no 'uses' field, we will look for the inner callable.
         else if (! isset($action['uses'])) {
             $action['uses'] = $this->findActionClosure($action);
         }
@@ -380,6 +380,7 @@ class Router
     /**
      * Prepares a response.
      *
+     * @param \Mini\Http\Request $request
      * @param mixed $response
      * @return \Mini\Http\Response
      */

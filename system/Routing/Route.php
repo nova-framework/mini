@@ -158,13 +158,18 @@ class Route
             return $this->callback = $callback;
         }
 
+        //
+        else if (! is_string($callback)) {
+            throw new LogicException("The route callback must be a Closure instance or a string.");
+        }
+
         list ($className, $method) = array_pad(explode('@', $callback, 2), 2, null);
 
         if (is_null($method) || ! class_exists($className)) {
             throw new LogicException("Invalid route action: [{$callback}]");
         }
 
-        // We will create a Controller instance, then we will check if its method exists.
+        //
         else if (! method_exists($controller = $this->container->make($className), $method)) {
             throw new LogicException("Controller [{$className}] has no method [${method}].");
         }
