@@ -286,8 +286,8 @@ class Router
     {
         $middleware = array_flatten(array_map(function ($name)
         {
-            if (isset($this->middlewareGroups[$name])) {
-                return $this->parseMiddlewareGroup($name);
+            if (! is_null($group = array_get($this->middlewareGroups, $name))) {
+                return $this->parseMiddlewareGroup($group);
             }
 
             return $this->parseMiddleware($name);
@@ -303,19 +303,18 @@ class Router
      * @param string $name
      * @return array
      */
-    protected function parseMiddlewareGroup($name)
+    protected function parseMiddlewareGroup(array $middleware)
     {
         $results = array();
 
-        foreach ($this->middlewareGroups[$name] as $middleware) {
-            if (! isset($this->middlewareGroups[$middleware])) {
-                $results[] = $this->parseMiddleware($middleware);
+        foreach ($middleware as $name) {
+            if (! is_null($group = array_get($this->middlewareGroups, $name))) {
+                $results = array_merge($results, $this->parseMiddlewareGroup($group));
 
                 continue;
             }
 
-            // The middleware refer a middleware group.
-            $results = array_merge($results, $this->parseMiddlewareGroup($middleware));
+            $results[] = $this->parseMiddleware($name);
         }
 
         return $results;
