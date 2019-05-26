@@ -277,39 +277,27 @@ class Router
     }
 
     /**
-     * Gather the middleware from the specified route action.
+     * Resolve the given middleware.
      *
-     * @param \Mini\Routing\Route $route
+     * @param mixed $middleware
      * @return array
      */
-    public function gatherMiddleware(Route $route)
+    public function gatherMiddleware($middleware)
     {
-        $middleware = array_flatten(array_map(function ($name)
-        {
-            if (! is_null($group = array_get($this->middlewareGroups, $name))) {
-                return $this->parseMiddlewareGroup($group);
-            }
+        if ($middleware instanceof Route) {
+            $middleware = $middleware->middleware();
+        }
 
-            return $this->parseMiddleware($name);
+        //
+        else if (! is_array($middleware)) {
+            return array();
+        }
 
-        }, $route->middleware()));
-
-        return array_unique($middleware, SORT_REGULAR);
-    }
-
-    /**
-     * Parse the middleware group and format it for usage.
-     *
-     * @param string $name
-     * @return array
-     */
-    protected function parseMiddlewareGroup(array $middleware)
-    {
         $results = array();
 
         foreach ($middleware as $name) {
             if (! is_null($group = array_get($this->middlewareGroups, $name))) {
-                $results = array_merge($results, $this->parseMiddlewareGroup($group));
+                $results = array_merge($results, $this->gatherMiddleware($group));
 
                 continue;
             }
@@ -317,7 +305,7 @@ class Router
             $results[] = $this->parseMiddleware($name);
         }
 
-        return $results;
+        return array_unique($results, SORT_REGULAR);
     }
 
     /**
@@ -344,9 +332,9 @@ class Router
 
         return function ($passable, $stack) use ($callable, $parameters)
         {
-            return call_user_func_array(
-                $callable, array_merge(array($passable, $stack), explode(',', $parameters))
-            );
+            $parameters = array_merge(array($passable, $stack), explode(',', $parameters));
+
+            return call_user_func_array($callable, $parameters);
         };
     }
 
