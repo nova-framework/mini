@@ -607,6 +607,6 @@ class Connection
             return $this->loggingQueries;
         }
 
-        $this->loggingQueries = $what;
+        $this->loggingQueries = (bool) $what;
     }
 }
