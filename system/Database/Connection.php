@@ -137,9 +137,9 @@ class Connection
      */
     public function selectOne($query, $bindings = array())
     {
-        $records = $this->select($query, $bindings);
-
-        return (count($records) > 0) ? reset($records) : null;
+        if (! empty($records = $this->select($query, $bindings))) {
+            return reset($records);
+        }
     }
 
     /**
@@ -153,7 +153,7 @@ class Connection
     {
         return $this->run($query, $bindings, function ($me, $query, $bindings)
         {
-            $statement = $me->getPdo()->prepare($query);
+            $statement = $me->prepare($query);
 
             $statement->execute($me->prepareBindings($bindings));
 
@@ -208,7 +208,7 @@ class Connection
     {
         return $this->run($query, $bindings, function ($me, $query, $bindings)
         {
-            $statement = $me->getPdo()->prepare($query);
+            $statement = $me->prepare($query);
 
             return $statement->execute($me->prepareBindings($bindings));
         });
@@ -225,7 +225,7 @@ class Connection
     {
         return $this->run($query, $bindings, function ($me, $query, $bindings)
         {
-            $statement = $me->getPdo()->prepare($query);
+            $statement = $me->prepare($query);
 
             $statement->execute($me->prepareBindings($bindings));
 
@@ -447,6 +447,46 @@ class Connection
         if (is_null($this->getPdo())) {
             $this->reconnect();
         }
+    }
+
+    /**
+     * Returns the ID of the last inserted row or sequence value.
+     *
+     * @param  string|null  $name
+     * @return mixed
+     */
+    public function lastInsertId($name = null)
+    {
+        $id = $this->getPdo()->lastInsertId($name);
+
+        return is_numeric($id) ? (int) $id : $id;
+    }
+
+    /**
+     * Parse the table variables and add the table prefix.
+     *
+     * @param  string  $query
+     * @return string
+     */
+    public function prepare($query)
+    {
+        $prefix = $this->getTablePrefix();
+
+        $query = preg_replace_callback('#\{(.*?)\}#', function ($matches) use ($prefix)
+        {
+            list ($table, $field) = array_pad(explode('.', $matches[1], 2), 2, null);
+
+            $result = $this->wrap($prefix .$table);
+
+            if (! is_null($field)) {
+                $result .= '.' . $this->wrap($field);
+            }
+
+            return $result;
+
+        }, $query);
+
+        return $this->getPdo()->prepare($query);
     }
 
     /**
