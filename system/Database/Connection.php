@@ -339,7 +339,9 @@ class Connection
      */
     protected function run($query, $bindings, Closure $callback)
     {
-        $this->reconnectIfMissingConnection();
+        if (is_null($this->getPdo())) {
+            $this->reconnect();
+        }
 
         $start = microtime(true);
 
@@ -435,18 +437,6 @@ class Connection
         return $this->setPdo(
             $this->connector->connect($this->config)
         );
-    }
-
-    /**
-     * Reconnect to the database if a PDO connection is missing.
-     *
-     * @return void
-     */
-    protected function reconnectIfMissingConnection()
-    {
-        if (is_null($this->getPdo())) {
-            $this->reconnect();
-        }
     }
 
     /**
