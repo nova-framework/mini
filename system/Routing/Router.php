@@ -277,27 +277,31 @@ class Router
     }
 
     /**
-     * Resolve the given middleware.
+     * Gather the middleware from the specified route action.
      *
-     * @param mixed $middleware
+     * @param \Mini\Routing\Route $route
      * @return array
      */
-    public function gatherMiddleware($middleware)
+    public function gatherMiddleware(Route $route)
     {
-        if ($middleware instanceof Route) {
-            $middleware = $middleware->middleware();
-        }
+        return $this->resolveMiddleware(
+            $route->middleware()
+        );
+    }
 
-        //
-        else if (! is_array($middleware)) {
-            return array();
-        }
-
+    /**
+     * Resolve the given middleware.
+     *
+     * @param array $middleware
+     * @return array
+     */
+    protected function resolveMiddleware(array $middleware)
+    {
         $results = array();
 
         foreach ($middleware as $name) {
             if (! is_null($group = array_get($this->middlewareGroups, $name))) {
-                $results = array_merge($results, $this->gatherMiddleware($group));
+                $results = array_merge($results, $this->resolveMiddleware($group));
 
                 continue;
             }
