@@ -41,17 +41,6 @@ class EncryptCookies
     }
 
     /**
-     * Disable encryption for the given cookie name(s).
-     *
-     * @param string|array $cookieName
-     * @return void
-     */
-    public function disableFor($cookieName)
-    {
-        $this->except = array_merge($this->except, (array) $cookieName);
-    }
-
-    /**
      * Handle an incoming request.
      *
      * @param  \Mini\Http\Request  $request
@@ -60,7 +49,9 @@ class EncryptCookies
      */
     public function handle($request, Closure $next)
     {
-        return $this->encrypt($next($this->decrypt($request)));
+        $response = call_user_func($next, $this->decrypt($request));
+
+        return $this->encrypt($response);
     }
 
     /**
@@ -72,15 +63,18 @@ class EncryptCookies
     protected function decrypt(Request $request)
     {
         foreach ($request->cookies as $key => $cookie) {
-            if ($this->isDisabled($key)) {
+            if ($this->isCookieDisabled($key)) {
                 continue;
             }
 
             try {
-                $request->cookies->set($key, $this->decryptCookie($cookie));
-            } catch (DecryptException $e) {
-                $request->cookies->set($key, null);
+                $value = $this->decryptCookie($cookie);
             }
+            catch (DecryptException $e) {
+                $value = null;
+            }
+
+            $request->cookies->set($key, $value);
         }
 
         return $request;
@@ -94,25 +88,18 @@ class EncryptCookies
      */
     protected function decryptCookie($cookie)
     {
-        return is_array($cookie)
-            ? $this->decryptArray($cookie)
-            : $this->encrypter->decrypt($cookie);
-    }
+        if (! is_array($cookie)) {
+            return $this->encrypter->decrypt($cookie);
+        }
 
-    /**
-     * Decrypt an array based cookie.
-     *
-     * @param  array  $cookie
-     * @return array
-     */
-    protected function decryptArray(array $cookie)
-    {
         $decrypted = array();
 
         foreach ($cookie as $key => $value) {
-            if (is_string($value)) {
-                $decrypted[$key] = $this->encrypter->decrypt($value);
+            if (! is_string($value)) {
+                continue;
             }
+
+            $decrypted[$key] = $this->encrypter->decrypt($value);
         }
 
         return $decrypted;
@@ -126,8 +113,10 @@ class EncryptCookies
      */
     protected function encrypt(Response $response)
     {
-        foreach ($response->headers->getCookies() as $cookie) {
-            if ($this->isDisabled($cookie->getName())) {
+        $cookies = $response->headers->getCookies();
+
+        foreach ($cookies as $cookie) {
+            if ($this->isCookieDisabled($cookie->getName())) {
                 continue;
             }
 
@@ -142,7 +131,7 @@ class EncryptCookies
     /**
      * Duplicate a cookie with a new value.
      *
-     * @param  \Symfony\Component\HttpFoundation\Cookie  $c
+     * @param  \Symfony\Component\HttpFoundation\Cookie  $cookie
      * @param  mixed  $value
      * @return \Symfony\Component\HttpFoundation\Cookie
      */
@@ -165,7 +154,7 @@ class EncryptCookies
      * @param  string $name
      * @return bool
      */
-    public function isDisabled($name)
+    public function isCookieDisabled($name)
     {
         return in_array($name, $this->except);
     }

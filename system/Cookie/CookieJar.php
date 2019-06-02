@@ -28,6 +28,7 @@ class CookieJar
      */
     protected $queued = array();
 
+
     /**
      * Create a new Cookie instance.
      *
@@ -42,7 +43,7 @@ class CookieJar
      */
     public function make($name, $value, $minutes = 0, $path = null, $domain = null, $secure = false, $httpOnly = true)
     {
-        list($path, $domain) = $this->getPathAndDomain($path, $domain);
+        list ($path, $domain) = $this->getPathAndDomain($path, $domain);
 
         $time = ($minutes == 0) ? 0 : time() + ($minutes * 60);
 
@@ -104,14 +105,12 @@ class CookieJar
     /**
      * Queue a Cookie to send with the next response.
      *
-     * @param  dynamic
+     * @param  mixed  $cookie
      * @return void
      */
-    public function queue()
+    public function queue($cookie)
     {
-        if (head(func_get_args()) instanceof Cookie) {
-            $cookie = head(func_get_args());
-        } else {
+        if (! $cookie instanceof Cookie) {
             $cookie = call_user_func_array(array($this, 'make'), func_get_args());
         }
 
@@ -139,7 +138,10 @@ class CookieJar
      */
     protected function getPathAndDomain($path, $domain)
     {
-        return array($path ?: $this->path, $domain ?: $this->domain);
+        return array(
+            $path   ?: $this->path,
+            $domain ?: $this->domain
+        );
     }
 
     /**
@@ -151,7 +153,8 @@ class CookieJar
      */
     public function setDefaultPathAndDomain($path, $domain)
     {
-        list($this->path, $this->domain) = array($path, $domain);
+        $this->path   = $path;
+        $this->domain = $domain;
 
         return $this;
     }

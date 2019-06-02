@@ -15,7 +15,7 @@ class Writer extends AbstractLogger
         $content = $date .' - ' .strtoupper($level) .":\n\n" .$message ."\n\n---------\n\n";
 
         //
-        $path = STORAGE_PATH .'logs' .DS .'errors.log';
+        $path = STORAGE_PATH .'logs' .DS .'framework.log';
 
         file_put_contents($path, $content, FILE_APPEND);
     }
