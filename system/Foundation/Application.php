@@ -8,7 +8,7 @@ use Mini\Exceptions\ExceptionServiceProvider;
 use Mini\Http\Request;
 use Mini\Http\Response;
 use Mini\Log\LogServiceProvider;
-use Mini\Pipeline\Pipeline;
+use Mini\Foundation\Pipeline;
 use Mini\Support\ServiceProvider;
 
 use Symfony\Component\Debug\Exception\FatalThrowableError;

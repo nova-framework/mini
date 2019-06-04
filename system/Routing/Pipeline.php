@@ -4,7 +4,7 @@ namespace Mini\Routing;
 
 use Mini\Foundation\Exceptions\HandlerInterface as ExceptionHandler;
 use Mini\Http\Request;
-use Mini\Pipeline\Pipeline as BasePipeline;
+use Mini\Foundation\Pipeline as BasePipeline;
 
 use Closure;
 use Exception;

@@ -1,6 +1,6 @@
 <?php
 
-namespace Mini\Pipeline;
+namespace Mini\Foundation;
 
 use Mini\Container\Container;
 
