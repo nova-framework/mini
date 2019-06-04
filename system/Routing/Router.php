@@ -320,25 +320,27 @@ class Router
      */
     protected function parseMiddleware($name)
     {
-        list ($name, $parameters) = array_pad(explode(':', $name, 2), 2, null);
+        list ($name, $payload) = array_pad(explode(':', $name, 2), 2, null);
 
         //
         $callable = array_get($this->middleware, $name, $name);
 
-        if (is_null($parameters)) {
+        if (empty($payload)) {
             return $callable;
         }
 
         // The middleware have parameters.
         else if (is_string($callable)) {
-            return $callable .':' .$parameters;
+            return $callable .':' .$payload;
         }
+
+        $parameters = explode(',', $payload);
 
         return function ($passable, $stack) use ($callable, $parameters)
         {
-            $parameters = array_merge(array($passable, $stack), explode(',', $parameters));
-
-            return call_user_func_array($callable, $parameters);
+            return call_user_func_array(
+                $callable, array_merge(array($passable, $stack), $parameters)
+            );
         };
     }
 
