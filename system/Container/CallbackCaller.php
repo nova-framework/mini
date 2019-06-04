@@ -2,6 +2,9 @@
 
 namespace Mini\Container;
 
+use Mini\Support\Str;
+use Mini\Container\Container;
+
 use Closure;
 use InvalidArgumentException;
 use ReflectionFunction;
@@ -14,49 +17,49 @@ class CallbackCaller
     /**
      * Call the given Closure / class@method and inject its dependencies.
      *
-     * @param  \Mini\Container\Container  $container
+     * @param  \Mini\Container \Container $container
      * @param  callable|string  $callback
      * @param  array  $parameters
      * @param  string|null  $defaultMethod
      * @return mixed
      */
-    public static function call($container, $callback, array $parameters = array(), $defaultMethod = null)
+    public static function call(Container $container, $callback, array $parameters = array(), $defaultMethod = null)
     {
         if (is_string($callback)) {
-            list ($class, $method) = array_pad(
-                explode('@', $callback, 2), 2, $defaultMethod
-            );
+            list ($className, $method) = Str::parseCallback($callback, $defaultMethod);
 
-            if (is_null($method)) {
-                throw new InvalidArgumentException('Method not provided.');
+            if (empty($method) || ! class_exists($className)) {
+                throw new InvalidArgumentException('Invalid callback provided.');
             }
 
-            $instance = $container->make($class);
-
-            $callback = array($instance, $method);
+            $callback = array($container->make($className), $method);
         }
 
-        $dependencies = static::getMethodDependencies(
-            $container, $parameters, static::getCallReflector($callback)
-        );
+        if (is_array($callback)) {
+            $reflector = new ReflectionMethod($callback[0], $callback[1]);
+        } else {
+            $reflector = new ReflectionFunction($callback);
+        }
 
-        return call_user_func_array($callback, $dependencies);
+        return call_user_func_array(
+            $callback, static::getMethodDependencies($container, $parameters, $reflector)
+        );
     }
 
     /**
      * Get all dependencies for a given method.
      *
-     * @param  \Mini\Container\Container  $container
+     * @param  \Mini\Container \Container $container
      * @param  array  $parameters
      * @param  \ReflectionFunctionAbstract  $reflector
      * @return array
      */
-    protected static function getMethodDependencies($container, array $parameters, ReflectionFunctionAbstract $reflector)
+    protected static function getMethodDependencies(Container $container, array $parameters, ReflectionFunctionAbstract $reflector)
     {
         $dependencies = array();
 
         foreach ($reflector->getParameters() as $parameter) {
-            if (array_key_exists($name = $parameter->name, $parameters)) {
+            if (array_key_exists($name = $parameter->getName(), $parameters)) {
                 $dependencies[] = $parameters[$name];
 
                 unset($parameters[$name]);
@@ -64,7 +67,7 @@ class CallbackCaller
 
             // The dependency does not exists in parameters.
             else if (! is_null($class = $parameter->getClass())) {
-                $dependencies[] = $container->make($class->name);
+                $dependencies[] = $container->make($class->getName());
             }
 
             // The dependency does not reference a class.
@@ -74,23 +77,5 @@ class CallbackCaller
         }
 
         return array_merge($dependencies, $parameters);
-    }
-
-    /**
-     * Get the proper reflection instance for the given callback.
-     *
-     * @param  callable|string  $callback
-     * @return \ReflectionFunctionAbstract
-     * @throws \InvalidArgumentException
-     */
-    protected static function getCallReflector($callback)
-    {
-        if ($callback instanceof Closure) {
-            return new ReflectionFunction($callback);
-        }
-
-        list ($instance, $method) = $callback;
-
-        return new ReflectionMethod($instance, $method);
     }
 }
