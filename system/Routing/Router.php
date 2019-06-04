@@ -300,7 +300,9 @@ class Router
         $results = array();
 
         foreach ($middleware as $name) {
-            if (! is_null($group = array_get($this->middlewareGroups, $name))) {
+            $group = array_get($this->middlewareGroups, $name);
+
+            if (! is_null($group)) {
                 $results = array_merge($results, $this->resolveMiddleware($group));
 
                 continue;
