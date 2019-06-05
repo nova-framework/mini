@@ -270,9 +270,7 @@ class Router
 
         return $pipeline->handle($request, function ($request) use ($route)
         {
-            $response = $route->run();
-
-            return $this->prepareResponse($request, $response);
+            return $this->prepareResponse($request, $route->run());
         });
     }
 
@@ -300,15 +298,11 @@ class Router
         $results = array();
 
         foreach ($middleware as $name) {
-            $group = array_get($this->middlewareGroups, $name);
-
-            if (! is_null($group)) {
+            if (! is_null($group = array_get($this->middlewareGroups, $name))) {
                 $results = array_merge($results, $this->resolveMiddleware($group));
-
-                continue;
+            } else {
+                $results[] = $this->parseMiddleware($name);
             }
-
-            $results[] = $this->parseMiddleware($name);
         }
 
         return array_unique($results, SORT_REGULAR);
