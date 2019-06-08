@@ -92,35 +92,6 @@ class Router
     }
 
     /**
-     * Register a new route responding to all verbs.
-     *
-     * @param  string  $uri
-     * @param  \Closure|array|string  $action
-     * @return void
-     */
-    public function any($route, $action)
-    {
-        $methods = array('GET', 'POST', 'PUT', 'DELETE', 'PATCH');
-
-        return $this->addRoute($methods, $route, $action);
-    }
-
-    /**
-     * Add a route to the underlying route lists.
-     *
-     * @param  array|string  $methods
-     * @param  string  $path
-     * @param  mixed  $action
-     * @return \Nova\Routing\Route
-     */
-    public function match($methods, $path, $action)
-    {
-        $methods = array_map('strtoupper', (array) $methods);
-
-        return $this->addRoute($methods, $path, $action);
-    }
-
-    /**
      * Create a route group with shared attributes.
      *
      * @param  array     $attributes
@@ -181,6 +152,20 @@ class Router
     }
 
     /**
+     * Register a new route responding to all verbs.
+     *
+     * @param  string  $uri
+     * @param  \Closure|array|string  $action
+     * @return void
+     */
+    public function any($route, $action)
+    {
+        $methods = array('GET', 'POST', 'PUT', 'DELETE', 'PATCH');
+
+        return $this->match($methods, $route, $action);
+    }
+
+    /**
      * Add a route to the underlying route collection.
      *
      * @param  array|string  $methods
@@ -188,8 +173,10 @@ class Router
      * @param  mixed  $action
      * @return \Mini\Routing\Route
      */
-    protected function addRoute($methods, $path, $action)
+    public function match($methods, $path, $action)
     {
+        $methods = array_map('strtoupper', (array) $methods);
+
         if (is_callable($action) || is_string($action)) {
             $action = array('uses' => $action);
         }
@@ -416,7 +403,7 @@ class Router
         if (in_array($key = strtoupper($method), static::$verbs)) {
             array_unshift($parameters, $key);
 
-            return call_user_func_array(array($this, 'addRoute'), $parameters);
+            return call_user_func_array(array($this, 'match'), $parameters);
         }
 
         throw new BadMethodCallException("Method [${method}] does not exist.");
