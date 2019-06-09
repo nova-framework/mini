@@ -127,19 +127,18 @@ class Router
         $namespace = array_get($old, 'namespace');
 
         if (isset($new['namespace'])) {
-            $namespace = trim($namespace, '\\') .'\\' .trim($new['namespace'], '\\');
+            $new['namespace'] = trim($namespace, '\\') .'\\' .trim($new['namespace'], '\\');
+        } else if (! empty($namespace)) {
+            $new['namespace'] = $namespace;
         }
 
-        $new['namespace'] = $namespace;
-
-        //
         $prefix = array_get($old, 'prefix');
 
         if (isset($new['prefix'])) {
-            $prefix = trim($prefix, '/') .'/' .trim($new['prefix'], '/');
+            $new['prefix'] = trim($prefix, '/') .'/' .trim($new['prefix'], '/');
+        } else if (! empty($prefix)) {
+            $new['prefix'] = $prefix;
         }
-
-        $new['prefix'] = $prefix;
 
         $new['where'] = array_merge(
             array_get($old, 'where', array()),
@@ -177,25 +176,19 @@ class Router
     {
         $methods = array_map('strtoupper', (array) $methods);
 
-        if (is_callable($action) || is_string($action)) {
+        if (! is_array($action)) {
             $action = array('uses' => $action);
         }
 
         $group = ! empty($this->groupStack) ? last($this->groupStack) : array();
 
-        if (isset($action['uses']) && is_string($action['uses'])) {
-            $uses = $action['uses'];
-
-            if (isset($group['namespace'])) {
-                $action['uses'] = $uses = $group['namespace'] .'\\' .$uses;
-            }
-
-            $action['controller'] = $uses;
+        if (is_null($uses = array_get($action, 'uses'))) {
+            $action['uses'] = $this->findActionClosure($action);
         }
 
-        // If the action has no 'uses' field, we will look for the inner callable.
-        else if (! isset($action['uses'])) {
-            $action['uses'] = $this->findActionClosure($action);
+        //
+        else if (is_string($uses) && ! empty($namespace = array_get($group, 'namespace'))) {
+            $action['uses'] = $namespace .'\\' .$uses;
         }
 
         if (is_string($middleware = array_get($action, 'middleware', array()))) {
@@ -204,8 +197,8 @@ class Router
 
         $action = static::mergeGroup($action, $group);
 
-        if (isset($action['prefix'])) {
-            $path = trim($action['prefix'], '/') .'/' .trim($path, '/');
+        if (! empty($prefix = array_get($action, 'prefix'))) {
+            $path = trim($prefix, '/') .'/' .trim($path, '/');
         }
 
         $path = '/' .trim($path, '/');
