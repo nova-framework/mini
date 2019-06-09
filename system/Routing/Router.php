@@ -197,6 +197,8 @@ class Router
 
         $action = static::mergeGroup($action, $group);
 
+        $action['where'] = array_merge($this->patterns, array_get($action, 'where', array()));
+
         if (! empty($prefix = array_get($action, 'prefix'))) {
             $path = trim($prefix, '/') .'/' .trim($path, '/');
         }
@@ -205,10 +207,6 @@ class Router
 
         // Create a new Route instance.
         $route = with(new Route($methods, $path, $action))->setContainer($this->container);
-
-        $route->where(
-            array_merge($this->patterns, array_get($action, 'where', array()))
-        );
 
         return $this->routes->add($route);
     }
