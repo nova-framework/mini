@@ -188,10 +188,9 @@ class Route
     {
         $patterns = is_array($name) ? $name : array($name => $pattern);
 
-        array_walk($patterns, function ($pattern, $name)
-        {
+        foreach ($patterns as $name => $pattern) {
             $this->patterns[$name] = $pattern;
-        });
+        };
 
         return $this;
     }

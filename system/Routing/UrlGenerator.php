@@ -255,11 +255,13 @@ class UrlGenerator
      */
     protected function addPortToDomain($domain)
     {
-        if (in_array($this->request->getPort(), array('80', '443'))) {
-            return $domain;
+        $port = $this->request->getPort();
+
+        if (! in_array($port, array('80', '443'))) {
+            return $domain .':' .$port;
         }
 
-        return $domain .':' .$this->request->getPort();
+        return $domain;
     }
 
     /**
