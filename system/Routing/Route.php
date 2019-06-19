@@ -89,7 +89,7 @@ class Route
             return false;
         }
 
-        $pattern = $this->compilePattern();
+        $pattern = with(new RouteCompiler($this->path, $this->patterns))->compile();
 
         if (preg_match($pattern, $path, $matches) !== 1) {
             return false;
@@ -105,38 +105,26 @@ class Route
     }
 
     /**
-     * Compile the route pattern.
-     *
-     * @return string
-     */
-    public function compilePattern()
-    {
-        $compiler = new RouteCompiler($this->getPath(), $this->getPatterns());
-
-        return $compiler->compile();
-    }
-
-    /**
      * Run the given action callback.
      *
      * @return mixed
      */
     public function run()
     {
-        if (! is_array($callback = $this->resolveCallback())) {
-            $parameters = $this->resolveMethodDependencies(
-                $this->getParameters(), new ReflectionFunction($callback)
-            );
+        if (is_array($callback = $this->resolveCallback())) {
+            extract($callback);
 
-            return call_user_func_array($callback, $parameters);
+            // Create a Controller Dispatcher instance.
+            $dispatcher = new ControllerDispatcher($this->container);
+
+            return $dispatcher->dispatch($this, $controller, $method);
         }
 
-        extract($callback);
+        $parameters = $this->resolveMethodDependencies(
+            $this->getParameters(), new ReflectionFunction($callback)
+        );
 
-        // Create a Controller Dispatcher instance.
-        $dispatcher = new ControllerDispatcher($this->container);
-
-        return $dispatcher->dispatch($this, $controller, $method);
+        return call_user_func_array($callback, $parameters);
     }
 
     /**
