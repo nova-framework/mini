@@ -42,6 +42,11 @@ class Route
     /**
      * @var array
      */
+    protected $patterns = array();
+
+    /**
+     * @var array
+     */
     protected $parameters = array();
 
     /**
@@ -70,6 +75,8 @@ class Route
         if (in_array('GET', $this->methods) && ! in_array('HEAD', $this->methods)) {
             $this->methods[] = 'HEAD';
         }
+
+        $this->patterns = array_get($action, 'where', array());
     }
 
     /**
@@ -243,7 +250,7 @@ class Route
      */
     public function getPatterns()
     {
-        return array_get($this->action, 'where', array());
+        return $this->patterns;
     }
 
     /**

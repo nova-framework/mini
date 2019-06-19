@@ -19,9 +19,7 @@ Route::group(array('prefix' => 'samples'), function ()
     Route::get('request',  'Sample@request');
 });
 
-Route::get('pages/{slug?}', array('uses' => 'Sample@page', 'where' => array(
-    'slug' => '(.*)'
-)));
+Route::get('pages/{page?}', 'Sample@page')->where('page', '(.*)');
 
 Route::get('blog/{slug}',   'Sample@post');
 
