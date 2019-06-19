@@ -19,7 +19,10 @@ Route::group(array('prefix' => 'samples'), function ()
     Route::get('request',  'Sample@request');
 });
 
-Route::get('pages/{page?}', 'Sample@page');
+Route::get('pages/{slug?}', array('uses' => 'Sample@page', 'where' => array(
+    'slug' => '(.*)'
+)));
+
 Route::get('blog/{slug}',   'Sample@post');
 
 // A route executing a closure.
@@ -46,4 +49,14 @@ Route::get('language/{code}', array('uses' => function ($code)
 {
     echo htmlentities($code);
 
-}, 'where' => array('code' => '[a-z]{2}')));
+}, 'where' => array('code' => '([a-z]{2})')));
+
+// Show the PHP information.
+Route::get('phpinfo', function ()
+{
+    ob_start();
+
+    phpinfo();
+
+    return Response::make(ob_get_clean(), 200);
+});

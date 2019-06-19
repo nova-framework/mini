@@ -42,11 +42,6 @@ class Route
     /**
      * @var array
      */
-    protected $patterns = array();
-
-    /**
-     * @var array
-     */
     protected $parameters = array();
 
     /**
@@ -248,7 +243,7 @@ class Route
      */
     public function getPatterns()
     {
-        return $this->patterns;
+        return array_get($this->action, 'where', array());
     }
 
     /**

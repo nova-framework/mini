@@ -65,7 +65,6 @@ class RouteCompiler
             }
 
             $variables[] = $name;
-
             //
             $pattern = array_get($this->patterns, $name, '[^/]+');
 
