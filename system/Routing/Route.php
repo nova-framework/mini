@@ -65,9 +65,9 @@ class Route
      * @param  array  $action
      * @return void
      */
-    public function __construct($methods, $path, array $action)
+    public function __construct(array $methods, $path, array $action)
     {
-        $this->methods = (array) $methods;
+        $this->methods = $methods;
 
         $this->path   = $path;
         $this->action = $action;
@@ -75,8 +75,6 @@ class Route
         if (in_array('GET', $this->methods) && ! in_array('HEAD', $this->methods)) {
             $this->methods[] = 'HEAD';
         }
-
-        $this->patterns = array_get($action, 'where', array());
     }
 
     /**

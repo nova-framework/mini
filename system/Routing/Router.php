@@ -176,6 +176,21 @@ class Router
     {
         $methods = array_map('strtoupper', (array) $methods);
 
+        return $this->routes->add(
+            $this->createRoute($methods, $path, $action)
+        );
+    }
+
+    /**
+     * Create a new Route instance.
+     *
+     * @param  array  $methods
+     * @param  string  $uri
+     * @param  mixed   $action
+     * @return \Mini\Routing\Route
+     */
+    protected function createRoute(array $methods, $path, $action)
+    {
         if (! is_array($action)) {
             $action = array('uses' => $action);
         }
@@ -197,8 +212,6 @@ class Router
 
         $action = static::mergeGroup($action, $group);
 
-        $action['where'] = array_merge($this->patterns, array_get($action, 'where', array()));
-
         if (! empty($prefix = array_get($action, 'prefix'))) {
             $path = trim($prefix, '/') .'/' .trim($path, '/');
         }
@@ -206,9 +219,12 @@ class Router
         $path = '/' .trim($path, '/');
 
         // Create a new Route instance.
-        $route = with(new Route($methods, $path, $action))->setContainer($this->container);
+        $route = new Route($methods, $path, $action);
 
-        return $this->routes->add($route);
+        return $route->where(
+            array_merge($this->patterns, array_get($action, 'where', array()))
+
+        )->setContainer($this->container);
     }
 
     /**
