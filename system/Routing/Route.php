@@ -114,10 +114,7 @@ class Route
         if (is_array($callback = $this->resolveCallback())) {
             extract($callback);
 
-            // Create a Controller Dispatcher instance.
-            $dispatcher = new ControllerDispatcher($this->container);
-
-            return $dispatcher->dispatch($this, $controller, $method);
+            return with(new ControllerDispatcher($this->container))->dispatch($this, $controller, $method);
         }
 
         $parameters = $this->resolveMethodDependencies(
@@ -175,9 +172,7 @@ class Route
     {
         $patterns = is_array($name) ? $name : array($name => $pattern);
 
-        foreach ($patterns as $name => $pattern) {
-            $this->patterns[$name] = $pattern;
-        };
+        $this->patterns = array_merge($this->patterns, $patterns);
 
         return $this;
     }
@@ -194,13 +189,8 @@ class Route
             return $this->resolveMiddleware();
         }
 
-        //
-        else if (is_string($middleware)) {
-            $middleware = array($middleware);
-        }
-
         $middleware = array_merge(
-            array_get($this->action, 'middleware', array()), $middleware
+            array_get($this->action, 'middleware', array()), (array) $middleware
         );
 
         $this->action['middleware'] = array_unique($middleware, SORT_REGULAR);

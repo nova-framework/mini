@@ -109,7 +109,9 @@ class Application extends Container
     protected function registerBaseServiceProviders()
     {
         $this->register(new EventServiceProvider($this));
+
         $this->register(new LogServiceProvider($this));
+
         $this->register(new ExceptionServiceProvider($this));
     }
 
@@ -155,7 +157,7 @@ class Application extends Container
      */
     public function boot()
     {
-        if ($this->booted) {
+        if ($this->isBooted()) {
             return;
         }
 
@@ -179,7 +181,7 @@ class Application extends Container
     protected function bootProvider(ServiceProvider $provider)
     {
         if (method_exists($provider, 'boot')) {
-            return $this->call(array($provider, 'boot'));
+            $this->call(array($provider, 'boot'));
         }
     }
 
@@ -235,21 +237,40 @@ class Application extends Container
             $request = Request::createFromGlobals();
         }
 
-        try {
-            $request->enableHttpMethodParameterOverride();
+        $request->enableHttpMethodParameterOverride();
 
+        try {
             $response = $this->sendRequestThroughRouter($request);
         }
         catch (Exception $e) {
             $response = $this->handleException($request, $e);
         }
         catch (Throwable $e) {
-            $response = $this->handleException($request, $e);
+            $response = $this->handleException($request, new FatalThrowableError($e));
         }
 
         $response->send();
 
         $this->shutdown($request, $response);
+    }
+
+    /**
+     * Handle an exception occured while dispatching the HTTP request.
+     *
+     * @param  \Mini\Http\Request  $request
+     * @param  \Exception  $e
+     *
+     * @return \Mini\Http\Response
+     */
+    protected function handleException(Request $request, Exception $exception)
+    {
+        $handler = $this->make('Mini\Foundation\Exceptions\HandlerInterface');
+
+        if (! $exception instanceof HttpException) {
+            $handler->report($exception);
+        }
+
+        return $handler->render($exception, $request);
     }
 
     /**
@@ -264,10 +285,10 @@ class Application extends Container
 
         $this->boot();
 
-        //
-        $middleware = $this->config->get('app.middleware', array());
-
-        $pipeline = new Pipeline($this, $middleware);
+        // Create a new Pipeline instance.
+        $pipeline = new Pipeline(
+            $this, $this->config->get('app.middleware', array())
+        );
 
         return $pipeline->handle($request, function ($request)
         {
@@ -286,15 +307,16 @@ class Application extends Container
      */
     public function shutdown(Request $request, $response)
     {
-        $middlewares = $this->config->get('app.middleware', array());
+        $middleware = $this->config->get('app.middleware', array());
 
         if (! is_null($route = $request->route())) {
-            $middlewares = array_merge($this->router->gatherMiddleware($route), $middlewares);
+            $middleware = array_merge($this->router->gatherMiddleware($route), $middleware);
         }
 
-        foreach ($middlewares as $middleware) {
+        array_walk($middleware, function ($middleware) use ($request, $response)
+        {
             if (! is_string($middleware)) {
-                continue;
+                return;
             }
 
             $name = head(explode(':', $middleware, 2));
@@ -302,7 +324,7 @@ class Application extends Container
             if (method_exists($instance = $this->make($name), 'terminate')) {
                 $instance->terminate($request, $response);
             }
-        }
+        });
 
         $this->terminate();
     }
@@ -331,29 +353,6 @@ class Application extends Container
     }
 
     /**
-     * Handle an exception occured while dispatching the HTTP request.
-     *
-     * @param  \Mini\Http\Request  $request
-     * @param  \Exception  $e
-     *
-     * @return \Mini\Http\Response
-     */
-    protected function handleException(Request $request, $e)
-    {
-        if (! $e instanceof Exception) {
-            $e = new FatalThrowableError($e);
-        }
-
-        $handler = $this->make('Mini\Foundation\Exceptions\HandlerInterface');
-
-        if (! $e instanceof HttpException) {
-            $handler->report($e);
-        }
-
-        return $handler->render($e, $request);
-    }
-
-    /**
      * Register a service provider with the application.
      *
      * @param  \Mini\Support\ServiceProvider|string  $provider
@@ -363,12 +362,12 @@ class Application extends Container
      */
     public function register($provider, $options = array(), $force = false)
     {
-        if ($registered = $this->getRegistered($provider) && ! $force) {
+        if (! is_null($registered = $this->getRegistered($provider)) && ! $force) {
             return $registered;
         }
 
         if (is_string($provider)) {
-            $provider = $this->resolveProviderClass($provider);
+            $provider = parent::make($provider);
         }
 
         $provider->register();
@@ -379,7 +378,7 @@ class Application extends Container
 
         $this->markAsRegistered($provider);
 
-        if ($this->booted) {
+        if ($this->isBooted()) {
             $this->bootProvider($provider);
         }
 
@@ -396,23 +395,14 @@ class Application extends Container
     {
         $name = is_string($provider) ? $provider : get_class($provider);
 
-        if (array_key_exists($name, $this->loadedProviders)) {
-            return array_first($this->serviceProviders, function ($key, $value) use ($name)
-            {
-                return get_class($value) == $name;
-            });
+        if (! array_key_exists($name, $this->loadedProviders)) {
+            return;
         }
-    }
 
-    /**
-     * Resolve a service provider instance from the class name.
-     *
-     * @param  string  $provider
-     * @return \Mini\Support\ServiceProvider
-     */
-    public function resolveProviderClass($provider)
-    {
-        return new $provider($this);
+        return array_first($this->serviceProviders, function ($key, $value) use ($name)
+        {
+            return get_class($value) == $name;
+        });
     }
 
     /**
@@ -423,11 +413,11 @@ class Application extends Container
      */
     protected function markAsRegistered($provider)
     {
-        $class = get_class($provider);
+        $name = get_class($provider);
 
         $this->serviceProviders[] = $provider;
 
-        $this->loadedProviders[$class] = true;
+        $this->loadedProviders[$name] = true;
     }
 
     /**
@@ -474,12 +464,14 @@ class Application extends Container
 
         $this->register($instance = new $provider($this));
 
-        if (! $this->booted) {
-            $this->booting(function() use ($instance)
-            {
-                $this->bootProvider($instance);
-            });
+        if ($this->isBooted()) {
+            return;
         }
+
+        $this->booting(function() use ($instance)
+        {
+            $this->bootProvider($instance);
+        });
     }
 
     /**

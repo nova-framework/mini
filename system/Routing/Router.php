@@ -219,12 +219,11 @@ class Router
         $path = '/' .trim($path, '/');
 
         // Create a new Route instance.
-        $route = new Route($methods, $path, $action);
+        $route = with(new Route($methods, $path, $action))->setContainer($this->container);
 
         return $route->where(
             array_merge($this->patterns, array_get($action, 'where', array()))
-
-        )->setContainer($this->container);
+        );
     }
 
     /**
@@ -255,16 +254,18 @@ class Router
             throw new NotFoundHttpException('Page not found');
         }
 
-        $request->setRouteResolver(function ()
+        $request->setRouteResolver(function () use ($route)
         {
-            return $this->currentRoute;
+            return $route;
         });
 
         $pipeline = new Pipeline($this->container, $this->gatherMiddleware($route));
 
         return $pipeline->handle($request, function ($request) use ($route)
         {
-            return $this->prepareResponse($request, $route->run());
+            $response = $route->run();
+
+            return $this->prepareResponse($request, $response);
         });
     }
 
@@ -296,9 +297,11 @@ class Router
         foreach ($middleware as $name) {
             if (! is_null($group = array_get($this->middlewareGroups, $name))) {
                 $results = array_merge($results, $this->resolveMiddleware($group));
-            } else {
-                $results[] = $this->parseMiddleware($name);
+
+                continue;
             }
+
+            $results[] = $this->parseMiddleware($name);
         }
 
         return $results;

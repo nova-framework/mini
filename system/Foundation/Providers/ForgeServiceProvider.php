@@ -24,10 +24,10 @@ class ForgeServiceProvider extends ServiceProvider
      * @var array
      */
     protected $commands = array(
-        'ClearLog'     => 'command.clear-log',
-        'KeyGenerate'  => 'command.key.generate',
-        'Optimize'     => 'command.optimize',
-        'Serve'        => 'command.serve',
+        'ClearLog'    => 'command.clear-log',
+        'KeyGenerate' => 'command.key.generate',
+        'Optimize'    => 'command.optimize',
+        'Serve'       => 'command.serve',
     );
 
     /**
@@ -37,13 +37,17 @@ class ForgeServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        foreach (array_keys($this->commands) as $command) {
+        $commands = array_keys($this->commands);
+
+        foreach ($commands as $command) {
             $method = "register{$command}Command";
 
-            call_user_func_array(array($this, $method), array());
+            call_user_func(array($this, $method));
         }
 
-        $this->commands(array_values($this->commands));
+        $this->commands(
+            array_values($this->commands)
+        );
     }
 
     /**

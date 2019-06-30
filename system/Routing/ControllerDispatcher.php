@@ -44,11 +44,11 @@ class ControllerDispatcher
             $route->getParameters(), new ReflectionMethod($controller, $method)
         );
 
-        if (! method_exists($controller, 'callAction')) {
-            return call_user_func_array(array($controller, $method), $parameters);
+        if (method_exists($controller, 'callAction')) {
+            return $controller->callAction($method, $parameters);
         }
 
-        return $controller->callAction($method, $parameters);
+        return call_user_func_array(array($controller, $method), $parameters);
     }
 
     /**

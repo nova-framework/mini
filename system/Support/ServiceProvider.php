@@ -2,6 +2,8 @@
 
 namespace Mini\Support;
 
+use Mini\Foundation\Application;
+
 use BadMethodCallException;
 
 
@@ -28,7 +30,7 @@ abstract class ServiceProvider
      * @param  \Mini\Foundation\Application $app
      * @return void
      */
-    public function __construct($app)
+    public function __construct(Application $app)
     {
         $this->app = $app;
     }
