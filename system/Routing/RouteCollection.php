@@ -4,6 +4,8 @@ namespace Mini\Routing;
 
 use Mini\Http\Request;
 
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+
 use Countable;
 
 
@@ -75,18 +77,34 @@ class RouteCollection implements Countable
     {
         $method = $request->method();
 
-        $path = rawurldecode('/' .trim($request->path(), '/'));
-
         //
         $routes = $this->get($method);
 
-        if (! is_null($route = array_get($routes, $path))) {
+        if (! is_null($route = $this->check($routes, $request))) {
             return $route;
         }
 
-        return array_first($routes, function ($uri, $route) use ($method, $path)
+        throw new NotFoundHttpException();
+    }
+
+    /**
+     * Determine if a route in the array matches the request.
+     *
+     * @param  array  $routes
+     * @param  \Mini\http\Request  $request
+     * @return \Mini\Routing\Route|null
+     */
+    protected function check(array $routes, $request)
+    {
+        $path = rawurldecode('/' .trim($request->path(), '/'));
+
+        if (! is_null($route = array_get($routes, $path)) && $route->matches($path)) {
+            return $route;
+        }
+
+        return array_first($routes, function ($uri, $route) use ($path)
         {
-            return $route->matches($path, $method);
+            return $route->matches($path);
         });
     }
 

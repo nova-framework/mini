@@ -367,7 +367,7 @@ class Application extends Container
         }
 
         if (is_string($provider)) {
-            $provider = parent::make($provider);
+            $provider = new $provider($this);
         }
 
         $provider->register();
@@ -413,11 +413,12 @@ class Application extends Container
      */
     protected function markAsRegistered($provider)
     {
-        $name = get_class($provider);
+        $this->events->dispatch($class = get_class($provider), array($provider));
 
+        //
         $this->serviceProviders[] = $provider;
 
-        $this->loadedProviders[$name] = true;
+        $this->loadedProviders[$class] = true;
     }
 
     /**

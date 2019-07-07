@@ -7,11 +7,9 @@ use Mini\Http\Request;
 use Mini\Http\Response;
 
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 use BadMethodCallException;
 use Closure;
-use LogicException;
 
 
 class Router
@@ -176,20 +174,21 @@ class Router
     {
         $methods = array_map('strtoupper', (array) $methods);
 
-        return $this->routes->add(
-            $this->createRoute($methods, $path, $action)
-        );
+        //
+        $route = $this->createRoute($methods, $path, $action);
+
+        return $this->routes->add($route);
     }
 
     /**
-     * Create a new Route instance.
+     * Create a new route instance.
      *
-     * @param  array  $methods
-     * @param  string  $uri
+     * @param  array|string  $methods
+     * @param  string  $path
      * @param  mixed   $action
      * @return \Mini\Routing\Route
      */
-    protected function createRoute(array $methods, $path, $action)
+    protected function createRoute($methods, $path, $action)
     {
         if (! is_array($action)) {
             $action = array('uses' => $action);
@@ -218,7 +217,7 @@ class Router
 
         $path = '/' .trim($path, '/');
 
-        // Create a new Route instance.
+        //
         $route = with(new Route($methods, $path, $action))->setContainer($this->container);
 
         return $route->where(
@@ -248,17 +247,38 @@ class Router
      */
     public function dispatch(Request $request)
     {
-        $this->currentRoute = $route = $this->routes->match($request);
-
-        if (is_null($route)) {
-            throw new NotFoundHttpException('Page not found');
-        }
+        $route = $this->findRoute($request);
 
         $request->setRouteResolver(function () use ($route)
         {
             return $route;
         });
 
+        $response = $this->runRouteWithinStack($route, $request);
+
+        return $this->prepareResponse($request, $response);
+    }
+
+    /**
+     * Find the route matching a given request.
+     *
+     * @param  \Mini\Http\Request  $request
+     * @return \Mini\Routing\Route
+     */
+    protected function findRoute($request)
+    {
+        return $this->currentRoute = $this->routes->match($request);
+    }
+
+    /**
+     * Run the route within the middleware stack.
+     *
+     * @param  \Mini\Routing\Route  $route
+     * @param  \Mini\Http\Request  $request
+     * @return mixed
+     */
+    protected function runRouteWithinStack(Route $route, Request $request)
+    {
         $pipeline = new Pipeline($this->container, $this->gatherMiddleware($route));
 
         return $pipeline->handle($request, function ($request) use ($route)
@@ -322,10 +342,7 @@ class Router
 
         if (empty($payload)) {
             return $callable;
-        }
-
-        // The middleware have parameters.
-        else if (is_string($callable)) {
+        } else if (is_string($callable)) {
             return $callable .':' .$payload;
         }
 

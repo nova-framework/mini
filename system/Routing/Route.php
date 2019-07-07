@@ -47,7 +47,7 @@ class Route
     /**
      * @var array
      */
-    protected $parameters = array();
+    protected $parameters;
 
     /**
      * The callback to be executed.
@@ -55,6 +55,13 @@ class Route
      * @var \Closure|array
      */
     protected $callback;
+
+    /**
+     * The computed gathered middleware.
+     *
+     * @var array|null
+     */
+    protected $computedMiddleware;
 
 
     /**
@@ -65,11 +72,14 @@ class Route
      * @param  array  $action
      * @return void
      */
-    public function __construct(array $methods, $path, array $action)
+    public function __construct($methods, $path, array $action)
     {
-        $this->methods = $methods;
-        $this->path    = $path;
-        $this->action  = $action;
+        $this->path = $path;
+
+        $this->action = $action;
+
+        //
+        $this->methods = (array) $methods;
 
         if (in_array('GET', $this->methods) && ! in_array('HEAD', $this->methods)) {
             $this->methods[] = 'HEAD';
@@ -205,6 +215,10 @@ class Route
      */
     protected function resolveMiddleware()
     {
+        if (isset($this->computedMiddleware)) {
+            return $this->computedMiddleware;
+        }
+
         $middleware = array_get($this->action, 'middleware', array());
 
         if (is_array($callback = $this->resolveCallback())) {
@@ -215,7 +229,7 @@ class Route
             );
         }
 
-        return array_unique($middleware, SORT_REGULAR);
+        return $this->computedMiddleware = array_unique($middleware, SORT_REGULAR);
     }
 
     /**
@@ -255,6 +269,10 @@ class Route
      */
     public function getParameters()
     {
+        if (! isset($this->parameters)) {
+            throw new LogicException("Route is not bound.");
+        }
+
         return array_map(function ($value)
         {
             return is_string($value) ? rawurldecode($value) : $value;
