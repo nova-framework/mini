@@ -59,7 +59,9 @@ class Pipeline
      */
     public function handle($passable, Closure $callback)
     {
-        $pipeline = array_reduce(array_reverse($this->pipes), function ($stack, $pipe)
+        $pipes = array_reverse($this->pipes);
+
+        $pipeline = array_reduce($pipes, function ($stack, $pipe)
         {
             return $this->createSlice($stack, $pipe);
 

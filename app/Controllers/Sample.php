@@ -22,7 +22,7 @@ class Sample extends BaseController
     {
         $request = app('request');
 
-        dump($request->route());
+        dump($request);
     }
 
     public function page(Request $request, $slug = null)

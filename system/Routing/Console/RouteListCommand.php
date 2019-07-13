@@ -133,7 +133,7 @@ class RouteListCommand extends Command
         {
             return ($middleware instanceof Closure) ? 'Closure' : $middleware;
 
-        }, $route->middleware());
+        }, $route->getMiddleware());
     }
 
     /**

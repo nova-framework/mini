@@ -61,7 +61,7 @@ class Route
      *
      * @var array|null
      */
-    protected $computedMiddleware;
+    protected $middleware;
 
 
     /**
@@ -188,35 +188,14 @@ class Route
     }
 
     /**
-     * Get or set the middlewares attached to the route.
-     *
-     * @param  array|string|null $middleware
-     * @return $this|array
-     */
-    public function middleware($middleware = null)
-    {
-        if (is_null($middleware)) {
-            return $this->resolveMiddleware();
-        }
-
-        $middleware = array_merge(
-            array_get($this->action, 'middleware', array()), (array) $middleware
-        );
-
-        $this->action['middleware'] = array_unique($middleware, SORT_REGULAR);
-
-        return $this;
-    }
-
-    /**
-     * Resolve the route Middleware.
+     * Get the middlewares attached to the route.
      *
      * @return array
      */
-    protected function resolveMiddleware()
+    public function getMiddleware()
     {
-        if (isset($this->computedMiddleware)) {
-            return $this->computedMiddleware;
+        if (isset($this->middleware)) {
+            return $this->middleware;
         }
 
         $middleware = array_get($this->action, 'middleware', array());
@@ -229,7 +208,7 @@ class Route
             );
         }
 
-        return $this->computedMiddleware = array_unique($middleware, SORT_REGULAR);
+        return $this->middleware = array_unique($middleware, SORT_REGULAR);
     }
 
     /**
