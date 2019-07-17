@@ -155,7 +155,9 @@ class Translator implements TranslatorInterface
 
         $replace['count'] = $number;
 
-        return $this->makeReplacements($this->getSelector()->choose($line, $number, $locale), $replace);
+        return $this->makeReplacements(
+            $this->getSelector()->choose($line, $number, $locale), $replace
+        );
     }
 
     /**
@@ -242,11 +244,13 @@ class Translator implements TranslatorInterface
      */
     protected function parseLocale($locale)
     {
-        if (! is_null($locale)) {
-            return array_filter(array($locale, $this->fallback));
-        } else {
-            return array_filter(array($this->locale, $this->fallback));
+        if (is_null($locale)) {
+            $locale = $this->locale;
         }
+
+        return array_filter(
+            array($locale, $this->fallback)
+        );
     }
 
     /**
