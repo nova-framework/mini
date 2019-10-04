@@ -886,7 +886,9 @@ class Model implements ArrayableInterface, JsonableInterface, \ArrayAccess
      */
     public function hasSetMutator($key)
     {
-        return method_exists($this, 'set' .Str::studly($key) .'Attribute');
+        $method = sprintf('set%sAttribute', Str::studly($key));
+
+        return method_exists($this, $method);
     }
 
     /**
@@ -897,7 +899,9 @@ class Model implements ArrayableInterface, JsonableInterface, \ArrayAccess
      */
     public function hasGetMutator($key)
     {
-        return method_exists($this, 'get' .Str::studly($key) .'Attribute');
+        $method = sprintf('get%sAttribute', Str::studly($key));
+
+        return method_exists($this, $method);
     }
 
     /**
@@ -909,7 +913,7 @@ class Model implements ArrayableInterface, JsonableInterface, \ArrayAccess
      */
     protected function mutateAttribute($key, $value)
     {
-        $method = 'get' .Str::studly($key) .'Attribute';
+        $method = sprintf('get%sAttribute', Str::studly($key));
 
         return call_user_func(array($this, $method), $value);
     }
@@ -921,7 +925,9 @@ class Model implements ArrayableInterface, JsonableInterface, \ArrayAccess
      */
     public function getDates()
     {
-        return array_merge($this->dates, array(static::CREATED_AT, static::UPDATED_AT));
+        return array_merge(
+            $this->dates, array(static::CREATED_AT, static::UPDATED_AT)
+        );
     }
 
     /**

@@ -75,10 +75,7 @@ class RouteCollection implements Countable
      */
     public function match(Request $request)
     {
-        $method = $request->method();
-
-        //
-        $routes = $this->get($method);
+        $routes = $this->get($request->method());
 
         if (! is_null($route = $this->check($routes, $request))) {
             return $route;
@@ -91,10 +88,10 @@ class RouteCollection implements Countable
      * Determine if a route in the array matches the request.
      *
      * @param  array  $routes
-     * @param  \Mini\http\Request  $request
+     * @param  \Mini\Http\Request  $request
      * @return \Mini\Routing\Route|null
      */
-    protected function check(array $routes, $request)
+    protected function check(array $routes, Request $request)
     {
         $path = rawurldecode('/' .trim($request->path(), '/'));
 

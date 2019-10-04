@@ -3,7 +3,6 @@
 namespace Mini\Routing\Console;
 
 use Mini\Http\Request;
-use Mini\Routing\ControllerDispatcher;
 use Mini\Routing\Route;
 use Mini\Routing\Router;
 use Mini\Console\Command;
