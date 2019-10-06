@@ -26,8 +26,8 @@ class Pipeline extends BasePipeline
             try {
                 return call_user_func($callback, $passable);
             }
-            catch (Exception | Throwable $e) {
-                return $this->handleException($passable, $e);
+            catch (Exception | Throwable $exception) {
+                return $this->handleException($passable, $exception);
             }
         };
     }
@@ -46,8 +46,8 @@ class Pipeline extends BasePipeline
             try {
                 return $this->call($pipe, $passable, $stack);
             }
-            catch (Exception | Throwable $e) {
-                return $this->handleException($passable, $e);
+            catch (Exception | Throwable $exception) {
+                return $this->handleException($passable, $exception);
             }
         };
     }
@@ -63,8 +63,8 @@ class Pipeline extends BasePipeline
      */
     protected function handleException($passable, $exception)
     {
-        if (! $this->container->bound(ExceptionHandler::class) || (! $passable instanceof Request)) {
-            throw $e;
+        if ((! $passable instanceof Request) || ! $this->container->bound(ExceptionHandler::class)) {
+            throw $exception;
         }
 
         $handler = $this->container->make(ExceptionHandler::class);
