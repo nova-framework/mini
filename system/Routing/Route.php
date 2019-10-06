@@ -66,18 +66,22 @@ class Route
     /**
      * Create a new Route instance.
      *
-     * @param  array  $methods
+     * @param  array|string  $methods
      * @param  string $path
      * @param  array  $action
      * @return void
      */
-    public function __construct(array $methods, $path, array $action)
+    public function __construct($methods, $path, array $action)
     {
         $this->path = $path;
 
         $this->action = $action;
 
-        $this->methods = $methods;
+        $this->methods = (array) $methods;
+
+        if (in_array('GET', $this->methods) && ! in_array('HEAD', $this->methods)) {
+            $this->methods[] = 'HEAD';
+        }
     }
 
     /**

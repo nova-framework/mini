@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 
 use BadMethodCallException;
 use Closure;
+use LogicException;
 
 
 class Router
@@ -122,19 +123,19 @@ class Router
      */
     protected static function mergeGroup($new, $old)
     {
-        $namespace = trim(array_get($old, 'namespace'), '\\');
+        if (! empty($namespace = array_get($old, 'namespace'))) {
+            if (isset($new['namespace'])) {
+                $namespace = trim($namespace, '\\') .'\\' .trim($new['namespace'], '\\');
+            }
 
-        if (isset($new['namespace'])) {
-            $new['namespace'] = $namespace .'\\' .trim($new['namespace'], '\\');
-        } else if (! empty($namespace)) {
             $new['namespace'] = $namespace;
         }
 
-        $prefix = trim(array_get($old, 'prefix'), '/');
+        if (! empty($prefix = array_get($old, 'prefix'))) {
+            if (isset($new['prefix'])) {
+                $prefix = trim($prefix, '/') .'/' .trim($new['prefix'], '/');
+            }
 
-        if (isset($new['prefix'])) {
-            $new['prefix'] = $prefix .'/' .trim($new['prefix'], '/');
-        } else if (! empty($prefix)) {
             $new['prefix'] = $prefix;
         }
 
@@ -163,7 +164,7 @@ class Router
     }
 
     /**
-     * Add a route to the underlying route collection.
+     * Register a new route responding to the specified verbs.
      *
      * @param  array|string  $methods
      * @param  string  $path
@@ -172,15 +173,41 @@ class Router
      */
     public function match($methods, $path, $action)
     {
+        $route = $this->createRoute($methods, $path, $action);
+
+        return $this->routes->add(
+            $route->setContainer($this->container)
+        );
+    }
+
+    /**
+     * Create a new Route instance.
+     *
+     * @param  array|string  $methods
+     * @param  string  $path
+     * @param  mixed  $action
+     * @return \Mini\Routing\Route
+     * @throws \LogicException
+     */
+    public function createRoute($methods, $path, $action)
+    {
         $methods = array_map('strtoupper', (array) $methods);
 
-        if (! is_array($action)) {
+        if (($action instanceof Closure) || is_string($action)) {
             $action = array('uses' => $action);
         }
 
         //
-        else if (! isset($action['uses'])) {
-            $action['uses'] = $this->findActionClosure($action);
+        else if (! is_array($action)) {
+            throw new LogicException("Route [{$path}] has no valid action");
+        }
+
+        if (! isset($action['uses'])) {
+            if (is_null($callback = $this->findActionClosure($action))) {
+                throw new LogicException("Route [{$path}] has no valid callback");
+            }
+
+            $action['uses'] = $callback;
         }
 
         if (is_string($middleware = array_get($action, 'middleware', array()))) {
@@ -201,22 +228,16 @@ class Router
 
         $path = '/' .trim($path, '/');
 
-        if (in_array('GET', $methods) && ! in_array('HEAD', $methods)) {
-            $methods[] = 'HEAD';
-        }
-
-        $route = with(new Route($methods, $path, $action))->setContainer($this->container);
-
-        return $this->routes->add($route->where(
+        return with(new Route($methods, $path, $action))->where(
             array_merge($this->patterns, array_get($action, 'where', array()))
-        ));
+        );
     }
 
     /**
      * Find the Closure in an action array.
      *
      * @param  array  $action
-     * @return \Closure|null
+     * @return \Closure
      */
     protected function findActionClosure(array $action)
     {
@@ -390,13 +411,13 @@ class Router
     }
 
     /**
-     * Get the Container instance.
+     * Get the defined route patterns.
      *
-     * @return \Mini\Container\Container
+     * @return array
      */
-    public function getContainer()
+    public function getPatterns()
     {
-        return $this->container;
+        return $this->patterns;
     }
 
     /**

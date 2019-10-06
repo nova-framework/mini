@@ -182,7 +182,7 @@ class UrlGenerator
         {
             list ($original, $name, $optional) = array_pad($matches, 3, false);
 
-            $value = array_pull($parameters, $name, ! $optional ? $original : '');
+            $value = array_pull($parameters, $name, ($optional === false) ? $original : '');
 
             return ! empty($value) ? '/' .$value : '';
 
@@ -205,9 +205,7 @@ class UrlGenerator
      */
     protected function removeIndex($root)
     {
-        $index = 'index.php';
-
-        return Str::contains($root, $index) ? str_replace('/' .$index, '', $root) : $root;
+        return str_replace('/index.php', '', $root);
     }
 
     /**
@@ -349,9 +347,9 @@ class UrlGenerator
      */
     protected function getPreviousUrlFromSession()
     {
-        $session = $this->getSession();
-
-        return $session ? $session->previousUrl() : null;
+        if (! is_null($session = $this->getSession())) {
+            return $session->previousUrl();
+        }
     }
 
     /**

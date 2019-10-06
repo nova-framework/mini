@@ -58,40 +58,40 @@ class Handler
      * Handle an uncaught exception from the application.
      *
      * @param  \Mini\Http\Request
-     * @param  \Exception|\Throwable  $e
+     * @param  \Exception|\Throwable  $exception
      * @return void
      */
-    public function handleException(Request $request, $e)
+    public function handleException(Request $request, $exception)
     {
-        if (! $e instanceof Exception) {
-            $e = new FatalThrowableError($e);
+        if (! $exception instanceof Exception) {
+            $exception = new FatalThrowableError($exception);
         }
 
-        $className = get_class($e);
+        $className = get_class($exception);
 
         if (! in_array($className, $this->dontReport)) {
-            $this->report($e);
+            $this->report($exception);
         }
 
-        return $this->render($e, $request);
+        return $this->render($exception, $request);
     }
 
     /**
      * Report or log an exception.
      *
-     * @param  \Exception  $e
+     * @param  \Exception  $exception
      * @return void
      */
-    public function report(Exception $e)
+    public function report(Exception $exception)
     {
         try {
             $logger = $this->container->make(LoggerInterface::class);
         }
         catch (Exception $ex) {
-            throw $e; // Throw the original exception
+            throw $exception; // Throw the original exception
         }
 
-        $logger->error($e);
+        $logger->error($exception);
     }
 
     /**
@@ -101,35 +101,36 @@ class Handler
      * @param  \Mini\Http\Request
      * @return void
      */
-    public function render(Exception $e, Request $request)
+    public function render(Exception $exception, Request $request)
     {
-        if ($e instanceof AuthenticationException) {
-            return $this->unauthenticated($request, $e);
+        if ($exception instanceof AuthenticationException) {
+            return $this->unauthenticated($request, $exception);
         }
 
-        $e = FlattenException::create($e);
+        $exception = FlattenException::create($exception);
 
         $handler = new SymfonyExceptionHandler($this->debug);
 
-        return new Response($handler->getHtml($e), $e->getStatusCode(), $e->getHeaders());
+        return new Response(
+            $handler->getHtml($exception), $exception->getStatusCode(), $exception->getHeaders()
+        );
     }
 
     /**
      * Render an exception for console.
      *
-     * @param  \Mini\Http\Request
-     * @param  \Exception  $e
+     * @param  \Exception  $exception
      * @return void
      */
-    public function renderForConsole(Exception $e)
+    public function renderForConsole(Exception $exception)
     {
         $message = sprintf(
             "%s: %s in file %s on line %d%s\n",
-            get_class($e),
-            $e->getMessage(),
-            $e->getFile(),
-            $e->getLine(),
-            $e->getTraceAsString()
+            get_class($exception),
+            $exception->getMessage(),
+            $exception->getFile(),
+            $exception->getLine(),
+            $exception->getTraceAsString()
         );
 
         echo $message;

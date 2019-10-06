@@ -242,11 +242,8 @@ class Application extends Container
         try {
             $response = $this->sendRequestThroughRouter($request);
         }
-        catch (Exception $e) {
+        catch (Exception | Throwable $e) {
             $response = $this->handleException($request, $e);
-        }
-        catch (Throwable $e) {
-            $response = $this->handleException($request, new FatalThrowableError($e));
         }
 
         $response->send();
@@ -255,15 +252,19 @@ class Application extends Container
     }
 
     /**
-     * Handle an exception occured while dispatching the HTTP request.
+     * Handle an exception or throwable error occured while dispatching the HTTP request.
      *
      * @param  \Mini\Http\Request  $request
-     * @param  \Exception  $e
+     * @param  \Exception|\Throwable  $exception
      *
      * @return \Mini\Http\Response
      */
-    protected function handleException(Request $request, Exception $exception)
+    protected function handleException(Request $request, $exception)
     {
+        if (! $exception instanceof Exception) {
+            $exception = new FatalThrowableError($e);
+        }
+
         $handler = $this->make('Mini\Foundation\Exceptions\HandlerInterface');
 
         if (! $exception instanceof HttpException) {
