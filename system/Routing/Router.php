@@ -170,9 +170,13 @@ class Router
      * @param  string  $path
      * @param  mixed  $action
      * @return \Mini\Routing\Route
+     * @throws \LogicException
      */
     public function match($methods, $path, $action)
     {
+        $methods = array_map('strtoupper', (array) $methods);
+
+        //
         $route = $this->createRoute($methods, $path, $action);
 
         return $this->routes->add(
@@ -183,16 +187,14 @@ class Router
     /**
      * Create a new Route instance.
      *
-     * @param  array|string  $methods
+     * @param  array  $methods
      * @param  string  $path
      * @param  mixed  $action
      * @return \Mini\Routing\Route
      * @throws \LogicException
      */
-    public function createRoute($methods, $path, $action)
+    protected function createRoute(array $methods, $path, $action)
     {
-        $methods = array_map('strtoupper', (array) $methods);
-
         if (($action instanceof Closure) || is_string($action)) {
             $action = array('uses' => $action);
         }

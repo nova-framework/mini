@@ -46,23 +46,23 @@ class Filesystem
      */
     public function sharedGet($path)
     {
+        if (is_null($handle = fopen($path, 'rb'))) {
+            return '';
+        }
+
         $contents = '';
 
-        $handle = fopen($path, 'rb');
+        try {
+            if (flock($handle, LOCK_SH)) {
+                clearstatcache(true, $path);
 
-        if (! is_null($handle)) {
-            try {
-                if (flock($handle, LOCK_SH)) {
-                    clearstatcache(true, $path);
+                $contents = fread($handle, $this->size($path) ?: 1);
 
-                    $contents = fread($handle, $this->size($path) ?: 1);
-
-                    flock($handle, LOCK_UN);
-                }
+                flock($handle, LOCK_UN);
             }
-            finally {
-                fclose($handle);
-            }
+        }
+        finally {
+            fclose($handle);
         }
 
         return $contents;
@@ -311,7 +311,7 @@ class Filesystem
         // To get the appropriate files, we'll simply glob the directory and filter
         // out any "files" that are not truly files so we do not end up with any
         // directories in our list, but only true files within the directory.
-        return array_filter($glob, function($file)
+        return array_filter($glob, function ($file)
         {
             return filetype($file) == 'file';
         });
@@ -325,7 +325,9 @@ class Filesystem
      */
     public function allFiles($directory)
     {
-        return iterator_to_array(Finder::create()->files()->in($directory), false);
+        return iterator_to_array(
+            Finder::create()->files()->in($directory), false
+        );
     }
 
     /**
@@ -387,14 +389,14 @@ class Filesystem
         $items = new FilesystemIterator($directory, $options);
 
         foreach ($items as $item) {
+            $path = $item->getPathname();
+
             // As we spin through items, we will check to see if the current file is actually
             // a directory or a file. When it is actually a directory we will need to call
             // back into this function recursively to keep copying these nested folders.
-            $target = $destination.'/'.$item->getBasename();
+            $target = $destination .'/' .$item->getBasename();
 
             if ($item->isDir()) {
-                $path = $item->getPathname();
-
                 if (! $this->copyDirectory($path, $target, $options)) return false;
             }
 
@@ -402,7 +404,7 @@ class Filesystem
             // location and keep looping. If for some reason the copy fails we'll bail out
             // and return false, so the developer is aware that the copy process failed.
             else {
-                if (! $this->copy($item->getPathname(), $target)) return false;
+                if (! $this->copy($path, $target)) return false;
             }
         }
 
@@ -425,18 +427,20 @@ class Filesystem
         $items = new FilesystemIterator($directory);
 
         foreach ($items as $item) {
+            $path = $item->getPathname();
+
             // If the item is a directory, we can just recurse into the function and
             // delete that sub-directory otherwise we'll just delete the file and
             // keep iterating through each file until the directory is cleaned.
             if ($item->isDir()) {
-                $this->deleteDirectory($item->getPathname());
+                $this->deleteDirectory($path);
             }
 
             // If the item is just a file, we can go ahead and delete it since we're
             // just looping through and waxing all of the files in this directory
             // and calling directories recursively, so we delete the real path.
             else {
-                $this->delete($item->getPathname());
+                $this->delete($path);
             }
         }
 

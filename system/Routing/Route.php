@@ -180,12 +180,11 @@ class Route
 
         extract($callback);
 
-        //
-        $reflector = new ReflectionMethod($controller, $method);
-
-        return $controller->callAction(
-            $method, $this->resolveCallParameters($parameters, $reflector)
+        $parameters = $this->resolveCallParameters(
+            $parameters, new ReflectionMethod($controller, $method)
         );
+
+        return $controller->callAction($method, $parameters);
     }
 
     /**
