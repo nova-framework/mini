@@ -39,6 +39,11 @@ class Route
     protected $action;
 
     /**
+     * @var bool
+     */
+    protected $fallback = false;
+
+    /**
      * @var array
      */
     protected $patterns = array();
@@ -170,16 +175,29 @@ class Route
     {
         $parameters = $this->getParameters();
 
-        if (! is_array($callback = $this->resolveCallback())) {
-            $reflector = new ReflectionFunction($callback);
+        if (is_array($callback = $this->resolveCallback())) {
+            extract($callback);
 
-            return call_user_func_array(
-                $callback, $this->resolveCallParameters($parameters, $reflector)
-            );
+            return $this->runController($controller, $method, $parameters);
         }
 
-        extract($callback);
+        $parameters = $this->resolveCallParameters(
+            $parameters, new ReflectionFunction($callback)
+        );
 
+        return call_user_func_array($callback, $parameters);
+    }
+
+    /**
+     * Runs the route action and returns the response.
+     *
+     * @param mixed $controller
+     * @param string $method
+     * @param array $parameters
+     * @return mixed
+     */
+    protected function runController($controller, $method, $parameters)
+    {
         $parameters = $this->resolveCallParameters(
             $parameters, new ReflectionMethod($controller, $method)
         );
@@ -298,6 +316,29 @@ class Route
         }
 
         return $this->middleware = array_unique($middleware, SORT_REGULAR);
+    }
+
+    /**
+     * Set the flag of fallback mode on the route.
+     *
+     * @param  bool  $value
+     * @return $this
+     */
+    public function fallback()
+    {
+        $this->fallback = true;
+
+        return $this;
+    }
+
+    /**
+     * Returns true if the flag of fallback mode is set.
+     *
+     * @return bool
+     */
+    public function isFallback()
+    {
+        return $this->fallback;
     }
 
     /**

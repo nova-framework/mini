@@ -154,13 +154,26 @@ class Router
      *
      * @param  string  $path
      * @param  \Closure|array|string  $action
-     * @return void
+     * @return \Mini\Routing\Route
      */
     public function any($path, $action)
     {
         $methods = array('GET', 'POST', 'PUT', 'DELETE', 'PATCH');
 
         return $this->match($methods, $path, $action);
+    }
+
+    /**
+     * Register a new fallback route.
+     *
+     * @param  \Closure|array|string  $action
+     * @return \Mini\Routing\Route
+     */
+    public function fallback($action)
+    {
+        return $this->match(array('GET', 'HEAD'), "{fallback}", $action)
+            ->where('fallback', '(.*)')
+            ->fallback();
     }
 
     /**

@@ -89,13 +89,26 @@ class RouteListCommand extends Command
     */
     protected function getRoutes()
     {
-        $results = array_map(function ($route)
+        $routes = $this->routes->getRoutes();
+
+        //
+        $fallbacks = array();
+
+        foreach ($routes as $key => $route) {
+            if (! $route->isFallback()) {
+                continue;
+            }
+
+            $fallbacks[$key] = $route;
+
+            unset($routes[$key]);
+        }
+
+        return array_map(function ($route)
         {
             return $this->getRouteInformation($route);
 
-        }, $this->routes->getRoutes());
-
-        return array_filter($results);
+        }, array_merge($routes, $fallbacks));
     }
 
     /**
