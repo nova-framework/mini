@@ -4,9 +4,9 @@ namespace Mini\Routing;
 
 use Mini\Container\Container;
 use Mini\Http\Request;
+use Mini\Support\Str;
 
 use Closure;
-use DomainException;
 use LogicException;
 use ReflectionFunction;
 use ReflectionFunctionAbstract;
@@ -102,7 +102,7 @@ class Route
             return false;
         }
 
-        $pattern = static::compilePattern($this->path, $this->patterns);
+        $pattern = with(new RouteCompiler($this))->compile();
 
         if (preg_match($pattern, $path, $matches) !== 1) {
             return false;
@@ -118,55 +118,6 @@ class Route
     }
 
     /**
-     * Compile a Route pattern.
-     *
-     * @param  string  $path
-     * @param  array  $patterns
-     * @return string
-     * @throws \LogicException
-     */
-    protected static function compilePattern($path, $patterns)
-    {
-        $optionals = 0;
-
-        $variables = array();
-
-        $pattern = preg_replace_callback('#/\{(.*?)(\?)?\}#', function ($matches) use ($path, $patterns, &$optionals, &$variables)
-        {
-            list (, $name, $optional) = array_pad($matches, 3, false);
-
-            if (in_array($name, $variables)) {
-                throw new LogicException("Route pattern [{$path}] cannot reference variable name [{$name}] more than once.");
-            } else if (strlen($name) > 32) {
-                throw new DomainException("Variable name [{$name}] cannot be longer than 32 characters in route pattern [{$path}].");
-            } else if (preg_match('/^\d/', $name) === 1) {
-                throw new DomainException("Variable name [{$name}] cannot start with a digit in route pattern [{$path}].");
-            }
-
-            $variables[] = $name;
-
-            //
-            $pattern = array_get($patterns, $name, '[^/]+');
-
-            if ($optional) {
-                $optionals++;
-
-                return sprintf('(?:/(?P<%s>%s)', $name, $pattern);
-            }
-
-            //
-            else if ($optionals > 0) {
-                throw new LogicException("Route pattern [{$path}] cannot reference variable [{$name}] after optionals.");
-            }
-
-            return sprintf('/(?P<%s>%s)', $name, $pattern);
-
-        }, $path);
-
-        return sprintf('#^%s%s$#s', $pattern, str_repeat(')?', $optionals));
-    }
-
-    /**
      * Run the given action callback.
      *
      * @return mixed
@@ -175,7 +126,7 @@ class Route
     {
         $parameters = $this->getParameters();
 
-        if (is_array($callback = $this->resolveCallback())) {
+        if (is_array($callback = $this->resolveActionCallback())) {
             extract($callback);
 
             return $this->runController($controller, $method, $parameters);
@@ -211,7 +162,7 @@ class Route
      * @return \Closure|array
      * @throws \UnexpectedValueException|\LogicException
      */
-    protected function resolveCallback()
+    protected function resolveActionCallback()
     {
         if (isset($this->callback)) {
             return $this->callback;
@@ -223,13 +174,23 @@ class Route
             return $this->callback = $callback;
         }
 
-        list ($className, $method) = array_pad(explode('@', $callback, 2), 2, '');
-
-        if (! class_exists($className) || empty($method)) {
-            throw new LogicException("Invalid route action: [{$callback}]");
+        //
+        else if (! is_string($callback)) {
+            throw new UnexpectedValueException("A route callback must be a string or a Closure instance");
+        } else if (! Str::contains($callback, '@')) {
+            throw new LogicException("A string callback must have the form [controller@method]");
         }
 
-        $controller = $this->container->make($className);
+        list ($className, $method) = explode('@', $callback, 2);
+
+        if (! class_exists($className)) {
+            throw new LogicException("Controller [{$className}] not found.");
+        }
+
+        //
+        else if (! method_exists($controller = $this->container->make($className), $method)) {
+            throw new LogicException("Controller [{$className}] has no method [{$method}]");
+        }
 
         return $this->callback = compact('controller', 'method');
     }
@@ -307,7 +268,7 @@ class Route
 
         $middleware = array_get($this->action, 'middleware', array());
 
-        if (is_array($callback = $this->resolveCallback())) {
+        if (is_array($callback = $this->resolveActionCallback())) {
             extract($callback);
 
             $middleware = array_merge(

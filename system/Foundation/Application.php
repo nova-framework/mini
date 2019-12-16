@@ -262,7 +262,7 @@ class Application extends Container
     protected function handleException(Request $request, $exception)
     {
         if (! $exception instanceof Exception) {
-            $exception = new FatalThrowableError($e);
+            $exception = new FatalThrowableError($exception);
         }
 
         $handler = $this->make('Mini\Foundation\Exceptions\HandlerInterface');
