@@ -129,7 +129,7 @@ class Route
         if (is_array($callback = $this->resolveActionCallback())) {
             extract($callback);
 
-            return $this->runController($controller, $method, $parameters);
+            return $this->runControllerAction($controller, $method, $parameters);
         }
 
         $parameters = $this->resolveCallParameters(
@@ -147,7 +147,7 @@ class Route
      * @param array $parameters
      * @return mixed
      */
-    protected function runController($controller, $method, $parameters)
+    protected function runControllerAction($controller, $method, $parameters)
     {
         $parameters = $this->resolveCallParameters(
             $parameters, new ReflectionMethod($controller, $method)
