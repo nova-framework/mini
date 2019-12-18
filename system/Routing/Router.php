@@ -5,6 +5,7 @@ namespace Mini\Routing;
 use Mini\Container\Container;
 use Mini\Http\Request;
 use Mini\Http\Response;
+use Mini\Support\Str;
 
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 
@@ -223,6 +224,16 @@ class Router
             }
 
             $action['uses'] = $callback;
+        }
+
+        $callback = $action['uses'];
+
+        if ($callback instanceof Closure) {
+            //
+        } else if (! is_string($callback)) {
+            throw new LogicException("A route callback must be a string or a Closure instance");
+        } else if (! Str::contains($callback, '@')) {
+            throw new LogicException("A string callback must have the form [controller@method]");
         }
 
         if (is_string($middleware = array_get($action, 'middleware', array()))) {

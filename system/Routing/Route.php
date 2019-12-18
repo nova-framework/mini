@@ -11,7 +11,6 @@ use LogicException;
 use ReflectionFunction;
 use ReflectionFunctionAbstract;
 use ReflectionMethod;
-use UnexpectedValueException;
 
 
 class Route
@@ -176,9 +175,7 @@ class Route
 
         //
         else if (! is_string($callback)) {
-            throw new UnexpectedValueException("A route callback must be a string or a Closure instance");
-        } else if (! Str::contains($callback, '@')) {
-            throw new LogicException("A string callback must have the form [controller@method]");
+            throw new LogicException("A route callback must be a string or a Closure instance");
         }
 
         list ($className, $method) = explode('@', $callback, 2);
