@@ -249,7 +249,7 @@ class Router
             });
         }
 
-        if (is_string($middleware = array_get($group, 'middleware', array()))) {
+        if (is_string($middleware = array_get($action, 'middleware', array()))) {
             $action['middleware'] = explode('|', $middleware);
         }
 
