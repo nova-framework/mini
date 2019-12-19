@@ -193,9 +193,7 @@ class Router
         //
         $route = $this->createRoute($methods, $path, $action);
 
-        return $this->routes->add(
-            $route->setContainer($this->container)
-        );
+        return $this->routes->add($route)->setContainer($this->container);
     }
 
     /**
@@ -208,7 +206,7 @@ class Router
      */
     protected function createRoute(array $methods, $path, $action)
     {
-        $action = $this->parseAction($action, $path);
+        $action = $this->parseAction($action);
 
         if (! empty($this->groupStack)) {
             $action = static::mergeGroup($action, $group = last($this->groupStack));
@@ -224,6 +222,7 @@ class Router
 
         $path = '/' .trim($path, '/');
 
+        //
         $patterns = array_merge($this->patterns, array_get($action, 'where', array()));
 
         return with(new Route($methods, $path, $action))->where($patterns);
@@ -233,48 +232,28 @@ class Router
      * Parse the action into an array format.
      *
      * @param  mixed  $action
-     * @param  string  $path
      * @return array
      * @throws \LogicException
      */
-    protected function parseAction($action, $path)
+    protected function parseAction($action)
     {
-        if (is_string($action) || ($action instanceof Closure)) {
+        if (! is_array($action)) {
             return array('uses' => $action);
         }
 
         //
-        else if (! is_array($action)) {
-            throw new LogicException("Route [{$path}] has no valid action");
+        else if (! isset($action['uses'])) {
+            $action['uses'] = array_first($action, function ($key, $value)
+            {
+                return is_callable($value) && is_numeric($key);
+            });
         }
 
-        if (! isset($action['uses'])) {
-            if (is_null($callback = $this->findActionClosure($action))) {
-                throw new LogicException("Route [{$path}] has no valid callback");
-            }
-
-            $action['uses'] = $callback;
-        }
-
-        if (isset($action['middleware']) && is_string($action['middleware'])) {
-            $action['middleware'] = explode('|', $action['middleware']);
+        if (is_string($middleware = array_get($group, 'middleware', array()))) {
+            $action['middleware'] = explode('|', $middleware);
         }
 
         return $action;
-    }
-
-    /**
-     * Find the Closure in an action array.
-     *
-     * @param  array  $action
-     * @return \Closure
-     */
-    protected function findActionClosure(array $action)
-    {
-        return array_first($action, function ($key, $value)
-        {
-            return is_callable($value) && is_numeric($key);
-        });
     }
 
     /**
