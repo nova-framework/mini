@@ -205,40 +205,10 @@ class Router
      * @param  string  $path
      * @param  mixed  $action
      * @return \Mini\Routing\Route
-     * @throws \LogicException
      */
     protected function createRoute(array $methods, $path, $action)
     {
-        if (($action instanceof Closure) || is_string($action)) {
-            $action = array('uses' => $action);
-        }
-
-        //
-        else if (! is_array($action)) {
-            throw new LogicException("Route [{$path}] has no valid action");
-        }
-
-        if (! isset($action['uses'])) {
-            if (is_null($callback = $this->findActionClosure($action))) {
-                throw new LogicException("Route [{$path}] has no valid callback");
-            }
-
-            $action['uses'] = $callback;
-        }
-
-        $callback = $action['uses'];
-
-        if ($callback instanceof Closure) {
-            //
-        } else if (! is_string($callback)) {
-            throw new LogicException("A route callback must be a string or a Closure instance");
-        } else if (! Str::contains($callback, '@')) {
-            throw new LogicException("A string callback must have the form [controller@method]");
-        }
-
-        if (is_string($middleware = array_get($action, 'middleware', array()))) {
-            $action['middleware'] = explode('|', $middleware);
-        }
+        $action = $this->parseAction($action, $path);
 
         if (! empty($this->groupStack)) {
             $action = static::mergeGroup($action, $group = last($this->groupStack));
@@ -254,9 +224,43 @@ class Router
 
         $path = '/' .trim($path, '/');
 
-        return with(new Route($methods, $path, $action))->where(
-            array_merge($this->patterns, array_get($action, 'where', array()))
-        );
+        $patterns = array_merge($this->patterns, array_get($action, 'where', array()));
+
+        return with(new Route($methods, $path, $action))->where($patterns);
+    }
+
+    /**
+     * Parse the action into an array format.
+     *
+     * @param  mixed  $action
+     * @param  string  $path
+     * @return array
+     * @throws \LogicException
+     */
+    protected function parseAction($action, $path)
+    {
+        if (is_string($action) || ($action instanceof Closure)) {
+            return array('uses' => $action);
+        }
+
+        //
+        else if (! is_array($action)) {
+            throw new LogicException("Route [{$path}] has no valid action");
+        }
+
+        if (! isset($action['uses'])) {
+            if (is_null($callback = $this->findActionClosure($action))) {
+                throw new LogicException("Route [{$path}] has no valid callback");
+            }
+
+            $action['uses'] = $callback;
+        }
+
+        if (isset($action['middleware']) && is_string($action['middleware'])) {
+            $action['middleware'] = explode('|', $action['middleware']);
+        }
+
+        return $action;
     }
 
     /**
