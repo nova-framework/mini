@@ -67,11 +67,7 @@ class Handler
             $exception = new FatalThrowableError($exception);
         }
 
-        $className = get_class($exception);
-
-        if (! in_array($className, $this->dontReport)) {
-            $this->report($exception);
-        }
+        $this->report($exception);
 
         return $this->render($exception, $request);
     }
@@ -84,6 +80,10 @@ class Handler
      */
     public function report(Exception $exception)
     {
+        if (in_array(get_class($exception), $this->dontReport)) {
+            return;
+        }
+
         try {
             $logger = $this->container->make(LoggerInterface::class);
         }
