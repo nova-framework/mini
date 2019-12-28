@@ -65,7 +65,7 @@ class Handler extends BaseHandler implements HandlerInterface
         else if (($e instanceof HttpException) || ! $this->debug) {
             $code = ($e instanceof HttpException) ? $e->getStatusCode() : 500;
 
-            if ($request->ajax() || $request->wantsJson()) {
+            if ($this->isAjaxRequest($request)) {
                 $e = FlattenException::create($e, $code);
 
                 return Response::json($e->toArray(), $code, $e->getHeaders());
@@ -85,6 +85,17 @@ class Handler extends BaseHandler implements HandlerInterface
     }
 
     /**
+     * Returns true if the given Request instance is AJAX.
+     *
+     * @param  \Mini\Http\Request  $request
+     * @return bool
+     */
+    protected function isAjaxRequest(Request $request)
+    {
+        return ($request->ajax() || $request->wantsJson());
+    }
+
+    /**
      * Convert an authentication exception into an unauthenticated response.
      *
      * @param  \Nova\Http\Request  $request
@@ -93,7 +104,7 @@ class Handler extends BaseHandler implements HandlerInterface
      */
     protected function unauthenticated(Request $request, AuthenticationException $exception)
     {
-        if ($request->ajax() || $request->wantsJson()) {
+        if ($this->isAjaxRequest($request)) {
             return Response::json(array('error' => 'Unauthenticated.'), 401);
         }
 
