@@ -80,7 +80,7 @@ class Handler
      */
     public function report(Exception $exception)
     {
-        if (in_array(get_class($exception), $this->dontReport)) {
+        if ($this->shouldntReport($exception)) {
             return;
         }
 
@@ -92,6 +92,34 @@ class Handler
         }
 
         $logger->error($exception);
+    }
+
+    /**
+     * Determine if the exception should be reported.
+     *
+     * @param  \Exception  $exception
+     * @return bool
+     */
+    public function shouldReport(Exception $exception)
+    {
+        return ! $this->shouldntReport($exception);
+    }
+
+    /**
+     * Determine if the exception should not be reported.
+     *
+     * @param  \Exception  $exception
+     * @return bool
+     */
+    public function shouldntReport(Exception $exception)
+    {
+        foreach ($this->dontReport as $type) {
+            if ($exception instanceof $type) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
