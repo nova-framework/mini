@@ -80,18 +80,18 @@ class Handler
      */
     public function report(Exception $exception)
     {
-        if ($this->shouldntReport($exception)) {
+        if (! $this->shouldReport($exception)) {
             return;
         }
 
         try {
             $logger = $this->container->make(LoggerInterface::class);
+
+            $logger->error($exception);
         }
         catch (Exception $ex) {
             throw $exception; // Throw the original exception
         }
-
-        $logger->error($exception);
     }
 
     /**
@@ -102,24 +102,17 @@ class Handler
      */
     public function shouldReport(Exception $exception)
     {
-        return ! $this->shouldntReport($exception);
-    }
+        $shouldReport = true;
 
-    /**
-     * Determine if the exception should not be reported.
-     *
-     * @param  \Exception  $exception
-     * @return bool
-     */
-    public function shouldntReport(Exception $exception)
-    {
         foreach ($this->dontReport as $type) {
             if ($exception instanceof $type) {
-                return true;
+                $shouldReport = false;
+
+                break;
             }
         }
 
-        return false;
+        return $shouldReport;
     }
 
     /**

@@ -5,7 +5,6 @@ namespace App\Platform\Exceptions;
 use Mini\Auth\AuthenticationException;
 use Mini\Foundation\Exceptions\Handler as BaseHandler;
 use Mini\Foundation\Exceptions\HandlerInterface;
-use Mini\Http\Exceptions\HttpException;
 use Mini\Http\Request;
 use Mini\Session\TokenMismatchException;
 use Mini\Support\Facades\Config;
@@ -14,6 +13,7 @@ use Mini\Support\Facades\Response;
 use Mini\Support\Facades\View;
 
 use Symfony\Component\Debug\Exception\FlattenException;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 use Exception;
 
@@ -61,27 +61,43 @@ class Handler extends BaseHandler implements HandlerInterface
                 ->with('danger', 'Validation Token has expired. Please try again!');
         }
 
-        // Http Error Pages or not Debug enabled.
-        else if (($e instanceof HttpException) || ! $this->debug) {
-            $code = ($e instanceof HttpException) ? $e->getStatusCode() : 500;
+        //
+        else if ($e instanceof HttpException) {
+            return $this->renderHttpException($e, $request);
+        } else if (! $this->debug) {
+            $exception = new HttpException(500, 'Internal Server Error');
 
-            if ($this->isAjaxRequest($request)) {
-                $e = FlattenException::create($e, $code);
-
-                return Response::json($e->toArray(), $code, $e->getHeaders());
-            }
-
-            // Not an AJAX request.
-            else if (View::exists('Errors/' .$code)) {
-                $view = View::make('Layouts/Default')
-                    ->shares('title', 'Error ' .$code)
-                    ->nest('content', 'Errors/' .$code, array('exception' => $e));
-
-                return Response::make($view->render(), $code);
-            }
+            return $this->renderHttpException($exception, $request);
         }
 
         return parent::render($e, $request);
+    }
+
+    /**
+     * Render the given HttpException.
+     *
+     * @param  \Symfony\Component\HttpKernel\Exception\HttpException  $e
+     * @param  \Mini\Http\Request  $request
+     * @return \Symfony\Component\HttpFoundation\Response
+     */
+    protected function renderHttpException(HttpException $e, Request $request)
+    {
+        $e = FlattenException::create($e, $code = $e->getStatusCode());
+
+        if ($this->isAjaxRequest($request)) {
+            return Response::json($e->toArray(), $code, $e->getHeaders());
+        }
+
+        // Not an AJAX request.
+        else if (! View::exists('Errors/' .$code)) {
+            return;
+        }
+
+        $view = View::make('Layouts/Default')
+            ->shares('title', 'Error ' .$code)
+            ->nest('content', 'Errors/' .$code, array('exception' => $e));
+
+        return Response::make($view->render(), $code);
     }
 
     /**
