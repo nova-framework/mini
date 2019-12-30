@@ -56,15 +56,17 @@ class Handler extends BaseHandler implements HandlerInterface
     public function render(Exception $e, Request $request)
     {
         if ($e instanceof TokenMismatchException) {
-            return Redirect::back()
-                ->withInput($request->except($this->dontFlash))
-                ->with('danger', 'Validation Token has expired. Please try again!');
+            $input = $request->except($this->dontFlash);
+
+            return Redirect::back()->withInput($input)->with('danger', 'Validation Token has expired. Please try again!');
+        } else if ($exception instanceof AuthenticationException) {
+            return $this->unauthenticated($request, $exception);
+        } else if ($e instanceof HttpException) {
+            return $this->renderHttpException($e, $request);
         }
 
         //
-        else if ($e instanceof HttpException) {
-            return $this->renderHttpException($e, $request);
-        } else if (! $this->debug) {
+        else if (! $this->debug) {
             $exception = new HttpException(500, 'Internal Server Error');
 
             return $this->renderHttpException($exception, $request);
