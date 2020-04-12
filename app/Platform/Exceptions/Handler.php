@@ -59,8 +59,8 @@ class Handler extends BaseHandler implements HandlerInterface
             $input = $request->except($this->dontFlash);
 
             return Redirect::back()->withInput($input)->with('danger', 'Validation Token has expired. Please try again!');
-        } else if ($exception instanceof AuthenticationException) {
-            return $this->unauthenticated($request, $exception);
+        } else if ($e instanceof AuthenticationException) {
+            return $this->unauthenticated($request, $e);
         } else if ($e instanceof HttpException) {
             return $this->renderHttpException($e, $request);
         }
