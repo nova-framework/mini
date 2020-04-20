@@ -66,24 +66,17 @@ class Factory
      */
     public function renderEach($view, array $items, $iterator, $empty = 'raw|')
     {
-        if (! empty($items)) {
-            $results = array();
-
-            foreach ($items as $key => $value) {
-                $data = array('key' => $key, $iterator => $value);
-
-                $results[] = $this->make($view, $data)->render();
-            }
-
-            return implode("\n", $results);
+        if (empty($items)) {
+            return Str::startsWith($empty, 'raw|') ? substr($empty, 4) : $this->fetch($empty);
         }
 
-        //
-        else if (! Str::startsWith($empty, 'raw|')) {
-            return $this->make($empty)->render();
+        $results = array();
+
+        foreach ($items as $key => $value) {
+            $results[] = $this->fetch($view, array('key' => $key, $iterator => $value));
         }
 
-        return substr($empty, 4);
+        return implode("\n", $results);
     }
 
     /**
