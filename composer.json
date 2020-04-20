@@ -23,7 +23,7 @@
         "symfony/process": "4.2.*",
         "symfony/translation": "4.2.*",
         "symfony/var-dumper": "4.2.*",
-        "nesbot/carbon": "^1.29",
+        "nesbot/carbon": "^2.0.0",
         "swiftmailer/swiftmailer": "^5.4"
     },
     "autoload": {

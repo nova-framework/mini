@@ -5,11 +5,13 @@ namespace Mini\Routing;
 use Mini\Container\Container;
 use Mini\Http\Request;
 use Mini\Http\Response;
+use Mini\Support\Str;
 
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 
 use BadMethodCallException;
 use Closure;
+use LogicException;
 
 
 class Router
@@ -17,7 +19,7 @@ class Router
     /**
      * The Container instance.
      *
-     * @var \Mini\Container
+     * @var \Mini\Container\Container
      */
     protected $container;
 
@@ -122,19 +124,19 @@ class Router
      */
     protected static function mergeGroup($new, $old)
     {
-        $namespace = array_get($old, 'namespace');
+        if (! empty($namespace = array_get($old, 'namespace'))) {
+            if (isset($new['namespace'])) {
+                $namespace = trim($namespace, '\\') .'\\' .trim($new['namespace'], '\\');
+            }
 
-        if (isset($new['namespace'])) {
-            $new['namespace'] = trim($namespace, '\\') .'\\' .trim($new['namespace'], '\\');
-        } else if (! empty($namespace)) {
             $new['namespace'] = $namespace;
         }
 
-        $prefix = array_get($old, 'prefix');
+        if (! empty($prefix = array_get($old, 'prefix'))) {
+            if (isset($new['prefix'])) {
+                $prefix = trim($prefix, '/') .'/' .trim($new['prefix'], '/');
+            }
 
-        if (isset($new['prefix'])) {
-            $new['prefix'] = trim($prefix, '/') .'/' .trim($new['prefix'], '/');
-        } else if (! empty($prefix)) {
             $new['prefix'] = $prefix;
         }
 
@@ -151,24 +153,38 @@ class Router
     /**
      * Register a new route responding to all verbs.
      *
-     * @param  string  $uri
+     * @param  string  $path
      * @param  \Closure|array|string  $action
-     * @return void
+     * @return \Mini\Routing\Route
      */
-    public function any($route, $action)
+    public function any($path, $action)
     {
         $methods = array('GET', 'POST', 'PUT', 'DELETE', 'PATCH');
 
-        return $this->match($methods, $route, $action);
+        return $this->match($methods, $path, $action);
     }
 
     /**
-     * Add a route to the underlying route collection.
+     * Register a new fallback route.
+     *
+     * @param  \Closure|array|string  $action
+     * @return \Mini\Routing\Route
+     */
+    public function fallback($action)
+    {
+        return $this->match(array('GET', 'HEAD'), "{fallback}", $action)
+            ->where('fallback', '(.*)')
+            ->fallback();
+    }
+
+    /**
+     * Register a new route responding to the specified verbs.
      *
      * @param  array|string  $methods
      * @param  string  $path
      * @param  mixed  $action
      * @return \Mini\Routing\Route
+     * @throws \LogicException
      */
     public function match($methods, $path, $action)
     {
@@ -177,66 +193,67 @@ class Router
         //
         $route = $this->createRoute($methods, $path, $action);
 
-        return $this->routes->add($route);
+        return $this->routes->add($route)->setContainer($this->container);
     }
 
     /**
-     * Create a new route instance.
+     * Create a new Route instance.
      *
-     * @param  array|string  $methods
+     * @param  array  $methods
      * @param  string  $path
-     * @param  mixed   $action
+     * @param  mixed  $action
      * @return \Mini\Routing\Route
      */
-    protected function createRoute($methods, $path, $action)
+    protected function createRoute(array $methods, $path, $action)
     {
-        if (! is_array($action)) {
-            $action = array('uses' => $action);
+        $action = $this->parseAction($action);
+
+        if (! empty($this->groupStack)) {
+            $action = static::mergeGroup($action, $group = last($this->groupStack));
+
+            if (is_string($uses = $action['uses']) && ! empty($namespace = array_get($group, 'namespace'))) {
+                $action['uses'] = trim($namespace, '\\') .'\\' .trim($uses, '\\');
+            }
+
+            if (! empty($prefix = array_get($group, 'prefix'))) {
+                $path = trim($prefix, '/') .'/' .trim($path, '/');
+            }
         }
 
-        $group = ! empty($this->groupStack) ? last($this->groupStack) : array();
+        $path = '/' .trim($path, '/');
 
-        if (is_null($callback = array_get($action, 'uses'))) {
-            $action['uses'] = $this->findActionClosure($action);
+        //
+        $patterns = array_merge($this->patterns, array_get($action, 'where', array()));
+
+        return with(new Route($methods, $path, $action))->where($patterns);
+    }
+
+    /**
+     * Parse the action into an array format.
+     *
+     * @param  mixed  $action
+     * @return array
+     * @throws \LogicException
+     */
+    protected function parseAction($action)
+    {
+        if (! is_array($action)) {
+            return array('uses' => $action);
         }
 
         //
-        else if (is_string($callback) && ! empty($namespace = array_get($group, 'namespace'))) {
-            $action['uses'] = $namespace .'\\' .$callback;
+        else if (! isset($action['uses'])) {
+            $action['uses'] = array_first($action, function ($key, $value)
+            {
+                return is_callable($value) && is_numeric($key);
+            });
         }
 
         if (is_string($middleware = array_get($action, 'middleware', array()))) {
             $action['middleware'] = explode('|', $middleware);
         }
 
-        $action = static::mergeGroup($action, $group);
-
-        if (! empty($prefix = array_get($action, 'prefix'))) {
-            $path = trim($prefix, '/') .'/' .trim($path, '/');
-        }
-
-        $path = '/' .trim($path, '/');
-
-        //
-        $route = with(new Route($methods, $path, $action))->setContainer($this->container);
-
-        return $route->where(
-            array_merge($this->patterns, array_get($action, 'where', array()))
-        );
-    }
-
-    /**
-     * Find the Closure in an action array.
-     *
-     * @param  array  $action
-     * @return \Closure
-     */
-    protected function findActionClosure(array $action)
-    {
-        return array_first($action, function ($key, $value)
-        {
-            return is_callable($value) && is_numeric($key);
-        });
+        return $action;
     }
 
     /**
@@ -254,39 +271,27 @@ class Router
             return $route;
         });
 
-        $response = $this->runRouteWithinStack($route, $request);
+        $pipeline = new Pipeline(
+            $this->container, $this->gatherMiddleware($route)
+        );
+
+        $response = $pipeline->dispatch($request, function ($request) use ($route)
+        {
+            return $this->prepareResponse($request, $route->run());
+        });
 
         return $this->prepareResponse($request, $response);
     }
 
     /**
-     * Find the route matching a given request.
+     * Find the Route which matches the given Request.
      *
      * @param  \Mini\Http\Request  $request
-     * @return \Mini\Routing\Route
+     * @return \Mini\Routing|Route|null
      */
-    protected function findRoute($request)
+    protected function findRoute(Request $request)
     {
         return $this->currentRoute = $this->routes->match($request);
-    }
-
-    /**
-     * Run the route within the middleware stack.
-     *
-     * @param  \Mini\Routing\Route  $route
-     * @param  \Mini\Http\Request  $request
-     * @return mixed
-     */
-    protected function runRouteWithinStack(Route $route, Request $request)
-    {
-        $pipeline = new Pipeline($this->container, $this->gatherMiddleware($route));
-
-        return $pipeline->handle($request, function ($request) use ($route)
-        {
-            $response = $route->run();
-
-            return $this->prepareResponse($request, $response);
-        });
     }
 
     /**
@@ -297,11 +302,9 @@ class Router
      */
     public function gatherMiddleware(Route $route)
     {
-        $middleware = $this->resolveMiddleware(
+        return $this->resolveMiddleware(
             $route->getMiddleware()
         );
-
-        return array_unique($middleware, SORT_REGULAR);
     }
 
     /**
@@ -315,16 +318,14 @@ class Router
         $results = array();
 
         foreach ($middleware as $name) {
-            if (! is_null($group = array_get($this->middlewareGroups, $name))) {
+            if (! empty($group = array_get($this->middlewareGroups, $name))) {
                 $results = array_merge($results, $this->resolveMiddleware($group));
-
-                continue;
+            } else {
+                $results[] = $this->parseMiddleware($name);
             }
-
-            $results[] = $this->parseMiddleware($name);
         }
 
-        return $results;
+        return array_unique($results, SORT_REGULAR);
     }
 
     /**
@@ -346,13 +347,13 @@ class Router
             return $callable .':' .$payload;
         }
 
-        $parameters = explode(',', $payload);
-
-        return function ($passable, $stack) use ($callable, $parameters)
+        return function ($passable, $stack) use ($callable, $payload)
         {
-            return call_user_func_array(
-                $callable, array_merge(array($passable, $stack), $parameters)
+            $parameters = array_merge(
+                array($passable, $stack), explode(',', $payload)
             );
+
+            return call_user_func_array($callable, $parameters);
         };
     }
 
@@ -399,9 +400,9 @@ class Router
     }
 
     /**
-     * Get the currently dispatched route action, if any.
+     * Get the currently dispatched Route, if any.
      *
-     * @return array|null
+     * @return \Mini\Routing\Route|null
      */
     public function getCurrentRoute()
     {
@@ -416,6 +417,16 @@ class Router
     public function getRoutes()
     {
         return $this->routes;
+    }
+
+    /**
+     * Get the defined route patterns.
+     *
+     * @return array
+     */
+    public function getPatterns()
+    {
+        return $this->patterns;
     }
 
     /**

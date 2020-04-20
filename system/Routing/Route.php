@@ -7,18 +7,16 @@ use Mini\Http\Request;
 use Mini\Support\Str;
 
 use Closure;
-use DomainException;
 use LogicException;
 use ReflectionFunction;
-use UnexpectedValueException;
+use ReflectionFunctionAbstract;
+use ReflectionMethod;
 
 
 class Route
 {
-    use RouteDependencyResolverTrait;
-
     /**
-     * The Container instance.
+     * The Router instance.
      *
      * @var \Mini\Container\Container
      */
@@ -38,6 +36,11 @@ class Route
      * @var array
      */
     protected $action;
+
+    /**
+     * @var bool
+     */
+    protected $fallback = false;
 
     /**
      * @var array
@@ -78,7 +81,6 @@ class Route
 
         $this->action = $action;
 
-        //
         $this->methods = (array) $methods;
 
         if (in_array('GET', $this->methods) && ! in_array('HEAD', $this->methods)) {
@@ -99,7 +101,7 @@ class Route
             return false;
         }
 
-        $pattern = with(new RouteCompiler($this->path, $this->patterns))->compile();
+        $pattern = with(new RouteCompiler($this))->compile();
 
         if (preg_match($pattern, $path, $matches) !== 1) {
             return false;
@@ -121,17 +123,36 @@ class Route
      */
     public function run()
     {
-        if (is_array($callback = $this->resolveCallback())) {
+        $parameters = $this->getParameters();
+
+        if (is_array($callback = $this->resolveActionCallback())) {
             extract($callback);
 
-            return with(new ControllerDispatcher($this->container))->dispatch($this, $controller, $method);
+            return $this->runControllerAction($controller, $method, $parameters);
         }
 
-        $parameters = $this->resolveMethodDependencies(
-            $this->getParameters(), new ReflectionFunction($callback)
+        $parameters = $this->resolveCallParameters(
+            $parameters, new ReflectionFunction($callback)
         );
 
         return call_user_func_array($callback, $parameters);
+    }
+
+    /**
+     * Runs the route action and returns the response.
+     *
+     * @param mixed $controller
+     * @param string $method
+     * @param array $parameters
+     * @return mixed
+     */
+    protected function runControllerAction($controller, $method, $parameters)
+    {
+        $parameters = $this->resolveCallParameters(
+            $parameters, new ReflectionMethod($controller, $method)
+        );
+
+        return $controller->callAction($method, $parameters);
     }
 
     /**
@@ -140,7 +161,7 @@ class Route
      * @return \Closure|array
      * @throws \UnexpectedValueException|\LogicException
      */
-    protected function resolveCallback()
+    protected function resolveActionCallback()
     {
         if (isset($this->callback)) {
             return $this->callback;
@@ -154,21 +175,65 @@ class Route
 
         //
         else if (! is_string($callback)) {
-            throw new LogicException("The route callback must be a Closure instance or a string.");
+            throw new LogicException("A route callback must be a string or a Closure instance");
         }
 
-        list ($className, $method) = array_pad(explode('@', $callback, 2), 2, null);
+        list ($className, $method) = explode('@', $callback, 2);
 
-        if (is_null($method) || ! class_exists($className)) {
-            throw new LogicException("Invalid route action: [{$callback}]");
+        if (! class_exists($className)) {
+            throw new LogicException("Controller [{$className}] not found.");
         }
 
         //
         else if (! method_exists($controller = $this->container->make($className), $method)) {
-            throw new LogicException("Controller [{$className}] has no method [${method}].");
+            throw new LogicException("Controller [{$className}] has no method [{$method}]");
         }
 
         return $this->callback = compact('controller', 'method');
+    }
+
+    /**
+     * Resolve the given method's type-hinted dependencies.
+     *
+     * @param  array  $parameters
+     * @param  \ReflectionFunctionAbstract  $reflector
+     * @return array
+     */
+    protected function resolveCallParameters(array $parameters, ReflectionFunctionAbstract $reflector)
+    {
+        $count = 0;
+
+        $values = array_values($parameters);
+
+        foreach ($reflector->getParameters() as $key => $parameter) {
+            if (! is_null($class = $parameter->getClass())) {
+                $className = $class->getName();
+
+                $this->spliceIntoParameters($parameters, $key, $this->container->make($className));
+
+                $count++;
+            }
+
+            //
+            else if (! isset($values[$key - $count]) && $parameter->isDefaultValueAvailable()) {
+                $this->spliceIntoParameters($parameters, $key, $parameter->getDefaultValue());
+            }
+        }
+
+        return array_values($parameters);
+    }
+
+    /**
+     * Splice the given value into the parameter list.
+     *
+     * @param  array  $parameters
+     * @param  string  $offset
+     * @param  mixed  $value
+     * @return void
+     */
+    protected function spliceIntoParameters(array &$parameters, $offset, $value)
+    {
+        array_splice($parameters, $offset, 0, array($value));
     }
 
     /**
@@ -200,15 +265,38 @@ class Route
 
         $middleware = array_get($this->action, 'middleware', array());
 
-        if (is_array($callback = $this->resolveCallback())) {
+        if (is_array($callback = $this->resolveActionCallback())) {
             extract($callback);
 
             $middleware = array_merge(
-                $middleware, ControllerDispatcher::getMiddleware($controller, $method)
+                $middleware, $controller->getMiddleware($method)
             );
         }
 
         return $this->middleware = array_unique($middleware, SORT_REGULAR);
+    }
+
+    /**
+     * Set the flag of fallback mode on the route.
+     *
+     * @param  bool  $value
+     * @return $this
+     */
+    public function fallback()
+    {
+        $this->fallback = true;
+
+        return $this;
+    }
+
+    /**
+     * Returns true if the flag of fallback mode is set.
+     *
+     * @return bool
+     */
+    public function isFallback()
+    {
+        return $this->fallback;
     }
 
     /**
@@ -308,7 +396,7 @@ class Route
     /**
      * Set the container instance on the route.
      *
-     * @param  \Nova\Container\Container  $container
+     * @param  \Mini\Container\Container  $container
      * @return $this
      */
     public function setContainer(Container $container)

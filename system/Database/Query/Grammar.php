@@ -86,7 +86,9 @@ class Grammar
             $column = 'distinct ' .$column;
         }
 
-        return "select {$aggregate['function']}({$column}) as aggregate";
+        $function = $aggregate['function'];
+
+        return "select {$function}({$column}) as aggregate";
     }
 
     /**
@@ -391,9 +393,7 @@ class Grammar
      */
     protected function compileOrders(Builder $query, $orders)
     {
-        $me = $this;
-
-        return 'order by ' .implode(', ', array_map(function ($order) use ($me)
+        return 'order by ' .implode(', ', array_map(function ($order)
         {
             if (isset($order['sql'])) {
                 return $order['sql'];
@@ -403,7 +403,7 @@ class Grammar
                 return $order['column'];
             }
 
-            return $me->wrap($order['column']) .' ' .$order['direction'];
+            return $this->wrap($order['column']) .' ' .$order['direction'];
 
         }, $orders));
     }
@@ -476,7 +476,7 @@ class Grammar
         $columns = implode(', ', $columns);
 
         if (isset($this->joins)) {
-            $joins = ' '.$this->compileJoins($query, $query->joins);
+            $joins = ' ' .$this->compileJoins($query, $query->joins);
         } else {
             $joins = '';
         }
@@ -583,11 +583,7 @@ class Grammar
      */
     protected function wrapValue($value)
     {
-        if ($value === '*') {
-            return $value;
-        }
-
-        return sprintf($this->getWrapper(), $value);
+        return ($value !== '*') ? sprintf($this->wrapper, $value) : $value;
     }
 
     /**
@@ -598,7 +594,7 @@ class Grammar
      */
     protected function concatenate($segments)
     {
-        return implode(' ', array_filter($segments, function($value)
+        return implode(' ', array_filter($segments, function ($value)
         {
             return ((string) $value !== '');
         }));

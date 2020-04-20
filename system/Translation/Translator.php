@@ -70,7 +70,9 @@ class Translator implements TranslatorInterface
      */
     public function has($key, $locale = null)
     {
-        return $this->get($key, array(), $locale) !== $key;
+        $value = $this->get($key, array(), $locale);
+
+        return ($key !== $value);
     }
 
     /**
@@ -93,11 +95,7 @@ class Translator implements TranslatorInterface
             }
         }
 
-        if (! isset($line)) {
-            return $key;
-        }
-
-        return $line;
+        return isset($line) ? $line : $key;
     }
 
     /**
@@ -112,14 +110,16 @@ class Translator implements TranslatorInterface
      */
     protected function getLine($group, $locale, $item, array $replace)
     {
-        $line = array_get($this->loaded[$group][$locale], $item);
+        $key = sprintf('%.%s%s', $group, $locale, ! empty($item) ? '.' .$item : '');
+
+        $line = array_get($this->loaded, $key);
 
         if (is_string($line)) {
             return $this->makeReplacements($line, $replace);
         }
 
         // The line is not a string.
-        else if (is_array($line) && (count($line) > 0)) {
+        else if (is_array($line) && ! empty($line)) {
             return $line;
         }
     }
@@ -151,11 +151,17 @@ class Translator implements TranslatorInterface
      */
     public function choice($key, $number, array $replace = array(), $locale = null)
     {
-        $line = $this->get($key, $replace, $locale = $locale ?: $this->locale);
+        if (is_null($locale)) {
+            $locale = $this->locale;
+        }
+
+        $line = $this->get($key, $replace, $locale);
 
         $replace['count'] = $number;
 
-        return $this->makeReplacements($this->getSelector()->choose($line, $number, $locale), $replace);
+        return $this->makeReplacements(
+            $this->getSelector()->choose($line, $number, $locale), $replace
+        );
     }
 
     /**
@@ -197,11 +203,11 @@ class Translator implements TranslatorInterface
      */
     public function load($group, $locale)
     {
-        if (! $this->isLoaded($group, $locale)) {
-            $lines = $this->loadPath($this->path, $locale, $group);
-
-            $this->loaded[$group][$locale] = $lines;
+        if ($this->isLoaded($group, $locale)) {
+            return;
         }
+
+        $this->loaded[$group][$locale] = $this->loadPath($this->path, $locale, $group);
     }
 
     /**
@@ -230,7 +236,7 @@ class Translator implements TranslatorInterface
      * @param  string  $locale
      * @return bool
      */
-    protected function isLoaded( $group, $locale)
+    protected function isLoaded($group, $locale)
     {
         return isset($this->loaded[$group][$locale]);
     }
@@ -242,11 +248,13 @@ class Translator implements TranslatorInterface
      */
     protected function parseLocale($locale)
     {
-        if (! is_null($locale)) {
-            return array_filter(array($locale, $this->fallback));
-        } else {
-            return array_filter(array($this->locale, $this->fallback));
+        if (is_null($locale)) {
+            $locale = $this->locale;
         }
+
+        return array_filter(
+            array($locale, $this->fallback)
+        );
     }
 
     /**
@@ -256,11 +264,11 @@ class Translator implements TranslatorInterface
      */
     public function getSelector()
     {
-        if (! isset($this->selector)) {
-            return $this->selector = new MessageSelector();
+        if (isset($this->selector)) {
+            return $this->selector;
         }
 
-        return $this->selector;
+        return $this->selector = new MessageSelector();
     }
 
     /**

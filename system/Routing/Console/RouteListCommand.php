@@ -3,7 +3,6 @@
 namespace Mini\Routing\Console;
 
 use Mini\Http\Request;
-use Mini\Routing\ControllerDispatcher;
 use Mini\Routing\Route;
 use Mini\Routing\Router;
 use Mini\Console\Command;
@@ -90,13 +89,24 @@ class RouteListCommand extends Command
     */
     protected function getRoutes()
     {
-        $results = array_map(function ($route)
+        $routes = $this->routes->getRoutes();
+
+        //
+        $fallbacks = array();
+
+        foreach ($routes as $key => $route) {
+            if ($route->isFallback()) {
+                $fallbacks[$key] = $route;
+
+                unset($routes[$key]);
+            }
+        }
+
+        return array_map(function ($route)
         {
             return $this->getRouteInformation($route);
 
-        }, $this->routes->getRoutes());
-
-        return array_filter($results);
+        }, array_merge($routes, $fallbacks));
     }
 
     /**

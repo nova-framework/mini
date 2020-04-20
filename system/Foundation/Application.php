@@ -175,7 +175,7 @@ class Application extends Container
     /**
      * Boot the given service provider.
      *
-     * @param  \Nova\Support\ServiceProvider  $provider
+     * @param  \Mini\Support\ServiceProvider  $provider
      * @return mixed
      */
     protected function bootProvider(ServiceProvider $provider)
@@ -242,11 +242,8 @@ class Application extends Container
         try {
             $response = $this->sendRequestThroughRouter($request);
         }
-        catch (Exception $e) {
+        catch (Exception | Throwable $e) {
             $response = $this->handleException($request, $e);
-        }
-        catch (Throwable $e) {
-            $response = $this->handleException($request, new FatalThrowableError($e));
         }
 
         $response->send();
@@ -255,15 +252,19 @@ class Application extends Container
     }
 
     /**
-     * Handle an exception occured while dispatching the HTTP request.
+     * Handle an exception or throwable error occured while dispatching the HTTP request.
      *
      * @param  \Mini\Http\Request  $request
-     * @param  \Exception  $e
+     * @param  \Exception|\Throwable  $exception
      *
      * @return \Mini\Http\Response
      */
-    protected function handleException(Request $request, Exception $exception)
+    protected function handleException(Request $request, $exception)
     {
+        if (! $exception instanceof Exception) {
+            $exception = new FatalThrowableError($exception);
+        }
+
         $handler = $this->make('Mini\Foundation\Exceptions\HandlerInterface');
 
         if (! $exception instanceof HttpException) {
@@ -276,8 +277,8 @@ class Application extends Container
     /**
      * Send the given request through the middleware / router.
      *
-     * @param  \Nova\Http\Request  $request
-     * @return \Nova\Http\Response
+     * @param  \Mini\Http\Request  $request
+     * @return \Mini\Http\Response
      */
     protected function sendRequestThroughRouter(Request $request)
     {
@@ -285,24 +286,28 @@ class Application extends Container
 
         $this->boot();
 
-        // Create a new Pipeline instance.
+        //
+        $router = $this->make('router');
+
         $pipeline = new Pipeline(
             $this, $this->config->get('app.middleware', array())
         );
 
-        return $pipeline->handle($request, function ($request)
+        $response = $pipeline->dispatch($request, function ($request) use ($router)
         {
             $this->instance('request', $request);
 
-            return $this->router->dispatch($request);
+            return $router->dispatch($request);
         });
+
+        return $router->prepareResponse($request, $response);
     }
 
     /**
      * Call the terminate method on any terminable middleware.
      *
-     * @param  \Nova\Http\Request  $request
-     * @param  \Nova\Http\Response  $response
+     * @param  \Mini\Http\Request  $request
+     * @param  \Mini\Http\Response  $response
      * @return void
      */
     public function shutdown(Request $request, $response)
@@ -310,21 +315,22 @@ class Application extends Container
         $middleware = $this->config->get('app.middleware', array());
 
         if (! is_null($route = $request->route())) {
-            $middleware = array_merge($this->router->gatherMiddleware($route), $middleware);
+            $middleware = array_merge(
+                $this->router->gatherMiddleware($route), $middleware
+            );
         }
 
-        array_walk($middleware, function ($middleware) use ($request, $response)
-        {
-            if (! is_string($middleware)) {
-                return;
+        foreach ($middleware as $value) {
+            if (! is_string($value)) {
+                continue;
             }
 
-            $name = head(explode(':', $middleware, 2));
+            $name = head(explode(':', $value, 2));
 
             if (method_exists($instance = $this->make($name), 'terminate')) {
                 $instance->terminate($request, $response);
             }
-        });
+        }
 
         $this->terminate();
     }

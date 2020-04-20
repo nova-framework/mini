@@ -1,5 +1,8 @@
 <?php
 
+use Mini\Http\Request;
+
+
 //
 // The global parameter patterns.
 
@@ -42,12 +45,16 @@ Route::get('dashboard', array('middleware' => 'auth', 'uses' => 'Users@dashboard
 Route::get( 'profile', array('middleware' => 'auth',      'uses' => 'Users@profile'));
 Route::post('profile', array('middleware' => 'auth|csrf', 'uses' => 'Users@postProfile'));
 
+
 // A route executing a closure and having own parameter patterns.
-Route::get('language/{code}', array('uses' => function ($code)
+Route::get('language/{code}', array('uses' => function (Request $request, $code)
 {
+    dump($request->route());
+
     echo htmlentities($code);
 
 }, 'where' => array('code' => '([a-z]{2})')));
+
 
 // Show the PHP information.
 Route::get('phpinfo', function ()

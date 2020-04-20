@@ -2,6 +2,8 @@
 
 namespace Mini\View;
 
+use Mini\Support\Str;
+
 use BadMethodCallException;
 
 
@@ -12,6 +14,77 @@ class Factory
      */
     protected $shared = array();
 
+
+    /**
+     * Get a View instance.
+     *
+     * @param mixed $view
+     * @param array $data
+     *
+     * @return \Mini\View\View
+     * @throws \BadMethodCallException
+     */
+    public function make($view, $data = array())
+    {
+        if (! is_readable($path = $this->getViewPath($view))) {
+            throw new BadMethodCallException("File path [$path] does not exist");
+        }
+
+        return new View($this, $path, $data);
+    }
+
+    /**
+     * Add a key / value pair to the shared view data.
+     *
+     * @param  string  $key
+     * @param  mixed   $value
+     * @return void
+     */
+    public function share($key, $value = null)
+    {
+        return $this->shared[$key] = $value;
+    }
+
+    /**
+     * Create a View instance and return its rendered content.
+     *
+     * @return string
+     */
+    public function fetch($view, $data = array())
+    {
+        return $this->make($view, $data)->render();
+    }
+
+    /**
+     * Get the rendered contents of a partial from a loop.
+     *
+     * @param  string  $view
+     * @param  array   $items
+     * @param  string  $iterator
+     * @param  string  $empty
+     * @return string
+     */
+    public function renderEach($view, array $items, $iterator, $empty = 'raw|')
+    {
+        if (! empty($items)) {
+            $results = array();
+
+            foreach ($items as $key => $value) {
+                $data = array('key' => $key, $iterator => $value);
+
+                $results[] = $this->make($view, $data)->render();
+            }
+
+            return implode("\n", $results);
+        }
+
+        //
+        else if (! Str::startsWith($empty, 'raw|')) {
+            return $this->make($empty)->render();
+        }
+
+        return substr($empty, 4);
+    }
 
     /**
      * Returns true if the specified View exists.
@@ -28,52 +101,13 @@ class Factory
     }
 
     /**
-     * Get a View instance.
-     *
-     * @param mixed $view
-     * @param array $data
-     *
-     * @return \Mini\View\View
-     * @throws \BadMethodCallException
-     */
-    public function make($view, $data = array())
-    {
-        if (! is_readable($path = $this->getViewPath($view))) {
-            throw new BadMethodCallException("File path [$path] does not exist");
-        }
-        return new View($this, $path, $data);
-    }
-
-    /**
-     * Create a View instance and return its rendered content.
-     *
-     * @return string
-     */
-    public function fetch($view, $data = array())
-    {
-        return $this->make($view, $data)->render();
-    }
-
-    /**
-     * Add a key / value pair to the shared view data.
-     *
-     * @param  string  $key
-     * @param  mixed   $value
-     * @return void
-     */
-    public function share($key, $value = null)
-    {
-        return $this->shared[$key] = $value;
-    }
-
-    /**
      * Get the view path.
      *
      * @return array
      */
     protected function getViewPath($view)
     {
-        return APPPATH .str_replace('/', DS, "Views/${view}.php");
+        return str_replace('/', DS, APPPATH ."Views/${view}.php");
     }
 
     /**

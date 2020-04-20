@@ -9,39 +9,43 @@ use LogicException;
 class RouteCompiler
 {
     /**
-     * The route path.
-     *
+     * @var \Mini\Routing\Route
+     */
+    protected $route;
+
+    /**
      * @var string
      */
     protected $path;
 
     /**
-     * The route patterns.
-     *
      * @var array
      */
     protected $patterns = array();
 
 
     /**
-     * Create a new Route compiler instance.
+     * Create a new Route Compiler instance.
      *
-     * @param  string  $path
+     * @param  string $path
      * @param  array  $patterns
      * @return void
      */
-    public function __construct($path, $patterns)
+    public function __construct(Route $route)
     {
-        $this->path = $path;
+        $this->route = $route;
 
-        $this->patterns = $patterns;
+        //
+        $this->path = $route->getPath();
+
+        $this->patterns = $route->getPatterns();
     }
 
     /**
-     * Compile the Route pattern.
+     * Compile the inner Route pattern.
      *
      * @return string
-     * @throws \DomainException|\LogicException
+     * @throws \LogicException|\DomainException
      */
     public function compile()
     {
@@ -56,32 +60,32 @@ class RouteCompiler
         {
             list (, $name, $optional) = array_pad($matches, 3, false);
 
-            if (preg_match('/^\d/', $name) === 1) {
-                throw new DomainException("Variable name [{$name}] cannot start with a digit in route pattern [{$path}].");
-            } else if (in_array($name, $variables)) {
+            if (in_array($name, $variables)) {
                 throw new LogicException("Route pattern [{$path}] cannot reference variable name [{$name}] more than once.");
             } else if (strlen($name) > 32) {
                 throw new DomainException("Variable name [{$name}] cannot be longer than 32 characters in route pattern [{$path}].");
+            } else if (preg_match('/^\d/', $name) === 1) {
+                throw new DomainException("Variable name [{$name}] cannot start with a digit in route pattern [{$path}].");
             }
 
             $variables[] = $name;
+
             //
             $pattern = array_get($this->patterns, $name, '[^/]+');
 
-            $result = sprintf('/(?P<%s>%s)', $name, $pattern);
+            $regex = sprintf('/(?P<%s>%s)', $name, $pattern);
 
-            if ($optional) {
-                $optionals++;
+            if (! $optional) {
+                if ($optionals > 0) {
+                    throw new LogicException("Route pattern [{$path}] cannot reference standard variable [{$name}] after optionals.");
+                }
 
-                return '(?:' .$result;
+                return $regex;
             }
 
-            // The variable is not optional.
-            else if ($optionals > 0) {
-                throw new LogicException("Route pattern [{$path}] cannot reference variable [{$name}] after optional variables.");
-            }
+            $optionals++;
 
-            return $result;
+            return '(?:' .$regex;
 
         }, $path);
 
@@ -89,7 +93,17 @@ class RouteCompiler
     }
 
     /**
-     * Get the route path.
+     * Get the inner Route instance.
+     *
+     * @return \Mini\Routing\Route
+     */
+    public function getRoute()
+    {
+        return $this->route;
+    }
+
+    /**
+     * Get the URI associated with the inner route.
      *
      * @return string
      */
@@ -99,9 +113,9 @@ class RouteCompiler
     }
 
     /**
-     * Get the route patterns.
+     * Get the patterns defined the inner route.
      *
-     * @return string
+     * @return array
      */
     public function getPatterns()
     {

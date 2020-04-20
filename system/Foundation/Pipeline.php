@@ -57,7 +57,7 @@ class Pipeline
      * @param  \Closure  $callback
      * @return mixed
      */
-    public function handle($passable, Closure $callback)
+    public function dispatch($passable, Closure $callback)
     {
         $pipes = array_reverse($this->pipes);
 

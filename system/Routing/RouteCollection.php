@@ -75,12 +75,9 @@ class RouteCollection implements Countable
      */
     public function match(Request $request)
     {
-        $method = $request->method();
+        $routes = $this->get($request->method());
 
-        //
-        $routes = $this->get($method);
-
-        if (! is_null($route = $this->check($routes, $request))) {
+        if (! is_null($route = $this->findRoute($routes, $request))) {
             return $route;
         }
 
@@ -91,10 +88,10 @@ class RouteCollection implements Countable
      * Determine if a route in the array matches the request.
      *
      * @param  array  $routes
-     * @param  \Mini\http\Request  $request
+     * @param  \Mini\Http\Request  $request
      * @return \Mini\Routing\Route|null
      */
-    protected function check(array $routes, $request)
+    protected function findRoute(array $routes, Request $request)
     {
         $path = rawurldecode('/' .trim($request->path(), '/'));
 
@@ -102,6 +99,30 @@ class RouteCollection implements Countable
             return $route;
         }
 
+        $fallbacks = array();
+
+        foreach ($routes as $key => $route) {
+            if ($route->isFallback()) {
+                $fallbacks[$key] = $route;
+
+                unset($routes[$key]);
+            }
+        }
+
+        return $this->check(
+            array_merge($routes, $fallbacks), $path
+        );
+    }
+
+    /**
+     * Determine if a route in the array matches the request path.
+     *
+     * @param  array  $routes
+     * @param  string $patch
+     * @return \Mini\Routing\Route|null
+     */
+    protected function check(array $routes, $path)
+    {
         return array_first($routes, function ($uri, $route) use ($path)
         {
             return $route->matches($path);
