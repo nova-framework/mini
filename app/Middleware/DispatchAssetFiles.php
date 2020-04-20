@@ -22,7 +22,7 @@ class DispatchAssetFiles
 
             // Check if the Request instance asks for an asset file.
             if (preg_match('#^assets/(.*)$#', $path, $matches) === 1) {
-                $path = str_replace('/', DS, $matches[1]);
+                $path = BASEPATH .'assets' .DS .str_replace('/', DS, $matches[1]);
 
                 return $this->createFileResponse($path, $request);
             }
@@ -33,8 +33,6 @@ class DispatchAssetFiles
 
     protected function createFileResponse($path, Request $request)
     {
-        $path = BASEPATH .'assets' .DS .$path;
-
         if (! file_exists($path)) {
             return new Response('File Not Found', 404);
         } else if (! is_readable($path)) {
@@ -45,7 +43,9 @@ class DispatchAssetFiles
             'Access-Control-Allow-Origin' => '*',
         );
 
-        if ($request->getMethod() == 'OPTIONS') {
+        if ($request->method() == 'OPTIONS') {
+            // The OPTIONS method needs a special handling.
+
             return new Response('OK', 200, array_merge($headers, array(
                 'Access-Control-Allow-Methods' => 'GET, HEAD, OPTIONS',
                 'Access-Control-Allow-Headers' => 'Content-Type, X-Auth-Token, Origin',
@@ -55,9 +55,9 @@ class DispatchAssetFiles
         $headers['Content-Type'] = $mimeType = $this->guessMimeType($path);
 
         if ($mimeType === 'application/json') {
-            return new JsonResponse(
-                json_decode(file_get_contents($path), true), 200, $headers
-            );
+            $data = json_decode(file_get_contents($path), true);
+
+            return new JsonResponse($data, 200, $headers);
         }
 
         $response = new BinaryFileResponse($path, 200, $headers, true, 'inline', true, false);
