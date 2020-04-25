@@ -1,4 +1,4 @@
-<div class='row-responsive'>
+<div class='row'>
     <h2>User Login</h2>
     <hr>
     <?= View::fetch('Partials/Messages'); ?>
