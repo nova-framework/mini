@@ -1,4 +1,8 @@
-<h1><?= $title ?></h1>
-<hr>
+<div class='row'>
+    <h1><?= $title ?></h1>
+    <hr>
+</div>
 
-<p><?= $content; ?></p>
+<div class='row'>
+    <?= $content; ?>
+</div>
