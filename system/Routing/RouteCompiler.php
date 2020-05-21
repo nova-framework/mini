@@ -9,11 +9,6 @@ use LogicException;
 class RouteCompiler
 {
     /**
-     * @var \Mini\Routing\Route
-     */
-    protected $route;
-
-    /**
      * @var string
      */
     protected $path;
@@ -31,14 +26,11 @@ class RouteCompiler
      * @param  array  $patterns
      * @return void
      */
-    public function __construct(Route $route)
+    public function __construct($path, array $patterns)
     {
-        $this->route = $route;
+        $this->path = $path;
 
-        //
-        $this->path = $route->getPath();
-
-        $this->patterns = $route->getPatterns();
+        $this->patterns = $patterns;
     }
 
     /**
@@ -73,33 +65,26 @@ class RouteCompiler
             //
             $pattern = array_get($this->patterns, $name, '[^/]+');
 
-            $regex = sprintf('/(?P<%s>%s)', $name, $pattern);
+            if ($optional) {
+                $optionals++;
 
-            if (! $optional) {
-                if ($optionals > 0) {
-                    throw new LogicException("Route pattern [{$path}] cannot reference standard variable [{$name}] after optionals.");
-                }
-
-                return $regex;
+                return sprintf('(?:/(?P<%s>%s)', $name, $pattern);
             }
 
-            $optionals++;
+            //
+            else if ($optionals > 0) {
+                throw new LogicException("Route pattern [{$path}] cannot reference standard variable [{$name}] after optionals.");
+            }
 
-            return '(?:' .$regex;
+            return sprintf('/(?P<%s>%s)', $name, $pattern);
 
         }, $path);
 
-        return sprintf('#^%s%s$#s', $pattern, str_repeat(')?', $optionals));
-    }
+        if ($optionals > 0) {
+            $pattern .= str_repeat(')?', $optionals);
+        }
 
-    /**
-     * Get the inner Route instance.
-     *
-     * @return \Mini\Routing\Route
-     */
-    public function getRoute()
-    {
-        return $this->route;
+        return sprintf('#^%s$#s', $pattern);
     }
 
     /**

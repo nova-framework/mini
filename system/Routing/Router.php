@@ -161,7 +161,7 @@ class Router
     {
         $methods = array('GET', 'POST', 'PUT', 'DELETE', 'PATCH');
 
-        return $this->match($methods, $path, $action);
+        return $this->addRoute($methods, $path, $action);
     }
 
     /**
@@ -172,7 +172,9 @@ class Router
      */
     public function fallback($action)
     {
-        return $this->match(array('GET', 'HEAD'), "{fallback}", $action)
+        $methods = array('GET', 'HEAD');
+
+        return $this->addRoute($methods, "{fallback}", $action)
             ->where('fallback', '(.*)')
             ->fallback();
     }
@@ -190,23 +192,31 @@ class Router
     {
         $methods = array_map('strtoupper', (array) $methods);
 
-        //
-        $route = $this->createRoute($methods, $path, $action);
-
-        return $this->routes->add($route)->setContainer($this->container);
+        return $this->addRoute($methods, $path, $action);
     }
 
     /**
-     * Create a new Route instance.
+     * Create and add a new Route instance to the routes collection.
      *
      * @param  array  $methods
      * @param  string  $path
      * @param  mixed  $action
      * @return \Mini\Routing\Route
      */
-    protected function createRoute(array $methods, $path, $action)
+    protected function addRoute(array $methods, $path, $action)
     {
-        $action = $this->parseAction($action);
+        if (! is_array($action)) {
+            $action = array('uses' => $action);
+        }
+
+        //
+        else if (! isset($action['uses'])) {
+            $action['uses'] = $this->findActionClosure($action);
+        }
+
+        if (is_string($middleware = array_get($action, 'middleware', array()))) {
+            $action['middleware'] = explode('|', $middleware);
+        }
 
         if (! empty($this->groupStack)) {
             $action = static::mergeGroup($action, $group = last($this->groupStack));
@@ -225,35 +235,23 @@ class Router
         //
         $patterns = array_merge($this->patterns, array_get($action, 'where', array()));
 
-        return with(new Route($methods, $path, $action))->where($patterns);
+        $route = with(new Route($methods, $path, $action))->where($patterns);
+
+        return $this->routes->add($route)->setContainer($this->container);
     }
 
     /**
-     * Parse the action into an array format.
+     * Find the Closure in an action array.
      *
-     * @param  mixed  $action
-     * @return array
-     * @throws \LogicException
+     * @param  array  $action
+     * @return \Closure|null
      */
-    protected function parseAction($action)
+    protected function findActionClosure(array $action)
     {
-        if (! is_array($action)) {
-            return array('uses' => $action);
-        }
-
-        //
-        else if (! isset($action['uses'])) {
-            $action['uses'] = array_first($action, function ($key, $value)
-            {
-                return is_callable($value) && is_numeric($key);
-            });
-        }
-
-        if (is_string($middleware = array_get($action, 'middleware', array()))) {
-            $action['middleware'] = explode('|', $middleware);
-        }
-
-        return $action;
+        return array_first($action, function ($key, $value)
+        {
+            return is_callable($value) && is_numeric($key);
+        });
     }
 
     /**
@@ -439,9 +437,9 @@ class Router
     public function __call($method, $parameters)
     {
         if (in_array($key = strtoupper($method), static::$verbs)) {
-            array_unshift($parameters, $key);
+            array_unshift($parameters, (array) $key);
 
-            return call_user_func_array(array($this, 'match'), $parameters);
+            return call_user_func_array(array($this, 'addRoute'), $parameters);
         }
 
         throw new BadMethodCallException("Method [${method}] does not exist.");

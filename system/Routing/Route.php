@@ -101,7 +101,7 @@ class Route
             return false;
         }
 
-        $pattern = with(new RouteCompiler($this))->compile();
+        $pattern = with(new RouteCompiler($this->path, $this->patterns))->compile();
 
         if (preg_match($pattern, $path, $matches) !== 1) {
             return false;
@@ -125,34 +125,20 @@ class Route
     {
         $parameters = $this->getParameters();
 
-        if (is_array($callback = $this->resolveActionCallback())) {
-            extract($callback);
+        //
+        $callback = $this->resolveActionCallback();
 
-            return $this->runControllerAction($controller, $method, $parameters);
+        if ($callback instanceof Closure) {
+            return call_user_func_array($callback, $this->resolveCallParameters(
+                $parameters, new ReflectionFunction($callback)
+            ));
         }
 
-        $parameters = $this->resolveCallParameters(
-            $parameters, new ReflectionFunction($callback)
-        );
+        extract($callback);
 
-        return call_user_func_array($callback, $parameters);
-    }
-
-    /**
-     * Runs the route action and returns the response.
-     *
-     * @param mixed $controller
-     * @param string $method
-     * @param array $parameters
-     * @return mixed
-     */
-    protected function runControllerAction($controller, $method, $parameters)
-    {
-        $parameters = $this->resolveCallParameters(
+        return $controller->callAction($method, $this->resolveCallParameters(
             $parameters, new ReflectionMethod($controller, $method)
-        );
-
-        return $controller->callAction($method, $parameters);
+        ));
     }
 
     /**
@@ -268,9 +254,7 @@ class Route
         if (is_array($callback = $this->resolveActionCallback())) {
             extract($callback);
 
-            $middleware = array_merge(
-                $middleware, $controller->getMiddleware($method)
-            );
+            $middleware = array_merge($middleware, $controller->getMiddleware($method));
         }
 
         return $this->middleware = array_unique($middleware, SORT_REGULAR);

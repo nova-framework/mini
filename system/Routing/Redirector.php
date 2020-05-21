@@ -115,9 +115,9 @@ class Redirector
 
         $result = preg_replace_callback('#\{(\d+)\}#', function ($matches) use ($parameters)
         {
-            list ($value, $key) = $matches;
+            $key = (int) $matches[1];
 
-            return isset($parameters[$key]) ? $parameters[$key] : $value;
+            return isset($parameters[$key]) ? $parameters[$key] : $matches[0];
 
         }, $path);
 

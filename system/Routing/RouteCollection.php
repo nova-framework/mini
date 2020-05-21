@@ -95,18 +95,20 @@ class RouteCollection implements Countable
     {
         $path = rawurldecode('/' .trim($request->path(), '/'));
 
-        if (! is_null($route = array_get($routes, $path)) && $route->matches($path)) {
+        if (! is_null($route = $this->fastCheck($routes, $path))) {
             return $route;
         }
 
         $fallbacks = array();
 
         foreach ($routes as $key => $route) {
-            if ($route->isFallback()) {
-                $fallbacks[$key] = $route;
-
-                unset($routes[$key]);
+            if (! $route->isFallback()) {
+                continue;
             }
+
+            $fallbacks[$key] = $route;
+
+            unset($routes[$key]);
         }
 
         return $this->check(
@@ -127,6 +129,20 @@ class RouteCollection implements Countable
         {
             return $route->matches($path);
         });
+    }
+
+    /**
+     * Determine if a route in the array matches the request parth - the fast way.
+     *
+     * @param  array  $routes
+     * @param  string $path
+     * @return \Mini\Routing\Route|null
+     */
+    protected function fastCheck(array $routes, $path)
+    {
+        if (! is_null($route = array_get($routes, $path)) && $route->matches($path)) {
+            return $route;
+        }
     }
 
     /**
