@@ -125,19 +125,15 @@ class Router
     protected static function mergeGroup($new, $old)
     {
         if (! empty($namespace = array_get($old, 'namespace'))) {
-            if (isset($new['namespace'])) {
-                $namespace = trim($namespace, '\\') .'\\' .trim($new['namespace'], '\\');
-            }
+            $value = array_get($new, 'namespace');
 
-            $new['namespace'] = $namespace;
+            $new['namespace'] = ! empty($value) ? trim($namespace, '\\') .'\\' .trim($value, '\\') : $namespace;
         }
 
         if (! empty($prefix = array_get($old, 'prefix'))) {
-            if (isset($new['prefix'])) {
-                $prefix = trim($prefix, '/') .'/' .trim($new['prefix'], '/');
-            }
+            $value = array_get($new, 'prefix');
 
-            $new['prefix'] = $prefix;
+            $new['prefix'] = ! empty($value) ? trim($prefix, '/') .'/' .trim($value, '/') : $prefix;
         }
 
         $new['where'] = array_merge(
@@ -233,9 +229,9 @@ class Router
         $path = '/' .trim($path, '/');
 
         //
-        $patterns = array_merge($this->patterns, array_get($action, 'where', array()));
-
-        $route = with(new Route($methods, $path, $action))->where($patterns);
+        $route = with(new Route($methods, $path, $action))->where(
+            array_merge($this->patterns, array_get($action, 'where', array()))
+        );
 
         return $this->routes->add($route)->setContainer($this->container);
     }

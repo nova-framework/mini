@@ -420,7 +420,9 @@ class Str
     public static function __callStatic($method, $parameters)
     {
         if (isset(static::$macros[$method])) {
-            return call_user_func_array(static::$macros[$method], $parameters);
+            $callback = static::$macros[$method];
+
+            return call_user_func_array($callback, $parameters);
         }
 
         throw new \BadMethodCallException("Method {$method} does not exist.");
