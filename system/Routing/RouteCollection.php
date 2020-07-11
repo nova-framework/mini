@@ -57,10 +57,7 @@ class RouteCollection implements Countable
 
         $this->allRoutes[] = $route;
 
-        //
-        $action = $route->getAction();
-
-        if (! empty($name = array_get($action, 'as'))) {
+        if (! empty($name = $route->getName())) {
             $this->namedRoutes[$name] = $route;
         }
 
@@ -93,56 +90,39 @@ class RouteCollection implements Countable
      */
     protected function findRoute(array $routes, Request $request)
     {
-        $path = rawurldecode('/' .trim($request->path(), '/'));
+        $path = '/' .trim($request->path(), '/');
 
-        if (! is_null($route = $this->fastCheck($routes, $path))) {
-            return $route;
+        if (! is_null($route = array_get($routes, $path = rawurldecode($path)))) {
+            return $route->matched();
         }
 
-        $fallbacks = array();
+        $orderedRoutes = $this->prepareRoutes($routes);
 
-        foreach ($routes as $key => $route) {
-            if (! $route->isFallback()) {
-                continue;
-            }
-
-            $fallbacks[$key] = $route;
-
-            unset($routes[$key]);
-        }
-
-        return $this->check(
-            array_merge($routes, $fallbacks), $path
-        );
-    }
-
-    /**
-     * Determine if a route in the array matches the request path.
-     *
-     * @param  array  $routes
-     * @param  string $patch
-     * @return \Mini\Routing\Route|null
-     */
-    protected function check(array $routes, $path)
-    {
-        return array_first($routes, function ($uri, $route) use ($path)
+        return array_first($orderedRoutes, function ($uri, $route) use ($path)
         {
             return $route->matches($path);
         });
     }
 
     /**
-     * Determine if a route in the array matches the request parth - the fast way.
+     * Moves fallback routes to the end of given routes list.
      *
      * @param  array  $routes
-     * @param  string $path
-     * @return \Mini\Routing\Route|null
+     * @return array
      */
-    protected function fastCheck(array $routes, $path)
+    protected function prepareRoutes(array $routes)
     {
-        if (! is_null($route = array_get($routes, $path)) && $route->matches($path)) {
-            return $route;
+        $items = $fallbacks = array();
+
+        foreach ($routes as $key => $route) {
+            if (! $route->isFallback()) {
+                $items[$key] = $route;
+            } else {
+                $fallbacks[$key] = $route;
+            }
         }
+
+        return array_merge($items, $fallbacks);
     }
 
     /**

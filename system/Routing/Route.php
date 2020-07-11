@@ -89,6 +89,18 @@ class Route
     }
 
     /**
+     * Initialize the parmeters to mark the route as being matched.
+     *
+     * @return this
+     */
+    public function matched()
+    {
+        $this->parameters = array();
+
+        return $this;
+    }
+
+    /**
      * Matches the Route pattern against the given path.
      *
      * @param  string  $path
@@ -352,7 +364,7 @@ class Route
      */
     public function getName()
     {
-        array_get($this->action, 'as');
+        return array_get($this->action, 'as');
     }
 
     /**
