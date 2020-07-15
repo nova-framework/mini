@@ -137,19 +137,16 @@ class Route
     {
         $parameters = $this->getParameters();
 
-        //
-        $callback = $this->resolveActionCallback();
+        if (is_array($callback = $this->resolveActionCallback())) {
+            extract($callback);
 
-        if ($callback instanceof Closure) {
-            return call_user_func_array($callback, $this->resolveCallParameters(
-                $parameters, new ReflectionFunction($callback)
+            return $controller->callAction($method, $this->resolveCallParameters(
+                $parameters, new ReflectionMethod($controller, $method)
             ));
         }
 
-        extract($callback);
-
-        return $controller->callAction($method, $this->resolveCallParameters(
-            $parameters, new ReflectionMethod($controller, $method)
+        return call_user_func_array($callback, $this->resolveCallParameters(
+            $parameters, new ReflectionFunction($callback)
         ));
     }
 
