@@ -271,7 +271,9 @@ class Router
 
         $response = $pipeline->dispatch($request, function ($request) use ($route)
         {
-            return $this->prepareResponse($request, $route->run());
+            $response = $route->run($request);
+
+            return $this->prepareResponse($request, $response);
         });
 
         return $this->prepareResponse($request, $response);

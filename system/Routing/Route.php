@@ -131,18 +131,28 @@ class Route
     /**
      * Run the given action callback.
      *
+     * @param  \Mini\Http\Request  $request
      * @return mixed
      */
-    public function run()
+    public function run(Request $request)
     {
-        $parameters = $this->getParameters();
-
         if (is_array($callback = $this->resolveActionCallback())) {
-            return $this->runControllerAction($callback, $parameters);
+            return $this->runControllerAction($callback, $request);
         }
 
+        return $this->runActionCallback($callback);
+    }
+
+    /**
+     * Runs the action callback and returns the response.
+     *
+     * @param  \Closure  $callback
+     * @return mixed
+     */
+    protected function runActionCallback(Closure $callback)
+    {
         $parameters = $this->resolveCallParameters(
-            $parameters, new ReflectionFunction($callback)
+            $this->getParameters(), new ReflectionFunction($callback)
         );
 
         return call_user_func_array($callback, $parameters);
@@ -152,25 +162,29 @@ class Route
      * Runs the controller callback and returns the response.
      *
      * @param  array  $callback
-     * @param  array  $parameters
+     * @param  \Mini\Http\Request  $request
      * @return mixed
      */
-    protected function runControllerAction(array $callback, array $parameters)
+    protected function runControllerAction(array $callback, Request $request)
     {
         extract($callback);
 
         $parameters = $this->resolveCallParameters(
-            $parameters, new ReflectionMethod($controller, $method)
+            $this->getParameters(), new ReflectionMethod($controller, $method)
         );
 
-        return $controller->callAction($method, $parameters);
+        if (method_exists($controller, 'callAction')) {
+            return $controller->callAction($method, $parameters, $request);
+        }
+
+        return call_user_func_array($callback, $parameters);
     }
 
     /**
      * Resolve the route callback.
      *
      * @return \Closure|array
-     * @throws \UnexpectedValueException|\LogicException
+     * @throws \LogicException
      */
     protected function resolveActionCallback()
     {
