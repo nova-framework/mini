@@ -22,15 +22,14 @@ class RouteCompiler
     /**
      * Create a new Route Compiler instance.
      *
-     * @param  string $path
-     * @param  array  $patterns
+     * @param  \Mini\Routing\Route $route
      * @return void
      */
-    public function __construct($path, array $patterns)
+    public function __construct(Route $rotue)
     {
-        $this->path = $path;
+        $this->path = $route->getPath();
 
-        $this->patterns = $patterns;
+        $this->patterns = $route->getPatterns();
     }
 
     /**

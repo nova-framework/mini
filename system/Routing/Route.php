@@ -4,6 +4,7 @@ namespace Mini\Routing;
 
 use Mini\Container\Container;
 use Mini\Http\Request;
+use Mini\Http\Exception\HttpResponseException;
 use Mini\Support\Str;
 
 use Closure;
@@ -113,7 +114,7 @@ class Route
             return false;
         }
 
-        $pattern = with(new RouteCompiler($this->path, $this->patterns))->compile();
+        $pattern = with(new RouteCompiler($this))->compile();
 
         if (preg_match($pattern, $path, $matches) !== 1) {
             return false;
@@ -136,26 +137,20 @@ class Route
      */
     public function run(Request $request)
     {
-        if (is_array($callback = $this->resolveActionCallback())) {
-            return $this->runControllerAction($callback, $request);
+        try {
+            if (is_array($callback = $this->resolveActionCallback())) {
+                return $this->runControllerAction($callback, $request);
+            }
+
+            $parameters = $this->resolveCallParameters(
+                $this->getParameters(), new ReflectionFunction($callback)
+            );
+
+            return call_user_func_array($callback, $parameters);
         }
-
-        return $this->runActionCallback($callback);
-    }
-
-    /**
-     * Runs the action callback and returns the response.
-     *
-     * @param  \Closure  $callback
-     * @return mixed
-     */
-    protected function runActionCallback(Closure $callback)
-    {
-        $parameters = $this->resolveCallParameters(
-            $this->getParameters(), new ReflectionFunction($callback)
-        );
-
-        return call_user_func_array($callback, $parameters);
+        catch (HttpResponseException $e) {
+            return $e->getResponse();
+        }
     }
 
     /**
@@ -196,11 +191,8 @@ class Route
 
         if ($callback instanceof Closure) {
             return $this->callback = $callback;
-        }
-
-        //
-        else if (! is_string($callback)) {
-            throw new LogicException("A route callback must be a string or a Closure instance");
+        } else if (! is_string($callback)) {
+            throw new LogicException("The callback must be either a string or a Closure instance");
         }
 
         list ($className, $method) = explode('@', $callback, 2);
@@ -237,10 +229,7 @@ class Route
                 $this->spliceIntoParameters($parameters, $key, $this->container->make($className));
 
                 $count++;
-            }
-
-            //
-            else if (! isset($values[$key - $count]) && $parameter->isDefaultValueAvailable()) {
+            } else if (! isset($values[$key - $count]) && $parameter->isDefaultValueAvailable()) {
                 $this->spliceIntoParameters($parameters, $key, $parameter->getDefaultValue());
             }
         }
