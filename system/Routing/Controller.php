@@ -64,11 +64,8 @@ class Controller
      */
     protected static function methodExcludedByOptions($method, array $options)
     {
-        if (isset($options['only']) && ! in_array($method, (array) $options['only'])) {
-            return true;
-        }
-
-        return isset($options['except']) && in_array($method, (array) $options['except']);
+        return (! empty($option = array_get($options, 'only')) && ! in_array($method, (array) $option)) ||
+               (! empty($option = array_get($options, 'except')) && in_array($method, (array) $option));
     }
 
     /**
