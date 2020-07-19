@@ -138,16 +138,32 @@ class Route
         $parameters = $this->getParameters();
 
         if (is_array($callback = $this->resolveActionCallback())) {
-            extract($callback);
-
-            return $controller->callAction($method, $this->resolveCallParameters(
-                $parameters, new ReflectionMethod($controller, $method)
-            ));
+            return $this->runControllerAction($callback, $parameters);
         }
 
-        return call_user_func_array($callback, $this->resolveCallParameters(
+        $parameters = $this->resolveCallParameters(
             $parameters, new ReflectionFunction($callback)
-        ));
+        );
+
+        return call_user_func_array($callback, $parameters);
+    }
+
+    /**
+     * Runs the controller callback and returns the response.
+     *
+     * @param  array  $callback
+     * @param  array  $parameters
+     * @return mixed
+     */
+    protected function runControllerAction(array $callback, array $parameters)
+    {
+        extract($callback);
+
+        $parameters = $this->resolveCallParameters(
+            $parameters, new ReflectionMethod($controller, $method)
+        );
+
+        return $controller->callAction($method, $parameters);
     }
 
     /**
