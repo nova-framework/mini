@@ -79,11 +79,7 @@ class RouteCompiler
 
         }, $path);
 
-        if ($optionals > 0) {
-            $pattern .= str_repeat(')?', $optionals);
-        }
-
-        return sprintf('#^%s$#s', $pattern);
+        return sprintf('#^%s%s$#s', $pattern, str_repeat(')?', $optionals));
     }
 
     /**

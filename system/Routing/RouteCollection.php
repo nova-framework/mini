@@ -117,9 +117,11 @@ class RouteCollection implements Countable
         foreach ($routes as $key => $route) {
             if (! $route->isFallback()) {
                 $items[$key] = $route;
-            } else {
-                $fallbacks[$key] = $route;
+
+                continue;
             }
+
+            $fallbacks[$key] = $route;
         }
 
         return array_merge($items, $fallbacks);
