@@ -62,7 +62,7 @@ class RouteCompiler
             $variables[] = $name;
 
             //
-            $pattern = array_get($this->patterns, $name, '[^/]+');
+            $pattern = $this->getPattern($name, '[^/]+');
 
             if ($optional) {
                 $optionals++;
@@ -83,13 +83,15 @@ class RouteCompiler
     }
 
     /**
-     * Get the URI associated with the inner route.
+     * Get a route pattern by name.
      *
-     * @return string
+     * @param  string $name
+     * @param  string|null $default
+     * @return string|null
      */
-    public function getPath()
+    protected function getPattern($name, $default = null)
     {
-        return $this->path;
+        return array_get($this->patterns, $name, $default);
     }
 
     /**
@@ -100,5 +102,15 @@ class RouteCompiler
     public function getPatterns()
     {
         return $this->patterns;
+    }
+
+    /**
+     * Get the URI associated with the inner route.
+     *
+     * @return string
+     */
+    public function getPath()
+    {
+        return $this->path;
     }
 }
