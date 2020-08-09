@@ -9,14 +9,9 @@ use LogicException;
 class RouteCompiler
 {
     /**
-     * @var string
+     * @var \Mini\Routing\Route
      */
-    protected $path;
-
-    /**
-     * @var array
-     */
-    protected $patterns = array();
+    protected $route;
 
 
     /**
@@ -25,11 +20,9 @@ class RouteCompiler
      * @param  \Mini\Routing\Route $route
      * @return void
      */
-    public function __construct(Route $rotue)
+    public function __construct(Route $route)
     {
-        $this->path = $route->getPath();
-
-        $this->patterns = $route->getPatterns();
+        $this->route = $route;
     }
 
     /**
@@ -40,14 +33,16 @@ class RouteCompiler
      */
     public function compile()
     {
+        $path = with($route = $this->getRoute())->getPath();
+
+        $patterns = $route->getPatterns();
+
+        //
         $optionals = 0;
 
         $variables = array();
 
-        //
-        $path = $this->getPath();
-
-        $pattern = preg_replace_callback('#/\{(.*?)(\?)?\}#', function ($matches) use ($path, &$optionals, &$variables)
+        $pattern = preg_replace_callback('#/\{(.*?)(\?)?\}#', function ($matches) use ($path, $patterns, &$optionals, &$variables)
         {
             list (, $name, $optional) = array_pad($matches, 3, false);
 
@@ -62,7 +57,7 @@ class RouteCompiler
             $variables[] = $name;
 
             //
-            $pattern = $this->getPattern($name, '[^/]+');
+            $pattern = array_get($patterns, $name, '[^/]+');
 
             if ($optional) {
                 $optionals++;
@@ -83,34 +78,12 @@ class RouteCompiler
     }
 
     /**
-     * Get a route pattern by name.
-     *
-     * @param  string $name
-     * @param  string|null $default
-     * @return string|null
-     */
-    protected function getPattern($name, $default = null)
-    {
-        return array_get($this->patterns, $name, $default);
-    }
-
-    /**
-     * Get the patterns defined the inner route.
+     * Get the inner route.
      *
      * @return array
      */
-    public function getPatterns()
+    public function getRoute()
     {
-        return $this->patterns;
-    }
-
-    /**
-     * Get the URI associated with the inner route.
-     *
-     * @return string
-     */
-    public function getPath()
-    {
-        return $this->path;
+        return $this->route;
     }
 }
