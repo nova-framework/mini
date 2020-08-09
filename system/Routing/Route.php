@@ -138,30 +138,19 @@ class Route
     public function run(Request $request)
     {
         try {
-            if (! is_array($callback = $this->resolveActionCallback())) {
-                return $this->runActionCallback($callback);
+            if (is_array($callback = $this->resolveActionCallback())) {
+                return $this->runControllerAction($callback, $request);
             }
 
-            return $this->runControllerAction($callback, $request);
+            $parameters = $this->resolveCallParameters(
+                $this->getParameters(), new ReflectionFunction($callback)
+            );
+
+            return call_user_func_array($callback, $parameters);
         }
         catch (HttpResponseException $e) {
             return $e->getResponse();
         }
-    }
-
-    /**
-     * Runs the action callback and returns the response.
-     *
-     * @param  \Closure  $callback
-     * @return mixed
-     */
-    protected function runActionCallback(Closure $callback)
-    {
-        $parameters = $this->resolveCallParameters(
-            $this->getParameters(), new ReflectionFunction($callback)
-        );
-
-        return call_user_func_array($callback, $parameters);
     }
 
     /**
