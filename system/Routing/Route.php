@@ -229,7 +229,10 @@ class Route
                 $this->spliceIntoParameters($parameters, $key, $this->container->make($className));
 
                 $count++;
-            } else if (! isset($values[$key - $count]) && $parameter->isDefaultValueAvailable()) {
+            }
+
+            //
+            else if (! isset($values[$key - $count]) && $parameter->isDefaultValueAvailable()) {
                 $this->spliceIntoParameters($parameters, $key, $parameter->getDefaultValue());
             }
         }
