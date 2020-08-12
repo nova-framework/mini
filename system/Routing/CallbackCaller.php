@@ -44,7 +44,7 @@ class CallbackCaller
     public function call($callback, array $parameters, Request $request)
     {
         if ($callback instanceof Closure) {
-            return $this->callActionClosure($callback, $parameters);
+            return $this->callClosure($callback, $parameters);
         }
 
         //
@@ -64,7 +64,7 @@ class CallbackCaller
      * @param  array  $parameters
      * @return mixed
      */
-    protected function callActionClosure(Closure $callback, array $parameters)
+    protected function callClosure(Closure $callback, array $parameters)
     {
         $parameters = $this->resolveCallParameters(
             $parameters, new ReflectionFunction($callback)
