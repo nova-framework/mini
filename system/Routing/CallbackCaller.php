@@ -42,30 +42,16 @@ class CallbackCaller
      */
     public function call($callback, array $parameters, Request $request)
     {
-        if (is_array($callback)) {
-            extract($callback);
+        if ($callback instanceof Closure) {
+            $parameters = $this->resolveCallParameters(
+                $parameters, new ReflectionFunction($callback)
+            );
 
-            return $this->callControllerAction($controller, $method, $parameters, $request);
+            return call_user_func_array($callback, $parameters);
         }
 
-        $parameters = $this->resolveCallParameters(
-            $parameters, new ReflectionFunction($callback)
-        );
+        extract($callback);
 
-        return call_user_func_array($callback, $parameters);
-    }
-
-    /**
-     * Runs the controller callback and returns the response.
-     *
-     * @param  \Mini\Routing\Controller  $controller
-     * @param  string  $method
-     * @param  array  $parameters
-     * @param  \Mini\Http\Request  $request
-     * @return mixed
-     */
-    protected function callControllerAction(Controller $controller, $method, array $parameters, Request $request)
-    {
         $parameters = $this->resolveCallParameters(
             $parameters, new ReflectionMethod($controller, $method)
         );
@@ -74,9 +60,8 @@ class CallbackCaller
             return $controller->callAction($method, $parameters, $request);
         }
 
-        return call_user_func_array($callback, $parameters);
+        return call_user_func_array(array($controller, $method), $parameters);
     }
-
 
     /**
      * Resolve the given method's type-hinted dependencies.
