@@ -6,6 +6,7 @@ use Mini\Container\Container;
 use Mini\Http\Request;
 
 use Closure;
+use LogicException;
 use ReflectionFunction;
 use ReflectionFunctionAbstract;
 use ReflectionMethod;
@@ -43,11 +44,14 @@ class CallbackCaller
     public function call($callback, array $parameters, Request $request)
     {
         if ($callback instanceof Closure) {
-            $parameters = $this->resolveCallParameters(
+            return call_user_func_array($callback, $this->resolveCallParameters(
                 $parameters, new ReflectionFunction($callback)
-            );
+            ));
+        }
 
-            return call_user_func_array($callback, $parameters);
+        //
+        else if (! is_array($callback)) {
+            throw new LogicException("The callback must be either an array or a Closure instance");
         }
 
         extract($callback);
