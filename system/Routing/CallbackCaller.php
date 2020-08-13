@@ -43,29 +43,17 @@ class CallbackCaller
      */
     public function call($callback, array $parameters, Request $request)
     {
-        if ($callback instanceof Closure) {
-            return $this->callClosure($callback, $parameters);
+        if (is_array($callback)) {
+            extract($callback);
+
+            return $this->callControllerAction($controller, $method, $parameters, $request);
         }
 
         //
-        else if (! is_array($callback)) {
+        else if (! $callback instanceof Closure) {
             throw new LogicException("The callback must be either an array or a Closure instance");
         }
 
-        extract($callback);
-
-        return $this->callControllerAction($controller, $method, $parameters, $request);
-    }
-
-    /**
-     * Runs the action closure and returns the response.
-     *
-     * @param  \Closure $callback
-     * @param  array  $parameters
-     * @return mixed
-     */
-    protected function callClosure(Closure $callback, array $parameters)
-    {
         $parameters = $this->resolveCallParameters(
             $parameters, new ReflectionFunction($callback)
         );
