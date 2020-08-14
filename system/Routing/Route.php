@@ -138,10 +138,10 @@ class Route
             $this->container = new Container();
         }
 
-        $callbackCaller = new CallbackCaller($this->container);
+        $caller = new CallbackCaller($this->container);
 
         try {
-            return $callbackCaller->call($request, $this->resolveActionCallback(), $this->getParameters());
+            return $caller->call($request, $this->resolveActionCallback(), $this->getParameters());
         }
         catch (HttpResponseException $e) {
             return $e->getResponse();
