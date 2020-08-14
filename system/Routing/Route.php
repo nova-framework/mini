@@ -134,10 +134,14 @@ class Route
      */
     public function run(Request $request)
     {
-        try {
-            $callback = $this->resolveActionCallback();
+        if (! isset($this->container)) {
+            $this->container = new Container();
+        }
 
-            return with(new CallbackCaller($this->container))->call($callback, $this->getParameters(), $request);
+        $callbackCaller = new CallbackCaller($this->container);
+
+        try {
+            return $callbackCaller->call($request, $this->resolveActionCallback(), $this->getParameters());
         }
         catch (HttpResponseException $e) {
             return $e->getResponse();
@@ -160,10 +164,25 @@ class Route
 
         if ($callback instanceof Closure) {
             return $this->callback = $callback;
-        } else if (! is_string($callback)) {
+        }
+
+        //
+        else if (! is_string($callback)) {
             throw new LogicException("The callback must be either a string or a Closure instance");
         }
 
+        return $this->callback = $this->createControllerCallback($callback);
+    }
+
+    /**
+     * Resolve a controller callback.
+     *
+     * @param  string  $callback
+     * @return array
+     * @throws \LogicException
+     */
+    protected function createControllerCallback($callback)
+    {
         list ($className, $method) = explode('@', $callback, 2);
 
         if (! class_exists($className)) {
@@ -175,7 +194,7 @@ class Route
             throw new LogicException("Controller [{$className}] has no method [{$method}]");
         }
 
-        return $this->callback = compact('controller', 'method');
+        return array($controller, $method);
     }
 
     /**
@@ -208,7 +227,7 @@ class Route
         $middleware = array_get($this->action, 'middleware', array());
 
         if (is_array($callback = $this->resolveActionCallback())) {
-            extract($callback);
+            list ($controller, $method) = $callback;
 
             $middleware = array_merge($middleware, $controller->getMiddleware($method));
         }

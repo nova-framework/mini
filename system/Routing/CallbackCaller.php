@@ -36,17 +36,15 @@ class CallbackCaller
     /**
      * Runs the route callback and returns the response.
      *
+     * @param  \Mini\Http\Request  $request
      * @param  \Closure|array  $callback
      * @param  array  $parameters
-     * @param  \Mini\Http\Request  $request
      * @return mixed
      */
-    public function call($callback, array $parameters, Request $request)
+    public function call(Request $request, $callback, array $parameters)
     {
         if (is_array($callback)) {
-            extract($callback);
-
-            return $this->callControllerAction($controller, $method, $parameters, $request);
+            return $this->callControllerAction($request, $callback, $parameters);
         }
 
         //
@@ -64,14 +62,15 @@ class CallbackCaller
     /**
      * Runs the controller action and returns the response.
      *
-     * @param  \Mini\Routing\Controller  $controller
-     * @param  string  $method
-     * @param  array  $parameters
      * @param  \Mini\Http\Request  $request
+     * @param  array  $callback
+     * @param  array  $parameters
      * @return mixed
      */
-    protected function callControllerAction(Controller $controller, $method, array $parameters, Request $request)
+    protected function callControllerAction(Request $request, array $callback, array $parameters)
     {
+        list ($controller, $method) = $callback;
+
         $parameters = $this->resolveCallParameters(
             $parameters, new ReflectionMethod($controller, $method)
         );
@@ -80,7 +79,7 @@ class CallbackCaller
             return $controller->callAction($method, $parameters, $request);
         }
 
-        return call_user_func_array(array($controller, $method), $parameters);
+        return call_user_func_array($callback, $parameters);
     }
 
     /**
