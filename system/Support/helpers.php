@@ -187,7 +187,9 @@ if (! function_exists('array_fetch')) {
      * @return array
      */
     function array_fetch($array, $key) {
-        foreach (explode('.', $key) as $segment) {
+        $segments = explode('.', $key);
+
+        foreach ($segments as $segment) {
             $results = array();
 
             foreach ($array as $value) {
@@ -212,7 +214,7 @@ if (! function_exists('array_first')) {
      * @param  mixed    $default
      * @return mixed
      */
-    function array_first($array, $callback, $default = null)
+    function array_first($array, Closure $callback, $default = null)
     {
         foreach ($array as $key => $value) {
             if (call_user_func($callback, $key, $value)) {
@@ -233,7 +235,7 @@ if ( ! function_exists('array_last')) {
      * @param  mixed    $default
      * @return mixed
      */
-    function array_last($array, $callback, $default = null)
+    function array_last($array, Closure $callback, $default = null)
     {
         return array_first(array_reverse($array), $callback, $default);
     }
@@ -274,14 +276,16 @@ if ( ! function_exists('array_forget')) {
         while (count($keys) > 1) {
             $key = array_shift($keys);
 
-            if ( ! isset($array[$key]) || ! is_array($array[$key])) {
+            if (! isset($array[$key]) || ! is_array($array[$key])) {
                 return;
             }
 
             $array =& $array[$key];
         }
 
-        unset($array[array_shift($keys)]);
+        $key = array_shift($keys);
+
+        unset($array[$key]);
     }
 }
 
@@ -298,11 +302,16 @@ if (! function_exists('array_get')) {
     {
         if (is_null($key)) {
             return $array;
-        } else if (isset($array[$key])) {
+        }
+
+        //
+        else if (isset($array[$key])) {
             return $array[$key];
         }
 
-        foreach (explode('.', $key) as $segment) {
+        $segments = explode('.', $key);
+
+        foreach ($segments as $segment) {
             if (! is_array($array) || ! array_key_exists($segment, $array)) {
                 return $default;
             }
@@ -330,7 +339,9 @@ if (! function_exists('array_has')) {
             return true;
         }
 
-        foreach (explode('.', $key) as $segment) {
+        $segments = explode('.', $key);
+
+        foreach ($segments as $segment) {
             if (! is_array($array) || ! array_key_exists($segment, $array)) {
                 return false;
             }
@@ -457,7 +468,9 @@ if ( ! function_exists('array_where'))
         $filtered = array();
 
         foreach ($array as $key => $value) {
-            if (call_user_func($callback, $key, $value)) $filtered[$key] = $value;
+            if (call_user_func($callback, $key, $value)) {
+                $filtered[$key] = $value;
+            }
         }
 
         return $filtered;

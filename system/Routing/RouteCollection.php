@@ -115,10 +115,10 @@ class RouteCollection implements Countable
         $items = $fallbacks = array();
 
         foreach ($routes as $key => $route) {
-            if (! $route->isFallback()) {
-                $items[$key] = $route;
-            } else {
+            if ($route->isFallback()) {
                 $fallbacks[$key] = $route;
+            } else {
+                $items[$key] = $route;
             }
         }
 

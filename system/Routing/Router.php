@@ -228,12 +228,12 @@ class Router
 
         $path = '/' .trim($path, '/');
 
-        //
-        $route = with(new Route($methods, $path, $action))->where(
-            array_merge($this->patterns, array_get($action, 'where', array()))
-        );
+        $patterns = array_merge($this->patterns, array_get($action, 'where', array()));
 
-        return $this->routes->add($route)->setContainer($this->container);
+        //
+        $route = with(new Route($methods, $path, $action))->where($patterns)->setContainer($this->container);
+
+        return $this->routes->add($route);
     }
 
     /**
