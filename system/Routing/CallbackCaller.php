@@ -44,7 +44,9 @@ class CallbackCaller
     public function call(Request $request, $callback, array $parameters)
     {
         if (is_array($callback)) {
-            return $this->callControllerAction($request, $callback, $parameters);
+            list ($controller, $method) = $callback;
+
+            return $this->callControllerAction($controller, $method, $parameters, $request);
         }
 
         //
@@ -62,15 +64,14 @@ class CallbackCaller
     /**
      * Runs the controller action and returns the response.
      *
-     * @param  \Mini\Http\Request  $request
-     * @param  array  $callback
+     * @param  \Mini\Routing\Controller  $controller
+     * @param  string  $method
      * @param  array  $parameters
+     * @param  \Mini\Http\Request  $request
      * @return mixed
      */
-    protected function callControllerAction(Request $request, array $callback, array $parameters)
+    protected function callControllerAction(Controller $controller, $method, array $parameters, Request $request)
     {
-        list ($controller, $method) = $callback;
-
         $parameters = $this->resolveCallParameters(
             $parameters, new ReflectionMethod($controller, $method)
         );
