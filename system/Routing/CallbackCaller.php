@@ -36,12 +36,12 @@ class CallbackCaller
     /**
      * Runs the route callback and returns the response.
      *
-     * @param  \Mini\Http\Request  $request
      * @param  \Closure|array  $callback
      * @param  array  $parameters
+     * @param  \Mini\Http\Request  $request
      * @return mixed
      */
-    public function call(Request $request, $callback, array $parameters)
+    public function call($callback, array $parameters, Request $request)
     {
         if (is_array($callback)) {
             list ($controller, $method) = $callback;
