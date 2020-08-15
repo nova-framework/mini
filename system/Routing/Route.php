@@ -171,7 +171,7 @@ class Route
             throw new LogicException("The callback must be either a string or a Closure instance");
         }
 
-        return $this->callback = $this->createControllerCallback($callback);
+        return $this->callback = $this->resolveStringCallback($callback);
     }
 
     /**
@@ -181,7 +181,7 @@ class Route
      * @return array
      * @throws \LogicException
      */
-    protected function createControllerCallback($callback)
+    protected function resolveStringCallback($callback)
     {
         list ($className, $method) = explode('@', $callback, 2);
 
