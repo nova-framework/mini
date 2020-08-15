@@ -53,24 +53,20 @@ class View implements RenderableInterface
     {
         $__data = $this->gatherData();
 
-        ob_start();
-
         // Extract the rendering variables.
         foreach ($__data as $__variable => $__value) {
             ${$__variable} = $__value;
         }
 
-        unset($__variable, $__value);
+        unset($__data, $__variable, $__value);
+
+        // Start rendering.
+        ob_start();
 
         try {
             include $this->path;
         }
-        catch (Exception $e) {
-            ob_get_clean();
-
-            throw $e;
-        }
-        catch (Throwable $e) {
+        catch (Exception | Throwable $e) {
             ob_get_clean();
 
             throw $e;
@@ -154,10 +150,7 @@ class View implements RenderableInterface
         try {
             return $this->render();
         }
-        catch (Exception $e) {
-            return '';
-        }
-        catch (Throwable $e) {
+        catch (Exception | Throwable $e) {
             return '';
         }
     }
