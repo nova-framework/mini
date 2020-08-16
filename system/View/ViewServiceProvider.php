@@ -25,7 +25,13 @@ class ViewServiceProvider extends ServiceProvider
     {
         $this->app->singleton('view', function ($app)
         {
-            return new Factory($app);
+            $factory = new Factory();
+
+            $factory->share('__env', $factory);
+
+            $factory->share('app', $app);
+
+            return $factory;
         });
     }
 

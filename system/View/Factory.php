@@ -2,6 +2,7 @@
 
 namespace Mini\View;
 
+use Mini\Events\Dispatcher;
 use Mini\Support\Str;
 
 use BadMethodCallException;
@@ -26,7 +27,7 @@ class Factory
      */
     public function make($view, $data = array())
     {
-        if (! is_readable($path = $this->getViewPath($view))) {
+        if (! is_readable($path = $this->resolveViewPath($view))) {
             throw new BadMethodCallException("File path [$path] does not exist");
         }
 
@@ -88,7 +89,7 @@ class Factory
      */
     public function exists($view)
     {
-        $path = $this->getViewPath($view);
+        $path = $this->resolveViewPath($view);
 
         return is_readable($path);
     }
@@ -98,7 +99,7 @@ class Factory
      *
      * @return array
      */
-    protected function getViewPath($view)
+    protected function resolveViewPath($view)
     {
         return str_replace('/', DS, APPPATH ."Views/${view}.php");
     }
