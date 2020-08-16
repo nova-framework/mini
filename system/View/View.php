@@ -51,14 +51,8 @@ class View implements RenderableInterface
      */
     public function render()
     {
-        $__data = $this->gatherData();
-
         // Extract the rendering variables.
-        foreach ($__data as $__variable => $__value) {
-            ${$__variable} = $__value;
-        }
-
-        unset($__data, $__variable, $__value);
+        extract($this->gatherData(), EXTR_SKIP);
 
         // Start rendering.
         ob_start();
@@ -84,13 +78,11 @@ class View implements RenderableInterface
     {
         $data = array_merge($this->factory->getShared(), $this->data);
 
-        foreach ($data as $key => $value) {
-            if ($value instanceof View) {
-                $data[$key] = $value->render();
-            }
-        }
+        return array_map(function ($value)
+        {
+            return ($value instanceof View) ? $value->render() : $value;
 
-        return $data;
+        }, $data);
     }
 
     /**
