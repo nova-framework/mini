@@ -74,7 +74,9 @@ class Factory
         $results = array();
 
         foreach ($items as $key => $value) {
-            $results[] = $this->fetch($view, array('key' => $key, $iterator => $value));
+            $data = array('key' => $key, $iterator => $value);
+
+            $results[] = $this->make($view, $data)->render();
         }
 
         return implode("\n", $results);
