@@ -560,6 +560,20 @@ if (! function_exists('dd')) {
     }
 }
 
+if (! function_exists('e'))
+{
+    /**
+     * Escape HTML entities in a string.
+     *
+     * @param  string  $value
+     * @return string
+     */
+    function esc($value)
+    {
+        return htmlentities($value, ENT_QUOTES, 'UTF-8', false);
+    }
+}
+
 if (! function_exists('ends_with')) {
     /**
      * Determine if a given string ends with a given substring.

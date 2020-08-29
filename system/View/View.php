@@ -58,7 +58,7 @@ class View implements RenderableInterface
         ob_start();
 
         try {
-            include $this->path;
+            include $this->getPath();
         }
         catch (Exception | Throwable $e) {
             ob_get_clean();
@@ -76,7 +76,7 @@ class View implements RenderableInterface
      */
     protected function gatherData()
     {
-        $data = array_merge($this->factory->getShared(), $this->data);
+        $data = array_merge($this->factory->getShared(), $this->getData());
 
         return array_map(function ($value)
         {
@@ -130,6 +130,39 @@ class View implements RenderableInterface
         }
 
         return $this;
+    }
+
+    /**
+     * Get the inner data of the  View instance.
+     *
+     * @return string
+     */
+    public function getData()
+    {
+        return $this->data;
+    }
+
+    /**
+     * Get the path currently being compiled.
+     *
+     * @param  string  $path
+     * @return View
+     */
+    public function setPath($path)
+    {
+        $this->path = $path;
+
+        return $this;
+    }
+
+    /**
+     * Get the path currently being compiled.
+     *
+     * @return string
+     */
+    public function getPath()
+    {
+        return $this->path;
     }
 
     /**
