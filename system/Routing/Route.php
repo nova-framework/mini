@@ -160,7 +160,7 @@ class Route
     }
 
     /**
-     * Runs the controller callback and returns the response.
+     * Runs the controller action and returns the response.
      *
      * @param  \Mini\Routing\Controller  $controller
      * @param  string  $method
