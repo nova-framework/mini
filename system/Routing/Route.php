@@ -9,6 +9,9 @@ use Mini\Support\Str;
 
 use Closure;
 use LogicException;
+use ReflectionFunction;
+use ReflectionFunctionAbstract;
+use ReflectionMethod;
 
 
 class Route
@@ -139,13 +142,62 @@ class Route
         }
 
         try {
-            $callback = $this->resolveActionCallback();
+            $parameters = $this->getParameters();
 
-            return with(new CallbackCaller($this->container))->call($callback, $this->getParameters(), $request);
+            if (is_array($callback = $this->resolveActionCallback())) {
+                return $this->callControllerCallback($callback, $parameters, $request);
+            }
+
+            return call_user_func_array($callback, $this->resolveCallParameters(
+                $parameters, new ReflectionFunction($callback)
+            ));
         }
         catch (HttpResponseException $e) {
             return $e->getResponse();
         }
+    }
+
+    /**
+     * Runs the controller callback and returns the response.
+     *
+     * @param  array  $callback
+     * @param  array  $parameters
+     * @param  \Mini\Http\Request  $request
+     * @return mixed
+     */
+    protected function callControllerCallback(array $callback, array $parameters, Request $request)
+    {
+        list ($controller, $method) = $callback;
+
+        $parameters = $this->resolveCallParameters(
+            $parameters, new ReflectionMethod($controller, $method)
+        );
+
+        if (method_exists($controller, 'callAction')) {
+            return $controller->callAction($method, $parameters, $request);
+        }
+
+        return call_user_func_array($callback, $parameters);
+    }
+
+    /**
+     * Resolve the given method's type-hinted dependencies.
+     *
+     * @param  array  $parameters
+     * @param  \ReflectionFunctionAbstract  $reflector
+     * @return array
+     */
+    protected function resolveCallParameters(array $parameters, ReflectionFunctionAbstract $reflector)
+    {
+        foreach ($reflector->getParameters() as $offset => $parameter) {
+            if (! is_null($class = $parameter->getClass())) {
+                $instance = $this->container->make($class->name);
+
+                array_splice($parameters, $offset, 0, array($instance));
+            }
+        }
+
+        return $parameters;
     }
 
     /**
