@@ -145,7 +145,9 @@ class Route
             $parameters = $this->getParameters();
 
             if (is_array($callback = $this->resolveActionCallback())) {
-                return $this->callControllerCallback($callback, $parameters, $request);
+                list ($controller, $method) = $callback;
+
+                return $this->callControllerAction($controller, $method, $parameters, $request);
             }
 
             return call_user_func_array($callback, $this->resolveCallParameters(
@@ -160,15 +162,14 @@ class Route
     /**
      * Runs the controller callback and returns the response.
      *
-     * @param  array  $callback
+     * @param  \Mini\Routing\Controller  $controller
+     * @param  string  $method
      * @param  array  $parameters
      * @param  \Mini\Http\Request  $request
      * @return mixed
      */
-    protected function callControllerCallback(array $callback, array $parameters, Request $request)
+    protected function callControllerAction(Controller $controller, $method, array $parameters, Request $request)
     {
-        list ($controller, $method) = $callback;
-
         $parameters = $this->resolveCallParameters(
             $parameters, new ReflectionMethod($controller, $method)
         );
