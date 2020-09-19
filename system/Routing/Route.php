@@ -141,7 +141,7 @@ class Route
             $this->container = new Container();
         }
 
-        $parameters = this->getParameters();
+        $parameters = $this->getParameters();
 
         try {
             if (is_array($callback = $this->resolveActionCallback())) {
@@ -167,7 +167,7 @@ class Route
      * @param  \Mini\Http\Request  $request
      * @return mixed
      */
-    protected function callControllerCallback(array $callback, array $$parameters, Request $request)
+    protected function callControllerCallback(array $callback, array $parameters, Request $request)
     {
         list ($controller, $method) = $callback;
 
