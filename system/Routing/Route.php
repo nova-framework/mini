@@ -141,15 +141,13 @@ class Route
             $this->container = new Container();
         }
 
-        $parameters = $this->getParameters();
-
         try {
             if (is_array($callback = $this->resolveActionCallback())) {
-                return $this->callControllerCallback($callback, $parameters, $request);
+                return $this->callControllerCallback($callback, $request);
             }
             
     	    $parameters = $this->resolveCallParameters(
-                $parameters, new ReflectionFunction($callback)
+                $this->getParameters(), new ReflectionFunction($callback)
 	    );
 
 	    return call_user_func_array($callback, $parameters);
@@ -163,16 +161,15 @@ class Route
      * Runs the controller callback and returns the response.
      *
      * @param  array  $callback
-     * @param  array  $parameters
      * @param  \Mini\Http\Request  $request
      * @return mixed
      */
-    protected function callControllerCallback(array $callback, array $parameters, Request $request)
+    protected function callControllerCallback(array $callback, Request $request)
     {
         list ($controller, $method) = $callback;
 
         $parameters = $this->resolveCallParameters(
-            $parameters, new ReflectionMethod($controller, $method)
+            $this->getParameters(), new ReflectionMethod($controller, $method)
         );
 
         if (method_exists($controller, 'callAction')) {
