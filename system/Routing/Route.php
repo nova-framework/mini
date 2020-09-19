@@ -147,8 +147,12 @@ class Route
             if (is_array($callback = $this->resolveActionCallback())) {
                 return $this->callControllerCallback($callback, $parameters, $request);
             }
+            
+    	    $parameters = $this->resolveCallParameters(
+                $parameters, new ReflectionFunction($callback)
+	    );
 
-            return $this->callActionCallback($callback, $parameters);
+	    return call_user_func_array($callback, $parameters);
         }
         catch (HttpResponseException $e) {
             return $e->getResponse();
@@ -174,22 +178,6 @@ class Route
         if (method_exists($controller, 'callAction')) {
             return $controller->callAction($method, $parameters, $request);
         }
-
-        return call_user_func_array($callback, $parameters);
-    }
-
-    /**
-     * Runs the action callback and returns the response.
-     *
-     * @param  \Closure  $callback
-     * @param  array  $parameters
-     * @return mixed
-     */
-    protected function callActionCallback(Closure $callback, array $$parameters)
-    {
-        $parameters = $this->resolveCallParameters(
-            $parameters, new ReflectionFunction($callback)
-        );
 
         return call_user_func_array($callback, $parameters);
     }
