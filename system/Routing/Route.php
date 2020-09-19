@@ -141,18 +141,14 @@ class Route
             $this->container = new Container();
         }
 
+        $parameters = this->getParameters();
+
         try {
-            $parameters = $this->getParameters();
-
             if (is_array($callback = $this->resolveActionCallback())) {
-                list ($controller, $method) = $callback;
-
-                return $this->callControllerAction($controller, $method, $parameters, $request);
+                return $this->callControllerCallback($callback, $parameters, $request);
             }
 
-            return call_user_func_array($callback, $this->resolveCallParameters(
-                $parameters, new ReflectionFunction($callback)
-            ));
+            return $this->callActionCallback($callback, $parameters);
         }
         catch (HttpResponseException $e) {
             return $e->getResponse();
@@ -160,16 +156,17 @@ class Route
     }
 
     /**
-     * Runs the controller action and returns the response.
+     * Runs the controller callback and returns the response.
      *
-     * @param  \Mini\Routing\Controller  $controller
-     * @param  string  $method
+     * @param  array  $callback
      * @param  array  $parameters
      * @param  \Mini\Http\Request  $request
      * @return mixed
      */
-    protected function callControllerAction(Controller $controller, $method, array $parameters, Request $request)
+    protected function callControllerCallback(array $callback, array $$parameters, Request $request)
     {
+        list ($controller, $method) = $callback;
+
         $parameters = $this->resolveCallParameters(
             $parameters, new ReflectionMethod($controller, $method)
         );
@@ -177,6 +174,22 @@ class Route
         if (method_exists($controller, 'callAction')) {
             return $controller->callAction($method, $parameters, $request);
         }
+
+        return call_user_func_array($callback, $parameters);
+    }
+
+    /**
+     * Runs the action callback and returns the response.
+     *
+     * @param  \Closure  $callback
+     * @param  array  $parameters
+     * @return mixed
+     */
+    protected function callActionCallback(Closure $callback, array $$parameters)
+    {
+        $parameters = $this->resolveCallParameters(
+            $parameters, new ReflectionFunction($callback)
+        );
 
         return call_user_func_array($callback, $parameters);
     }
