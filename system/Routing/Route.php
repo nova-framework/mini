@@ -145,12 +145,12 @@ class Route
             if (is_array($callback = $this->resolveActionCallback())) {
                 return $this->callControllerCallback($callback, $request);
             }
-            
-    	    $parameters = $this->resolveCallParameters(
-                $this->getParameters(), new ReflectionFunction($callback)
-	    );
 
-	    return call_user_func_array($callback, $parameters);
+            $parameters = $this->resolveCallParameters(
+                $this->getParameters(), new ReflectionFunction($callback)
+            );
+
+            return call_user_func_array($callback, $parameters);
         }
         catch (HttpResponseException $e) {
             return $e->getResponse();
